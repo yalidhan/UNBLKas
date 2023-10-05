@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Auth;
+use Session;
 
 class LoginController extends Controller
 {
@@ -36,5 +39,23 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function login(Request $request)
+    {        
+        if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+            $userStatus = Auth::User()->status;
+            if($userStatus=='1') {
+                return redirect()->route('home');
+            }else{
+                Auth::logout();
+                Session::flush();
+                return redirect()->route('login')->withInput()->with('message','Akun anda Tidak Aktif. Silahkan kontak admin');
+            }
+        }
+        else {
+
+            return redirect()->route('login')->withInput()->with('message','Email atau password salah. Silahkan coba lagi.');
+        }
     }
 }

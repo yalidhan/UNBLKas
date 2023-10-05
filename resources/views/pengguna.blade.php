@@ -7,7 +7,7 @@
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/home">Dashboard</a></li>
                         <li class="breadcrumb-item active"><a href="javascript:void(0)">Pengguna</a></li>
                     </ol>
                 </div>
@@ -36,6 +36,7 @@
                                                 <th>Email</th>
                                                 <th>Derpartemen</th>
                                                 <th>Jabatan</th>
+                                                <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -46,6 +47,11 @@
                                                 <td>{{$pengguna->email}}</td>
                                                 <td>{{$pengguna->departement}}</td>
                                                 <td>{{$pengguna->jabatan}}</td>
+                                                <td>
+                                                    <a href="/statuspengguna/{{$pengguna->id}}" class="btn btn-sm btn-{{$pengguna->status ? 'success' : 'danger'}}">
+                                                      {{$pengguna->status?'Aktif':'Non Aktif'}}
+                                                    </a>
+                                                </td>
                                                 <td><a href="/pengguna/{{$pengguna->id}}/edit" class="btn mb-1 btn-rounded btn-warning" role="button">Edit</a></td>
                                             </tr>
                                             @endforeach

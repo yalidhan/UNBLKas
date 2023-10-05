@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\UpdatePasswordController;
+use App\Http\Controllers\Auth\LoginController;
  
 
 /*
@@ -23,10 +24,12 @@ use App\Http\Controllers\UpdatePasswordController;
 
 Route::get('/', [HomeController::class, 'index']);
 Auth::routes();
+Route::post('login', [LoginController::class,'login']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('pengguna',PenggunaController::class);
+Route::get('statuspengguna/{id}',[PenggunaController::class,'status']);
 
 Route::get('updatepassword',[UpdatePasswordController::class,'edit'])->name('updatepassword');
 Route::put('updatepassword',[UpdatePasswordController::class,'update']);

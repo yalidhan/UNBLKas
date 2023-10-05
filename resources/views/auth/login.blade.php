@@ -56,7 +56,12 @@
                                     </div>
                                     <button type="submit" class="btn login-form__btn submit w-100">Login</button>
                                 </form>
-                                <p class="mt-5 login-form__footer">Tidak punya akun? silahkan kontak Admin. Tekan <a href="/password/reset">RESET_PASSWORD</a> jika lupa password</p>
+                                @if(session()->has('message'))
+                                <div class="alert alert-danger">
+                                    <b>{{ session()->get('message') }}</b>
+                                </div>
+                                @endif
+                                <p class="mt-5 login-form__footer">Tidak punya akun? silahkan kontak <u><a href="https://api.whatsapp.com/send?phone=6285391072748" target="_blank">Admin</a></u>. Tekan <u><a href="/password/reset">RESET_PASSWORD</a></u> jika lupa password</p>
                             </div>
                         </div>
                     </div>

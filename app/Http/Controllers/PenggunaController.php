@@ -80,6 +80,22 @@ class PenggunaController extends Controller
         return redirect()->route('pengguna.index')->with('message', 'Berhasil Merubah Data');
     }
 
+    public function status($statuspengguna){
+        $user=User::find($statuspengguna);
+        // dd($user->status);
+        if($user){
+            if($user->status){
+            $user->status = 0;
+        }
+        else{
+            $user->status = 1;
+        }
+        $user->save();
+        }
+        return back();
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
