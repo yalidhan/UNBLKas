@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PenggunaController;
 use Illuminate\Auth\Events\Registered;
+use App\Models\Departement;
 
 class RegisterController extends Controller
 {
@@ -56,7 +57,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'departement' => ['required', 'string',],
+            'departement_id' => ['required'],
             'jabatan' => ['required', 'string',],
 
         ]);
@@ -74,7 +75,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'departement' =>$data['departement'],
+            'departement_id' =>$data['departement_id'],
             'jabatan' =>$data['jabatan'],
         ]);
     }
@@ -87,6 +88,11 @@ class RegisterController extends Controller
     return $this->registered($request, $user)
                     // ?: redirect($this->redirectPath());
     ?: redirect()->route('pengguna.index')->with('message', 'Berhasil Menambahkan Pengguna');
+}
+public function showRegistrationForm()
+{
+    $departement=Departement::all();
+    return view('auth.register',compact('departement'));
 }
 }
 

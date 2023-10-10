@@ -42,11 +42,11 @@
         ***********************************-->
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="/assets/index.html">
-                    <b class="logo-abbr"><img src="/assets/images/logo.png" alt=""> </b>
-                    <span class="logo-compact"><img src="/assets/images/logo-compact.png" alt=""></span>
+                <a href="/home">
+                    <b class="logo-abbr"><img src="/assets/images/unbl.png" alt=""> </b>
+                    <span class="logo-compact"><img src="/assets/images/unbl.png" alt=""></span>
                     <span class="brand-title">
-                        <img src="/assets/images/logo-text.png" alt="">
+                        <img src="/assets/images/unbl-text.png" alt="">
                     </span>
                 </a>
             </div>
@@ -126,7 +126,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{route('pengguna.index')}}">Pengguna</a></li>
-                            <li><a href="#">Departemen</a></li>
+                            <li><a href="{{route('departement.index')}}">Departemen</a></li>
                             <li><a href="#">Akun</a></li>
                             <li><a href="#">Anggaran</a></li>
                         </ul>

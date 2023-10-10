@@ -17,7 +17,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'departement',
+        'departement_id',
         'jabatan',
         'status',
     ];
@@ -28,5 +28,9 @@ class User extends Authenticatable
 
     const CREATED_AT='created_at';
     const UPDATED_AT='updated_at';
-
+    
+    public function departement()
+    {
+        return $this->belongsTo(Departement::class);
+    }
 }

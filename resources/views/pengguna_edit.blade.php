@@ -53,10 +53,10 @@
                         <div class="row mb-3">
                             <label for="departement" class="col-md-4 col-form-label text-md-end">{{ __('Departemen') }}</label>
                             <div class="col-md-6">
-                                <select id="departement" name="departement" class="form-control @error('departement') is-invalid @enderror" required autocomplete="departement" autofocus>
-                                    <option value="none" selected disabled hidden>Pilih Departement</option>
-                                    <option value="Yayasan" @if ($pengguna->departement=='Yayasan') selected @endif)>Yayasan</option>
-                                    <option value="Rektorat" @if ($pengguna->departement=='Rektorat') selected @endif)>Rektorat</option>
+                                <select id="departement" name="departement_id" class="form-control @error('departement') is-invalid @enderror" required autocomplete="departement" autofocus>
+                                @foreach($departement as $value)
+                                    <option value="{{ $value->id }}"{{$pengguna->departement_id == $value->id  ? 'selected' : ''}}>{{ $value->nama}}</option>
+                                @endforeach
                                 </select>
                 
                                 @error('departement')

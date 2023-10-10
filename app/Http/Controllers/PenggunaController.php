@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Departement;
+
 
 class PenggunaController extends Controller
 {
@@ -17,8 +19,8 @@ class PenggunaController extends Controller
     public function index()
     {
         //
-        $pengguna=User::get();
-        return view('pengguna',['daftarpengguna'=>$pengguna]);
+        $pengguna=User::all();
+        return view('pengguna',compact('pengguna'));
     }
 
     /**
@@ -51,8 +53,10 @@ class PenggunaController extends Controller
     public function edit(string $id)
     {
         //
+        $departement=Departement::all();
         $pengguna=User::find($id);
-        return view('pengguna_edit',compact('pengguna'));
+        // dd($departement);
+        return view('pengguna_edit',compact('pengguna','departement'));
         
         
     }
@@ -67,16 +71,15 @@ class PenggunaController extends Controller
             'name' => 'required',
             'email' => 'required',
             'jabatan' => 'required',
-            'departement' => 'required'
+            'departement_id' => 'required'
         ]);
-
+        
         $pengguna->update([
             'name' => $request->name,
             'email' => $request->email,
             'jabatan' => $request->jabatan,
-            'departement' => $request->departement
+            'departement_id' => $request->departement_id
         ]);
-
         return redirect()->route('pengguna.index')->with('message', 'Berhasil Merubah Data');
     }
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DepartementController;
  
 
 /*
@@ -33,3 +34,6 @@ Route::get('statuspengguna/{id}',[PenggunaController::class,'status']);
 
 Route::get('updatepassword',[UpdatePasswordController::class,'edit'])->name('updatepassword');
 Route::put('updatepassword',[UpdatePasswordController::class,'update']);
+
+Route::resource('departement',DepartementController::class);
+Route::get('departementstat/{id}',[DepartementController::class,'status']);

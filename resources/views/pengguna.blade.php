@@ -41,18 +41,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($daftarpengguna as $pengguna)
+                                            @foreach ($pengguna as $value)
                                             <tr>
-                                                <td>{{$pengguna->name}}</td>
-                                                <td>{{$pengguna->email}}</td>
-                                                <td>{{$pengguna->departement}}</td>
-                                                <td>{{$pengguna->jabatan}}</td>
+                                                <td>{{$value->name}}</td>
+                                                <td>{{$value->email}}</td>
+                                                <td>{{$value->departement->nama}}</td>
+                                                <td>{{$value->jabatan}}</td>
                                                 <td>
-                                                    <a href="/statuspengguna/{{$pengguna->id}}" class="btn btn-sm btn-{{$pengguna->status ? 'success' : 'danger'}}">
-                                                      {{$pengguna->status?'Aktif':'Non Aktif'}}
+                                                    <a href="/statuspengguna/{{$value->id}}" class="btn btn-sm btn-{{$value->status ? 'success' : 'danger'}}">
+                                                      {{$value->status?'Aktif':'Non Aktif'}}
                                                     </a>
                                                 </td>
-                                                <td><a href="/pengguna/{{$pengguna->id}}/edit" class="btn mb-1 btn-rounded btn-warning" role="button">Edit</a></td>
+                                                <td><a href="/pengguna/{{$value->id}}/edit" class="btn mb-1 btn-rounded btn-warning" role="button">Edit</a></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -62,6 +62,7 @@
                                                 <th>Email</th>
                                                 <th>Derpartemen</th>
                                                 <th>Jabatan</th>
+                                                <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </tfoot>
