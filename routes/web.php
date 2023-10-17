@@ -6,6 +6,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\AccountController;
  
 
 /*
@@ -37,3 +38,7 @@ Route::put('updatepassword',[UpdatePasswordController::class,'update']);
 
 Route::resource('departement',DepartementController::class);
 Route::get('departementstat/{id}',[DepartementController::class,'status']);
+
+Route::resource('akun',AccountController::class);
+Route::get('akunstat/{id}',[AccountController::class,'status']);
+Route::view('transaksi', '\transaksi/transaksi');

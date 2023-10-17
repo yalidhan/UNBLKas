@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Website Buku Kas UNBL</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="/assets/image/png" sizes="16x16" href="/assets/images/favicon.png">
+    <link rel="icon" type="/assets/image/png" sizes="16x16" href="/assets/images/unbl.png">
     <!-- Custom Stylesheet -->
     <link href="/assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/plugins/sweetalert/css/sweetalert.css" rel="stylesheet">
 
 </head>
 
@@ -127,7 +128,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{route('pengguna.index')}}">Pengguna</a></li>
                             <li><a href="{{route('departement.index')}}">Departemen</a></li>
-                            <li><a href="#">Akun</a></li>
+                            <li><a href="{{route('akun.index')}}">Akun</a></li>
                             <li><a href="#">Anggaran</a></li>
                         </ul>
                     <li class="nav-label">Transaksi</li>
@@ -136,7 +137,7 @@
                             <i class="icon-note menu-icon"></i><span class="nav-text">Transaksi</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="#">Buku Kas</a></li>
+                            <li><a href="/transaksi">Buku Kas</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">Laporan</li>
@@ -184,6 +185,16 @@
     <script src="/assets/plugins/tables/js/jquery.dataTables.min.js"></script>
     <script src="/assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
     <script src="/assets/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+    <script src="/assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+    <script src="/assets/plugins/sweetalert/js/sweetalert.init.js"></script>
+    @if(session()->has('message'))
+        <script>
+            swal("Sukses!", "{{ session()->get('message') }}", "success");
+        </script>
+    <!-- <div class="alert alert-success">
+        <b>{{ session()->get('message') }}</b>
+    </div> -->
+    @endif
 
 </body>
 

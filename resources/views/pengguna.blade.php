@@ -19,11 +19,11 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                            @if(session()->has('message'))
+                            <!-- @if(session()->has('message'))
                                 <div class="alert alert-success">
                                     <b>{{ session()->get('message') }}</b>
                                 </div>
-                            @endif
+                            @endif -->
                             <center>
                                 <h4 class="card-title">Daftar Pengguna</h4>
                                 <a href="{{route('register')}}"><button type="button" class="btn mb-1 btn-rounded btn-primary">Tambah Pengguna</button></a>

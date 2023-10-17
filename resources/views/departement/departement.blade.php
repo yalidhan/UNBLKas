@@ -19,11 +19,11 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                            @if(session()->has('message'))
+                            <!-- @if(session()->has('message'))
                                 <div class="alert alert-success">
                                     <b>{{ session()->get('message') }}</b>
                                 </div>
-                            @endif
+                            @endif -->
                             <center>
                                 <h4 class="card-title">Daftar Departemen</h4>   
                             

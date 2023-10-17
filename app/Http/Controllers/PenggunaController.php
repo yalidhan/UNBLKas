@@ -53,7 +53,8 @@ class PenggunaController extends Controller
     public function edit(string $id)
     {
         //
-        $departement=Departement::all();
+        $departement=Departement::where('status','1')
+        ->get();
         $pengguna=User::find($id);
         // dd($departement);
         return view('pengguna_edit',compact('pengguna','departement'));
