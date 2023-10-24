@@ -42,3 +42,5 @@ Route::get('departementstat/{id}',[DepartementController::class,'status']);
 Route::resource('akun',AccountController::class);
 Route::get('akunstat/{id}',[AccountController::class,'status']);
 Route::view('transaksi', '\transaksi/transaksi');
+Route::view('rincian_transaksi', '\transaksi/rincian_transaksi');
+Route::view('pertanggungjawaban', '\laporan/pertanggungjawaban');

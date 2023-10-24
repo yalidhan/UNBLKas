@@ -11,8 +11,10 @@
     <!-- Custom Stylesheet -->
     <link href="/assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/select2.min.css" rel="stylesheet">
     <link href="/assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/assets/plugins/sweetalert/css/sweetalert.css" rel="stylesheet">
+    <!-- <link href="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet"> -->
 
 </head>
 
@@ -146,7 +148,7 @@
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="#">Lembar Pertanggungjawaban</a></li>
+                            <li><a href="/pertanggungjawaban">Lembar Pertanggungjawaban</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -180,6 +182,7 @@
     <script src="/assets/js/custom.min.js"></script>
     <script src="/assets/js/settings.js"></script>
     <script src="/assets/js/gleek.js"></script>
+    <script src="/assets/js/select2.min.js"></script>
     <script src="/assets/js/styleSwitcher.js"></script>
 
     <script src="/assets/plugins/tables/js/jquery.dataTables.min.js"></script>
@@ -187,6 +190,7 @@
     <script src="/assets/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
     <script src="/assets/plugins/sweetalert/js/sweetalert.min.js"></script>
     <script src="/assets/plugins/sweetalert/js/sweetalert.init.js"></script>
+    <!-- <script src="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script> -->
     @if(session()->has('message'))
         <script>
             swal("Sukses!", "{{ session()->get('message') }}", "success");
@@ -195,6 +199,37 @@
         <b>{{ session()->get('message') }}</b>
     </div> -->
     @endif
+    <script src="/assets/js/jquery.mask.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#nominal_pemasukan').mask('#.##0', {reverse: true});
+            $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
+        })
+    </script>
+    <script>    
+        $(document).ready(function() {
+            $('.akun_rincian').select2();
+        });
+        $('#akun_rincian').select2({
+        dropdownParent: $('#tambah_rincian')
+    });
+    </script>
+    <script>    
+        $(document).ready(function() {
+            $('.akun_pendapatan').select2();
+        });
+        $('#akun_pendapatan').select2({
+        dropdownParent: $('#pemasukan')
+    });
+    </script>
+        <script>    
+        $(document).ready(function() {
+            $('.akun_kas').select2();
+        });
+        $('#akun_kas').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
 
 </body>
 
