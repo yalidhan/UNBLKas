@@ -204,6 +204,7 @@
         $(document).ready(function(){
             $('#nominal_pemasukan').mask('#.##0', {reverse: true});
             $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
+            $('#nominal_transfer').mask('#.##0', {reverse: true});
         })
     </script>
     <script>    

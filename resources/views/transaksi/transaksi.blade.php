@@ -1,5 +1,6 @@
 @extends('master')
 @section('content')
+@php use Carbon\Carbon; @endphp
         <!--**********************************
             Content body start
         ***********************************-->
@@ -21,7 +22,7 @@
                             <div class="card-body">
                             <h4 class="card-title">Buku Kas</h4>
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <form action="#">
                                             <div class="form-group">
                                                 <label for="periode" class="col-form-label">Periode:</label>
@@ -33,7 +34,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="col-md-10 align-self-center">
+                                    <div class="col-md-9 align-self-center">
                                             <!-- <button type="button" class="btn mb-1 btn-primary">pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></span></button> -->
                                             <!-- <div class="bootstrap-modal"> -->
                                                 <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#pemasukan">Pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></button>
@@ -46,7 +47,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form action="/pemasukan" method="POST">
+                                                                <form action="/transaksi" method="POST">
                                                                 @csrf
                                                                         <div class="form-group">
                                                                             <label for="tgl_pemasukan" class="col-form-label">Tanggal:</label>
@@ -62,24 +63,24 @@
                                                                         <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan</label>
                                                                         <select id="akun_pendapatan" data-width="100%" name="akun_pendapatan" class="form-control" required>
                                                                             <option value="" selected disabled hidden>Pilih Akun</option>
-                                                                            <option value="01">Pendapatan Usaha</option>
-                                                                            <option value="02">Pendapatan UKT</option>
-                                                                            <option value="03">Pendapatan SKS</option>
-                                                                            <option value="04">Pendapatan SPP</option>
-                                                                            <option value="05">Pendapatan Sewa</option>
-                                                                            <option value="06">Pendapatan Gedung</option>
+                                                                            @foreach($accountlist as $accountvalue)
+                                                                                <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea required name="keterangan_pemasukan" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_pemasukan" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label for="nominal_transfer" class="col-form-label">Nominal Pemasukan:</label>
-                                                                        <input required name="nominal_transfer" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
+                                                                        <label for="nominal_pemasukan" class="col-form-label">Nominal Pemasukan:</label>
+                                                                        <input required name="nominal_pemasukan" type="text" class="form-control" id="nominal_pemasukan" placeholder="Rp">
                                                                     </div>
+                                                                    <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement">
+                                                                    <input type="hidden" value="{{auth()->user()->id}}" name="user_id">
+                                                                    <input type="hidden" value="1" name="dk">
                                                             </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -181,7 +182,7 @@
                                                                         <textarea required name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label for="nominal_transfer" class="col-form-label">Nominal Pemasukan:</label>
+                                                                        <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
                                                                         <input required name="nominal_transfer" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
                                                                     </div>
                                                                     </div>
@@ -197,12 +198,14 @@
                                     </div>
                                 </div>
                             </br>
+                                <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{Carbon::now()->isoFormat('MMMM Y')}}  </h4></center>
                                 <div class="table-responsive"> 
                                     <table class="table table-bordered table-striped verticle-middle">
                                         <thead>
                                             <tr>
                                                 <th scope="col">No</th>
                                                 <th scope="col">No.SPB</th>
+                                                <th scope="col">Tanggal</th>
                                                 <th scope="col">Keterangan</th>
                                                 <th scope="col">Debet</th>
                                                 <th scope="col">Kredit</th>
@@ -211,37 +214,38 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php $saldo = 15000000 ; @endphp
                                             <tr>
-                                                <td colspan="5"><b>Saldo Awal</b></td>
-                                                <td colspan="2" style="text-align:left"><b>Rp 100.000</b></td>
+                                                <td colspan="6"><b>Saldo Awal</b></td>
+                                                <td style="text-align:left;white-space: nowrap;" ><b>Rp {{number_format($saldo,0,',','.')}}</b></td>
                                             </tr>
+                                            @php $no = 1 ; @endphp
+                                            @foreach ($transactionlist as $transaction)
                                             <tr>
-                                                <td>1</td>
-                                                <td>040/YYS/2023</td>
-                                                <td>Dropping Saldo Rektorat</td>
-                                                <td>Rp 10.000.000</td>
-                                                <td>0</td>
-                                                <td>Rp 10.000.000</td>
-                                                <td><span><a href="/rincian_transaksi" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></a></span></td>
+                                                <td>{{$no++}}</td>
+                                                <td>{{$transaction->no_spb}}</td>
+                                                <td>{{\Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y')}}</td>
+                                                <td>{{$transaction->keterangan}}</td>
+                                                @if ($transaction->dk==1)
+                                                    <td style="white-space: nowrap;"> Rp {{number_format($transaction->total,0,',','.'),
+                                                        $saldo=$saldo+$transaction->total}}</td>
+                                                @else 
+                                                    <td style="white-space: nowrap;">Rp 0</td>
+                                                @endif
+                                                @if ($transaction->dk==2)
+                                                    <td style="white-space: nowrap;"> Rp {{number_format($transaction->total,0,',','.'),
+                                                        $saldo=$saldo-$transaction->total}}</td>
+                                                @else 
+                                                    <td style="white-space: nowrap;">Rp 0</td>
+                                                @endif
+                                                <td style="white-space: nowrap;">Rp {{number_format($saldo,0,',','.')}}</td>
+                                                <td><span><a href="/rincian_transaksi" data-toggle="tooltip" data-placement="top" title="Rincian">
+                                                    <i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus">
+                                                    <i class="fa fa-close color-danger"></i></a></span>
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>10/REKTORAT/2023</td>
-                                                <td>Pembelian ATK</td>
-                                                <td>0</td>
-                                                <td>Rp 2.000.000</td>
-                                                <td>Rp 8.000.000</td>
-                                                <td><span><a href="#" data-toggle="tooltip" data-placement="top" title="Detail"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></a></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>11/REKTORAT/2023</td>
-                                                <td>Pembayaran Tagihan Listrik</td>
-                                                <td>0</td>
-                                                <td>Rp 5.000.000</td>
-                                                <td>Rp 3.000.000</td>
-                                                <td><span><a href="#" data-toggle="tooltip" data-placement="top" title="Detail"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></a></span></td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
