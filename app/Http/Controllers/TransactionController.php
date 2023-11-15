@@ -20,12 +20,20 @@ class TransactionController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {
         //
+        if ($request->filled('periode')){
+            $date=explode('-',$request->periode);
+            $month=$date[1];
+            $year=$date[0];
+        };
+        if ($request->input('periode')==''){
+            $current=Carbon::now();
+            $month=$current->month;
+            $year=$current->year;
+        }
         $departement_id=auth()->user()->departement_id;
-        $current=Carbon::now();
-        $month=$current->month;
         \DB::statement("SET SQL_MODE=''");
         $transaction=DB::select(
             "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,   
@@ -33,13 +41,18 @@ class TransactionController extends Controller
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
-            WHERE departement_id=$departement_id and month (tanggal)=$month GROUP BY transaction_id"
+            WHERE departement_id=$departement_id and month (tanggal)=$month
+                and year (tanggal)=$year
+            GROUP BY 
+                transaction_id
+            ORDER BY 
+                tanggal ASC,
+                id ASC"
         );
-        // dd($transaction);
-        // $transaction=Transaction::whereMonth('tanggal',$month)->get();
-        $account=Account::get()->sortBy('no');
+        // dd($year,$month);
+        $account=Account::get()->where('tipe','=','Pendapatan')->sortBy('no');
         return view('\transaksi/transaksi',['transactionlist'=>$transaction],
-            ['accountlist'=>$account]);
+            ['accountlist'=>$account])->with ('year',$year)->with('month',$month);
 
     }
 
@@ -57,6 +70,7 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         //
+        
         $request->validate([
             'tgl_pemasukan'=>'required',
             'kode_pemasukan'=>'required',
@@ -72,6 +86,7 @@ class TransactionController extends Controller
             'departement_id'=>$request->id_departement,
             'user_id'=>$request->user_id,
         ]);
+        
         $last_transaction=Transaction::orderBy('id','desc')->first();
         Transaction_detail::create([
             'transaction_id'=>$last_transaction->id,

@@ -45,6 +45,7 @@ Route::resource('akun',AccountController::class);
 Route::get('akunstat/{id}',[AccountController::class,'status']);
 
 Route::resource('transaksi',TransactionController::class);
+// Route::get('transaksi/month/{periode}',[TransactionController::class,'monthFilter']);
 
 // Route::view('transaksi', '\transaksi/transaksi');
 Route::view('rincian_transaksi', '\transaksi/rincian_transaksi');

@@ -23,13 +23,14 @@
                             <h4 class="card-title">Buku Kas</h4>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <form action="#">
+                                        <form action="transaksi" method="get">    
+                                                           
                                             <div class="form-group">
                                                 <label for="periode" class="col-form-label">Periode:</label>
                                                     <div class="input-group">
                                                         <input id="periode" type="month" name="periode" class="form-control">
                                                     </div>   
-                                                </br><button type="button" class="btn mb-1 btn-success">Filter<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                                </br><button type="submit" class="btn mb-1 btn-success">Filter<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
                                             </button>
                                             </div>
                                         </form>
@@ -57,7 +58,7 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="kode_pemasukan" class="col-form-label">Kode Pemasukan:</label>
-                                                                        <input name="kode_pemasukan" type="text" class="form-control" id="kode_pemasukan" placeholder="No Cek/No Ref/No Record/Kode Transaksi">
+                                                                        <input required name="kode_pemasukan" type="text" class="form-control" id="kode_pemasukan" placeholder="No Cek/No Ref/No Record/Kode Transaksi">
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan</label>
@@ -198,7 +199,7 @@
                                     </div>
                                 </div>
                             </br>
-                                <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{Carbon::now()->isoFormat('MMMM Y')}}  </h4></center>
+                                <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{\Carbon\Carbon::parse('01-'.$month.'-'.$year.'')->format('F Y')}} </h4></center>
                                 <div class="table-responsive"> 
                                     <table class="table table-bordered table-striped verticle-middle">
                                         <thead>
@@ -217,7 +218,7 @@
                                             @php $saldo = 15000000 ; @endphp
                                             <tr>
                                                 <td colspan="6"><b>Saldo Awal</b></td>
-                                                <td style="text-align:left;white-space: nowrap;" ><b>Rp {{number_format($saldo,0,',','.')}}</b></td>
+                                                <td colspan="2" style="text-align:left;white-space: nowrap;" ><b>Rp {{number_format($saldo,0,',','.')}}</b></td>
                                             </tr>
                                             @php $no = 1 ; @endphp
                                             @foreach ($transactionlist as $transaction)
