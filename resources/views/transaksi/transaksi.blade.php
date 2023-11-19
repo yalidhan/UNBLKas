@@ -64,7 +64,7 @@
                                                                         <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan</label>
                                                                         <select id="akun_pendapatan" data-width="100%" name="akun_pendapatan" class="form-control" required>
                                                                             <option value="" selected disabled hidden>Pilih Akun</option>
-                                                                            @foreach($accountlist as $accountvalue)
+                                                                            @foreach($accountlistPendapatan as $accountvalue)
                                                                                 <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
                                                                             @endforeach
                                                                         </select>
@@ -82,6 +82,7 @@
                                                                     <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement">
                                                                     <input type="hidden" value="{{auth()->user()->id}}" name="user_id">
                                                                     <input type="hidden" value="1" name="dk">
+                                                                    <input type="hidden" value="pemasukan" name="tp_trx">
                                                             </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -104,7 +105,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form action="/pengeluaran" method="POST">
+                                                                    <form action="/transaksi" method="POST">
                                                                     @csrf
                                                                     <div class="form-group">
                                                                             <label for="tgl_pengeluaran" class="col-form-label">Tanggal:</label>
@@ -113,8 +114,8 @@
                                                                             </div>
                                                                         </div>
                                                                     <div class="form-group">
-                                                                        <label for="no_spb_transfer" class="col-form-label">No.SPB:</label>
-                                                                        <input required name="no_spb_transfer" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                                        <label for="no_spb_pengeluaran" class="col-form-label">No.SPB:</label>
+                                                                        <input required name="no_spb_pengeluaran" type="text" class="form-control" id="no_spb_pengeluaran" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
@@ -127,6 +128,9 @@
                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                                                             <button type="submit" class="btn btn-primary">Simpan</button>
                                                                         </div>
+                                                                        <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement">
+                                                                        <input type="hidden" value="{{auth()->user()->id}}" name="user_id">
+                                                                        <input type="hidden" value="pengeluaran" name="tp_trx">
                                                                     </form>
                                                             </div>
                                                         </div>
@@ -152,24 +156,39 @@
                                                                                 <p class="card-text">Saldo : Rp 50.000.000 </p>
                                                                             </div>
                                                                         </div> -->
-                                                                        <form action="#" method="POST">
+                                                                        <form action="transaksi" method="POST">
                                                                         @csrf
                                                                         <div class="form-group">
-                                                                            <label for="akun_kas" class="col-form-label">Kas Departemen Tujuan:</label>
-                                                                            <select id="akun_kas" data-width="100%" name="akun_kas" class="form-control" required>
-                                                                                <option value="" selected disabled hidden>Pilih Akun</option>
-                                                                                <option value="01">Kas Yayasan</option>
-                                                                                <option value="02">Kas Rektorat</option>
-                                                                                <option value="03">Kas Fakultas Farmasi</option>
-                                                                                <option value="04">Kas Fakultas Humaniora</option>
-                                                                                <option value="05">Kas Fakultas Kesehatan</option>
-                                                                                <option value="06">Kas Prodi D3 Farmasi</option>
+                                                                            <label for="akun_kas_awal" class="col-form-label">Kas Departemen Awal:</label>
+                                                                            <select id="akun_kas_awal" data-width="100%" name="akun_kas_awal" class="form-control" required>
+                                                                            <option value="" selected disabled hidden>Pilih Akun Kas</option>
+                                                                                @foreach($accountlistHarta as $accountvalue)
+                                                                                    <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>                                                                        
+                                                                        <div class="form-group">
+                                                                            <label for="akun_kas_tujuan" class="col-form-label">Kas Departemen Tujuan:</label>
+                                                                            <select id="akun_kas_tujuan" data-width="100%" name="akun_kas_tujuan" class="form-control" required>
+                                                                            <option value="" selected disabled hidden>Pilih Akun Kas</option>
+                                                                                @foreach($accountlistHarta as $accountvalue)
+                                                                                    <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                                                @endforeach
                                                                             </select>
                                                                         </div>
+                                                                        <div class="form-group">
+                                                                            <label for="departement_tujuan" class="col-form-label">Departemen Tujuan:</label>
+                                                                            <select id="departement_tujuan" data-width="100%" name="departement_tujuan" class="form-control" required>
+                                                                                <option value="" selected disabled hidden>Pilih Departement Tujuan</option>
+                                                                                @foreach($listDepartement as $departementvalue)
+                                                                                    <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>                                                                        
                                                                             <div class="form-group">
                                                                             <label for="tgl_transfer" class="col-form-label">Tanggal:</label>
                                                                             <div class="input-group">
-                                                                                <input id="tgl_transfer" required type="date" name="tgl_pengeluaran" class="form-control" placeholder="mm/dd/yyyy">
+                                                                                <input id="tgl_transfer" required type="date" name="tgl_transfer" class="form-control" placeholder="mm/dd/yyyy">
                                                                             </div>
                                                                         </div>
                                                                     <div class="form-group">
@@ -180,13 +199,18 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea required name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
                                                                         <input required name="nominal_transfer" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
                                                                     </div>
                                                                     </div>
+                                                                        <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement_pengirim">
+                                                                        <input type="hidden" value="{{auth()->user()->id}}" name="user_id">
+                                                                        <input type="hidden" value="transfer" name="tp_trx">
+                                                                        <input type="hidden" value="2" name="dk_1">
+                                                                        <input type="hidden" value="1" name="dk_2">
                                                                             <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -215,7 +239,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php $saldo = 15000000 ; @endphp
+                                            @php $saldo = 0 ; @endphp
+                                            @foreach ($saldoDebitList as $saldoDebit)
+                                                    @php $saldo=$saldo+$saldoDebit->total_debit; @endphp
+                                            @endforeach
+                                            @foreach ($saldoKreditList as $saldoKredit)
+                                                    @php $saldo=$saldo-$saldoKredit->total_kredit; @endphp
+                                            @endforeach
                                             <tr>
                                                 <td colspan="6"><b>Saldo Awal</b></td>
                                                 <td colspan="2" style="text-align:left;white-space: nowrap;" ><b>Rp {{number_format($saldo,0,',','.')}}</b></td>

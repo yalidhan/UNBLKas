@@ -91,7 +91,7 @@ class RegisterController extends Controller
 }
 public function showRegistrationForm()
 {
-    $departement=Departement::all();
+    $departement=Departement::where('status','=','1')->get();
     return view('auth.register',compact('departement'));
 }
 }

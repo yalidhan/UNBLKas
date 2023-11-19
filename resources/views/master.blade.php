@@ -77,7 +77,7 @@
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <span class="activity active"></span>
-                                <img src="/assets/images/user/1.png" height="40" width="40" alt="">
+                                <img src="/assets/images/user/form-user.png" height="40" width="40" alt="">
                             </div>
                             <div class="drop-down dropdown-profile   dropdown-menu">
                                 <div class="dropdown-content-body">
@@ -223,11 +223,27 @@
         dropdownParent: $('#pemasukan')
     });
     </script>
+    <script>    
+        $(document).ready(function() {
+            $('.akun_kas_tujuan').select2();
+        });
+        $('#akun_kas_tujuan').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
         <script>    
         $(document).ready(function() {
-            $('.akun_kas').select2();
+            $('.akun_kas_awal').select2();
         });
-        $('#akun_kas').select2({
+        $('#akun_kas_awal').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
+    <script>    
+        $(document).ready(function() {
+            $('.departement_tujuan').select2();
+        });
+        $('#departement_tujuan').select2({
         dropdownParent: $('#transfer')
     });
     </script>
