@@ -36,12 +36,15 @@ class TransactionController extends Controller
         $departement_id=auth()->user()->departement_id;
         \DB::statement("SET SQL_MODE=''");
         $transaction=DB::select(
-            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,   
-                d.dk,sum(d.nominal) AS total
+            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan, t.no_trf, t.user_id, 
+                d.dk,sum(d.nominal) AS total,
+                u.name
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
-            WHERE departement_id=$departement_id and month (tanggal)=$month
+            LEFT JOIN users u
+            ON t.user_id = u.id
+            WHERE t.departement_id=$departement_id and month (tanggal)=$month
                 and year (tanggal)=$year
             GROUP BY 
                 transaction_id
@@ -198,6 +201,26 @@ class TransactionController extends Controller
     public function show(string $id)
     {
         //
+        \DB::statement("SET SQL_MODE=''");
+        $showTransaction=DB::select(
+            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,
+                dp.nama AS departement,sum(d.nominal) AS total
+            FROM transactions t
+            LEFT JOIN transaction_details d
+            ON t.id = d.transaction_id
+            LEFT JOIN departements dp
+            ON t.departement_id = dp.id
+            WHERE transaction_id=$id"
+        );
+        $showDetailTransaction=DB::select(
+            "SELECT dt.nominal, a.nama, a.tipe
+            FROM transaction_details dt
+            LEFT JOIN accounts a
+            ON dt.account_id = a.id
+            WHERE transaction_id = $id;"
+        );
+        $accountList=Account::get()->sortBy('no');
+        return view('\transaksi\rincian_transaksi',compact('showTransaction','showDetailTransaction','accountList'));
     }
 
     /**
@@ -211,9 +234,20 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Transaction $id)
     {
         //
+        $request->validate([
+            'tgl_edit' => 'required',
+            'no_spb_edit' => 'required',
+            'keterangan_edit' => 'required'
+        ]);
+        $id->update([
+            'tanggal'=>$request->tgl_edit,
+            'no_spb'=>$request->no_spb_edit,
+            'keterangan'=>$request->keterangan_edit
+        ]);
+        return redirect::back()->with('message', 'Berhasil Mengubah Data Transaksi');
     }
 
     /**
@@ -222,5 +256,13 @@ class TransactionController extends Controller
     public function destroy(string $id)
     {
         //
+        // dd(str_contains($id,'TF.'));
+        if (str_contains($id,'TF.')){
+            Transaction::where('no_trf',$id)->delete();
+        }
+        else {
+            Transaction::where('id',$id)->delete();
+        }
+        return redirect::back()->with ('message','Berhasil menghapus data Transaksi');
     }
 }

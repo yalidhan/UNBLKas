@@ -13,7 +13,6 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/select2.min.css" rel="stylesheet">
     <link href="/assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/assets/plugins/sweetalert/css/sweetalert.css" rel="stylesheet">
     <!-- <link href="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet"> -->
 
 </head>
@@ -188,17 +187,32 @@
     <script src="/assets/plugins/tables/js/jquery.dataTables.min.js"></script>
     <script src="/assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
     <script src="/assets/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
-    <script src="/assets/plugins/sweetalert/js/sweetalert.min.js"></script>
-    <script src="/assets/plugins/sweetalert/js/sweetalert.init.js"></script>
+    <script src="/assets/js/sweetalert.min.js"></script>
     <!-- <script src="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script> -->
     @if(session()->has('message'))
         <script>
-            swal("Sukses!", "{{ session()->get('message') }}", "success");
+            Swal.fire("Sukses!", "{{ session()->get('message') }}", "success");
         </script>
-    <!-- <div class="alert alert-success">
-        <b>{{ session()->get('message') }}</b>
-    </div> -->
     @endif
+    <script type="text/javascript">
+        $(document).on('click', '#submitForm', function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+                title: "Anda Yakin Untuk Menghapus Data Ini?",
+                text: "Data Yang Telah Dihapus Tidak Dapat Dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                form.submit();
+            }
+        });
+    });
+    </script>
     <script src="/assets/js/jquery.mask.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){

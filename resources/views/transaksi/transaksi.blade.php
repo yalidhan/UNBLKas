@@ -225,7 +225,7 @@
                             </br>
                                 <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{\Carbon\Carbon::parse('01-'.$month.'-'.$year.'')->format('F Y')}} </h4></center>
                                 <div class="table-responsive"> 
-                                    <table class="table table-bordered table-striped verticle-middle">
+                                    <table class="table table-bordered table-striped verticle-middle" style="color: #222222;font-size: 1rem;">
                                         <thead>
                                             <tr>
                                                 <th scope="col">No</th>
@@ -256,7 +256,7 @@
                                                 <td>{{$no++}}</td>
                                                 <td>{{$transaction->no_spb}}</td>
                                                 <td>{{\Carbon\Carbon::parse($transaction->tanggal)->format('d/m/Y')}}</td>
-                                                <td>{{$transaction->keterangan}}</td>
+                                                <td>{{$transaction->keterangan}} <span style="font-size:11px;color: #8898aa !important;"><br>input by {{$transaction->name}}</span></td>
                                                 @if ($transaction->dk==1)
                                                     <td style="white-space: nowrap;"> Rp {{number_format($transaction->total,0,',','.'),
                                                         $saldo=$saldo+$transaction->total}}</td>
@@ -270,10 +270,23 @@
                                                     <td style="white-space: nowrap;">Rp 0</td>
                                                 @endif
                                                 <td style="white-space: nowrap;">Rp {{number_format($saldo,0,',','.')}}</td>
-                                                <td><span><a href="/rincian_transaksi" data-toggle="tooltip" data-placement="top" title="Rincian">
-                                                    <i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                    <i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus">
-                                                    <i class="fa fa-close color-danger"></i></a></span>
+                                                <td><span style="display: flex;">
+                                                            <a href="{{route('transaksi.show',$transaction->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @if (auth()->user()->id==$transaction->user_id)
+                                                            <form
+                                                                @if ($transaction->no_trf=="")
+                                                                    action="{{route('transaksi.destroy',$transaction->id)}}"
+                                                                @else
+                                                                    action="{{route('transaksi.destroy',"$transaction->no_trf")}}"
+                                                                @endif
+                                                                method="POST"> 
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                            </form>   
+                                                    @else
+                                                    @endif         
+                                                    </span>                         
                                                 </td>
                                             </tr>
                                             @endforeach
