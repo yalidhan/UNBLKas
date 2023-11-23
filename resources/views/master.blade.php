@@ -218,6 +218,7 @@
         $(document).ready(function(){
             $('#nominal_pemasukan').mask('#.##0', {reverse: true});
             $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
+            $('#nominal_tambah_rincian_edit').mask('#.##0', {reverse: true});
             $('#nominal_transfer').mask('#.##0', {reverse: true});
         })
     </script>
@@ -227,6 +228,14 @@
         });
         $('#akun_rincian').select2({
         dropdownParent: $('#tambah_rincian')
+    });
+    </script>
+        <script>    
+        $(document).ready(function() {
+            $('.akun_rincian_edit').select2();
+        });
+        $('#akun_rincian_edit').select2({
+        dropdownParent: $('#editRincian')
     });
     </script>
     <script>    

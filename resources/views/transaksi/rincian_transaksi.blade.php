@@ -55,6 +55,7 @@
                                     </table>
                         </div>
                         <div class="card-footer text-muted">
+                            @if (auth()->user()->id==$showTransaction[0]->user_id)
                             <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#edit"><span class="btn-icon-left" style="background: #ffbe88;"><i class="fa fa-edit color-warning"></i></span>Edit Data</button>
                                 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -92,7 +93,9 @@
                                                 </form>
                                         </div>
                                     </div>
-                                </div>                            
+                                </div>   
+                                @else
+                                    @endif                         
                         </div>
                     </div>
                 </div>
@@ -113,14 +116,60 @@
                                 <td>{{$no++}}</td>
                                 <td>{{$value->tipe}} || {{$value->nama}}</td>
                                 <td> Rp {{number_format($value->nominal,0,',','.')}}</td>
-                                <td><span><a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></a></span></td>
+                                <td><span style="display: flex;">
+                                    @if (auth()->user()->id==$showTransaction[0]->user_id)
+                                        <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
+                                        <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="modal fade" id="editRincian" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editRincianModalLabel">Edit Data Rincian</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{route('transaksi.update',$showTransaction[0]->id)}}" method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                                <div class="form-group">
+                                                                    <label for="akun_rincian_edit" class="col-form-label">Akun</label>
+                                                                    <select id="akun_rincian_edit" data-width="100%" name="akun_rincian_edit" class="form-control" required>
+                                                                        <option value="" selected disabled hidden>Pilih Akun</option>
+                                                                        @foreach($accountList as $accountvalue)
+                                                                        <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="nominal_tambah_rincian_edit" class="col-form-label">Nominal :</label>
+                                                                    <input required name="nominal_tambah_rincian_edit" type="text" class="form-control" id="nominal_tambah_rincian_edit" placeholder="Rp">
+                                                                </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                                </div>
+                                                            </form>
+                                                    </div>
+                                                </div>
+                                            </div>                                 
+                                        <form method="POST" action="{{route('destroyRincian',$value->id)}}"> 
+                                            @csrf
+                                            @method('DELETE')
+                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                        </form>   
+                                    @else
+                                    @endif         
+                                    </span>                         
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
                 <center>
-                    <a href="{{ URL::previous() }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
+                    <a href="{{ route('transaksi.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
                     <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
                 </center>
                     <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
@@ -132,8 +181,8 @@
                                             </button>
                                         </div>
                                             <div class="modal-body">
-                                                <form action="#" method="POST" id="forms">
-                                                @csrf
+                                                <form action="{{route('storeRincian')}}" method="POST" id="forms">
+                                                    @csrf
                                                     <div class="form-group">
                                                         <label for="akun_rincian" class="col-form-label">Akun</label>
                                                         <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>
@@ -147,6 +196,8 @@
                                                         <label for="nominal_tambah_rincian" class="col-form-label">Nominal :</label>
                                                         <input required name="nominal_tambah_rincian" type="text" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
                                                     </div>
+                                                    <input type="hidden" name="transaction_id" value="{{$showTransaction[0]->id}}">
+                                                    <input type="hidden" name="dk" value="2">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

@@ -190,7 +190,7 @@ class TransactionController extends Controller
                 'nominal'=>$nominal_transfer_int,
                 'dk'=>$request->dk_2,
             ]);}
-            return redirect::back()->with ('message','Berhasil menambahkan data Transaksi');
+        return redirect::back()->with ('message','Berhasil menambahkan data Transaksi');
         
     }
 
@@ -203,7 +203,7 @@ class TransactionController extends Controller
         //
         \DB::statement("SET SQL_MODE=''");
         $showTransaction=DB::select(
-            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,
+            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,t.user_id,
                 dp.nama AS departement,sum(d.nominal) AS total
             FROM transactions t
             LEFT JOIN transaction_details d
@@ -213,7 +213,7 @@ class TransactionController extends Controller
             WHERE transaction_id=$id"
         );
         $showDetailTransaction=DB::select(
-            "SELECT dt.nominal, a.nama, a.tipe
+            "SELECT dt.nominal, a.nama, a.tipe,dt.id
             FROM transaction_details dt
             LEFT JOIN accounts a
             ON dt.account_id = a.id
@@ -234,7 +234,7 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $id)
+    public function update(Request $request, $id)
     {
         //
         $request->validate([
@@ -242,11 +242,16 @@ class TransactionController extends Controller
             'no_spb_edit' => 'required',
             'keterangan_edit' => 'required'
         ]);
-        $id->update([
-            'tanggal'=>$request->tgl_edit,
-            'no_spb'=>$request->no_spb_edit,
-            'keterangan'=>$request->keterangan_edit
-        ]);
+        $transaction = Transaction::find($id);
+        $transaction->tanggal = $request->tgl_edit;
+        $transaction->no_spb = $request->no_spb_edit;
+        $transaction->keterangan = $request->keterangan_edit;
+        $transaction->update();
+        // $transaction>update([
+        //     'tanggal'=>$request->tgl_edit,
+        //     'no_spb'=>$request->no_spb_edit,
+        //     'keterangan'=>$request->keterangan_edit
+        // ]);
         return redirect::back()->with('message', 'Berhasil Mengubah Data Transaksi');
     }
 
@@ -264,5 +269,31 @@ class TransactionController extends Controller
             Transaction::where('id',$id)->delete();
         }
         return redirect::back()->with ('message','Berhasil menghapus data Transaksi');
+    }
+
+    public function destroyRincian(string $id)
+    {
+        Transaction_detail::where('id',$id)->delete();
+        return redirect::back()->with('message','Berhasil menghapus rincian Transaksi');
+    }
+
+    public function storeRincian(Request $request)
+    {
+        $request->validate([
+            'akun_rincian'=>'required',
+            'nominal_tambah_rincian'=>'required',
+            'transaction_id'=>'required',
+            'dk'=>'required'
+        ]);
+        $nominal_rincian_int=$request->nominal_tambah_rincian;
+        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+        
+        Transaction_detail::create([
+            'transaction_id'=>$request->transaction_id,
+            'account_id'=>$request->akun_rincian,
+            'nominal'=>$nominal_rincian_int,
+            'dk'=>$request->dk,
+        ]);
+        return redirect::back()->with ('message','Berhasil menmbah rincian transaksi');
     }
 }
