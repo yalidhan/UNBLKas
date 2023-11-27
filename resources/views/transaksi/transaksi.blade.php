@@ -38,7 +38,11 @@
                                     <div class="col-md-9 align-self-center">
                                             <!-- <button type="button" class="btn mb-1 btn-primary">pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></span></button> -->
                                             <!-- <div class="bootstrap-modal"> -->
-                                                <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#pemasukan">Pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></button>
+                                                @if (auth()->user()->departement_id==1)
+                                                    <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#pemasukan">Pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></button>
+                                                @else
+                                                
+                                                @endif
                                                 <div class="modal fade bd-example-modal-lg" id="pemasukan" tabindex="-1" role="dialog" aria-labelledby="pemasukanModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
@@ -271,19 +275,23 @@
                                                 @endif
                                                 <td style="white-space: nowrap;">Rp {{number_format($saldo,0,',','.')}}</td>
                                                 <td><span style="display: flex;">
+                                                        @if ($transaction->no_trf=="")
                                                             <a href="{{route('transaksi.show',$transaction->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    @if (auth()->user()->id==$transaction->user_id)
-                                                            <form
-                                                                @if ($transaction->no_trf=="")
-                                                                    action="{{route('transaksi.destroy',$transaction->id)}}"
-                                                                @else
-                                                                    action="{{route('transaksi.destroy',"$transaction->no_trf")}}"
-                                                                @endif
-                                                                method="POST"> 
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                                            </form>   
+                                                        @else
+                                                            <a href="{{route('showTransfer',$transaction->no_trf)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        @endif
+                                                        @if (auth()->user()->id==$transaction->user_id)
+                                                        <form
+                                                            @if ($transaction->no_trf=="")
+                                                                action="{{route('transaksi.destroy',$transaction->id)}}"
+                                                            @else
+                                                                action="{{route('transaksi.destroy',"$transaction->no_trf")}}"
+                                                            @endif
+                                                            method="POST"> 
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                        </form>   
                                                     @else
                                                     @endif         
                                                     </span>                         
@@ -304,4 +312,57 @@
             Content body end
         ***********************************-->
 @endsection
+@push ('transaksi-script')
+<script type="text/javascript">
+        $(document).on('click', '#submitForm', function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+                title: "Anda Yakin Untuk Menghapus Data Ini?",
+                text: "Data Yang Telah Dihapus Tidak Dapat Dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                form.submit();
+            }
+        });
+    });
+    </script>
+        <script>    
+        $(document).ready(function() {
+            $('.akun_pendapatan').select2();
+        });
+        $('#akun_pendapatan').select2({
+        dropdownParent: $('#pemasukan')
+    });
+    </script>
+    <script>    
+        $(document).ready(function() {
+            $('.akun_kas_tujuan').select2();
+        });
+        $('#akun_kas_tujuan').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
+        <script>    
+        $(document).ready(function() {
+            $('.akun_kas_awal').select2();
+        });
+        $('#akun_kas_awal').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
+    <script>    
+        $(document).ready(function() {
+            $('.departement_tujuan').select2();
+        });
+        $('#departement_tujuan').select2({
+        dropdownParent: $('#transfer')
+    });
+    </script>
+@endpush
 

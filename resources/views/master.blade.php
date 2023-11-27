@@ -189,87 +189,25 @@
     <script src="/assets/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
     <script src="/assets/js/sweetalert.min.js"></script>
     <!-- <script src="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script> -->
+    
     @if(session()->has('message'))
         <script>
             Swal.fire("Sukses!", "{{ session()->get('message') }}", "success");
         </script>
     @endif
-    <script type="text/javascript">
-        $(document).on('click', '#submitForm', function(e){
-        e.preventDefault();
-        var form = $(this).parents('form');
-        Swal.fire({
-                title: "Anda Yakin Untuk Menghapus Data Ini?",
-                text: "Data Yang Telah Dihapus Tidak Dapat Dikembalikan!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                form.submit();
-            }
-        });
-    });
-    </script>
+    @stack('transaksi-script')
     <script src="/assets/js/jquery.mask.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('#nominal_pemasukan').mask('#.##0', {reverse: true});
-            $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
-            $('#nominal_tambah_rincian_edit').mask('#.##0', {reverse: true});
+            // $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
+            // $('#nominal_tambah_rincian_edit').mask('#.##0', {reverse: true});
             $('#nominal_transfer').mask('#.##0', {reverse: true});
+            @stack('nominal-mask')
         })
     </script>
-    <script>    
-        $(document).ready(function() {
-            $('.akun_rincian').select2();
-        });
-        $('#akun_rincian').select2({
-        dropdownParent: $('#tambah_rincian')
-    });
-    </script>
-        <script>    
-        $(document).ready(function() {
-            $('.akun_rincian_edit').select2();
-        });
-        $('#akun_rincian_edit').select2({
-        dropdownParent: $('#editRincian')
-    });
-    </script>
-    <script>    
-        $(document).ready(function() {
-            $('.akun_pendapatan').select2();
-        });
-        $('#akun_pendapatan').select2({
-        dropdownParent: $('#pemasukan')
-    });
-    </script>
-    <script>    
-        $(document).ready(function() {
-            $('.akun_kas_tujuan').select2();
-        });
-        $('#akun_kas_tujuan').select2({
-        dropdownParent: $('#transfer')
-    });
-    </script>
-        <script>    
-        $(document).ready(function() {
-            $('.akun_kas_awal').select2();
-        });
-        $('#akun_kas_awal').select2({
-        dropdownParent: $('#transfer')
-    });
-    </script>
-    <script>    
-        $(document).ready(function() {
-            $('.departement_tujuan').select2();
-        });
-        $('#departement_tujuan').select2({
-        dropdownParent: $('#transfer')
-    });
-    </script>
+    @stack('detail_transaksi-script')
+    @stack('edit_transfer-script')
 
 </body>
 

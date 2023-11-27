@@ -213,13 +213,26 @@ class TransactionController extends Controller
             WHERE transaction_id=$id"
         );
         $showDetailTransaction=DB::select(
-            "SELECT dt.nominal, a.nama, a.tipe,dt.id
+            "SELECT dt.nominal, a.nama,a.id as account_id, a.tipe,dt.id, dt.dk
             FROM transaction_details dt
             LEFT JOIN accounts a
             ON dt.account_id = a.id
             WHERE transaction_id = $id;"
         );
-        $accountList=Account::get()->sortBy('no');
+        if ($showDetailTransaction){
+            $dk=$showDetailTransaction[0]->dk;
+        }
+        else{
+            $dk=2;
+        }
+        
+        if ($dk==1){
+            $accountList=Account::where('tipe','=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+        }
+        else{
+            $accountList=Account::where('tipe','!=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+        }
+        
         return view('\transaksi\rincian_transaksi',compact('showTransaction','showDetailTransaction','accountList'));
     }
 
@@ -247,11 +260,7 @@ class TransactionController extends Controller
         $transaction->no_spb = $request->no_spb_edit;
         $transaction->keterangan = $request->keterangan_edit;
         $transaction->update();
-        // $transaction>update([
-        //     'tanggal'=>$request->tgl_edit,
-        //     'no_spb'=>$request->no_spb_edit,
-        //     'keterangan'=>$request->keterangan_edit
-        // ]);
+
         return redirect::back()->with('message', 'Berhasil Mengubah Data Transaksi');
     }
 
@@ -283,17 +292,101 @@ class TransactionController extends Controller
             'akun_rincian'=>'required',
             'nominal_tambah_rincian'=>'required',
             'transaction_id'=>'required',
-            'dk'=>'required'
         ]);
         $nominal_rincian_int=$request->nominal_tambah_rincian;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
         
+        $akun_tipe=Account::find($request->akun_rincian);
+        $akun_tipe=$akun_tipe->tipe;
+        if ($akun_tipe=="Pendapatan"){
+            $dk=1;
+        }
+        else{
+            $dk=2;
+        }
         Transaction_detail::create([
             'transaction_id'=>$request->transaction_id,
             'account_id'=>$request->akun_rincian,
             'nominal'=>$nominal_rincian_int,
-            'dk'=>$request->dk,
+            'dk'=>$dk,
         ]);
         return redirect::back()->with ('message','Berhasil menmbah rincian transaksi');
     }
+    public function updateRincian(Request $request,$id)
+    {
+        $request->validate([
+            'akun_rincian_edit' => 'required',
+            'nominal_tambah_rincian_edit' => 'required'
+        ]);
+        $nominal_rincian_int=$request->nominal_tambah_rincian_edit;
+        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+
+        $updateRincian = Transaction_detail::find($id);
+        $updateRincian->account_id = $request->akun_rincian_edit;
+        $updateRincian->nominal = $nominal_rincian_int;
+        $updateRincian->update();
+
+        return redirect::back()->with('message', 'Berhasil Mengubah Data Rincian');
+    }
+
+    public function showTransfer(string $id)
+    {   
+        $showTransaction=Transaction::where('no_trf','=',$id)->get();
+        $idDetail1=$showTransaction[0]->id;
+        $idDetail2=$showTransaction[1]->id;
+        $showDetailTransaction1=Transaction_detail::where('transaction_id','=',$idDetail1)->get();
+        $showDetailTransaction2=Transaction_detail::where('transaction_id','=',$idDetail2)->get();
+
+        $departement=Departement::where('status','=','1')->get();
+        $accountHarta=Account::where('nama','LIKE','Kas%')->where('status','=','1')->orderBy('no')->get();
+        return view('\transaksi\edit_transfer')
+            ->with('accountlistHarta',$accountHarta)
+            ->with('listDepartement',$departement)
+            ->with('showTransaction',$showTransaction)
+            ->with('showDetailTransaction1',$showDetailTransaction1)
+            ->with('showDetailTransaction2',$showDetailTransaction2);
+    }
+
+    public function updateTransfer(Request $request, $id)
+    {
+        $request->validate([
+            'departement_tujuan'=>'required',
+            'tgl_transfer'=>'required',
+            'no_spb_transfer'=>'required',
+            'akun_kas_awal'=>'required',
+            'akun_kas_tujuan'=>'required',
+            'nominal_transfer'=>'required',
+        ]);
+        $nominal_transfer_int=$request->nominal_transfer;
+        $nominal_transfer_int=str_replace('.','',$nominal_transfer_int);
+        $id_1=$request->id_1;
+        $id_2=$request->id_2;
+
+        $updateTransfer1 = Transaction::find($id_1);
+            $updateTransfer1->tanggal = $request->tgl_transfer;
+            $updateTransfer1->no_spb = $request->no_spb_transfer;
+            $updateTransfer1->keterangan = $request->keterangan_transfer;
+        $updateTransfer1->update();
+        $detailTransfer1id = Transaction_detail::where('transaction_id','=',$id_1)->first();
+        $updateDetailTransfer1 = Transaction_detail::find($detailTransfer1id->id);
+        $updateDetailTransfer1->account_id = $request->akun_kas_awal;
+        $updateDetailTransfer1->nominal = $nominal_transfer_int;
+        $updateDetailTransfer1->update();
+
+        $updateTransfer2 = Transaction::find($id_2);
+            $updateTransfer2->tanggal = $request->tgl_transfer;
+            $updateTransfer2->no_spb = $request->no_spb_transfer;
+            $updateTransfer2->keterangan = $request->keterangan_transfer;
+            $updateTransfer2->departement_id = $request->departement_tujuan;
+        $updateTransfer2->update();
+
+        $detailTransfer2id = Transaction_detail::where('transaction_id','=',$id_2)->first();
+        $updateDetailTransfer2 = Transaction_detail::find($detailTransfer2id->id);
+        $updateDetailTransfer2->account_id = $request->akun_kas_tujuan;
+        $updateDetailTransfer2->nominal = $nominal_transfer_int;
+        $updateDetailTransfer2->update();
+
+        return redirect::back()->with('message', 'Berhasil mengubah data Transfer');
+    }
+    
 }

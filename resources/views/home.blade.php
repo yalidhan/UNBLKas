@@ -86,19 +86,19 @@
                 </div>
 
                 <center><h3>Informasi Saldo</h3>
-                    <h3>Fakultas Farmasi</h3>
+                    <h3>{{auth()->user()->departement->nama}}</h3>
                     <h4>Periode</h4>
-                    <h4>Juli 2023</h4>
+                    <h4>Periode {{\Carbon\Carbon::now()->format('F Y')}}</h4>
                 <div class="row">
                     <div class="col-lg-4 col-sm-4">
                         <div class="card">
                             <div class="stat-widget-one">
                                 <div class="stat-content">
-                                    <div class="stat-text">Penerimaan</div>
-                                    <div class="stat-digit gradient-3-text">Rp 2.000.000</div>
+                                    <div class="stat-text">Saldo Bulan Lalu+Penerimaan</div>
+                                    <div class="stat-digit gradient-6-text">Rp {{number_format($saldoLastMonth+$saldoDebitList,0,',','.')}}</div>
                                 </div>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar gradient-3" style="width: 100%;" role="progressbar"><span class="sr-only">100% Complete</span>
+                                <div class="progress mb-3" style="height: 13px">
+                                    <div class="progress-bar bg-success active progress-bar-striped" style="width: 100%;" role="progressbar"><span class="sr-only">100% Complete</span>
                                     </div>
                                 </div>
                             </div>
@@ -110,10 +110,10 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Pengeluaran</div>
-                                    <div class="stat-digit gradient-4-text">Rp 500.000</div>
+                                    <div class="stat-digit gradient-4-text">Rp {{number_format($saldoKreditList,0,',','.')}}</div>
                                 </div>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar gradient-4" style="width: 25%;" role="progressbar"><span class="sr-only">25% Complete</span>
+                                <div class="progress mb-3" style="height: 13px">
+                                    <div class="progress-bar bg-warning active progress-bar-striped" style="width: {{$persentasePengeluaran}}%;" role="progressbar">{{$persentasePengeluaran}}%
                                     </div>
                                 </div>
                             </div>
@@ -125,10 +125,10 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Saldo</div>
-                                    <div class="stat-digit gradient-4-text">Rp 1.500.000</div>
+                                    <div class="stat-digit gradient-4-text">Rp {{number_format($saldoLastMonth+$saldoDebitList-$saldoKreditList,0,',','.')}}</div>
                                 </div>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar gradient-4" style="width: 75%;" role="progressbar"><span class="sr-only">75% Complete</span>
+                                <div class="progress mb-3" style="height: 13px">
+                                    <div class="progress-bar bg-danger active progress-bar-striped" style="width: {{$persentaseSaldo}}%;" role="progressbar">{{$persentaseSaldo}}%
                                     </div>
                                 </div>
                             </div>

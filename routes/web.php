@@ -44,8 +44,11 @@ Route::get('departementstat/{id}',[DepartementController::class,'status']);
 Route::resource('akun',AccountController::class);
 Route::get('akunstat/{id}',[AccountController::class,'status']);
 
+Route::get('transaksi/transfer/{id}',[TransactionController::class,'showTransfer'])->name('showTransfer');
+Route::put('transaksi/transfer{id}',[TransactionController::class,'updateTransfer'])->name('updateTransfer');
 Route::post('transaksi/rincian',[TransactionController::class,'storeRincian'])->name('storeRincian');
 Route::delete('transaksi/rincian{id}',[TransactionController::class,'destroyRincian'])->name('destroyRincian');
+Route::put('transaksi/rincian{id}',[TransactionController::class,'updateRincian'])->name('updateRincian');
 Route::resource('transaksi',TransactionController::class);
 
 // Route::get('transaksi/month/{periode}',[TransactionController::class,'monthFilter']);
