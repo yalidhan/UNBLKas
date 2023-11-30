@@ -147,7 +147,7 @@
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/pertanggungjawaban">Lembar Pertanggungjawaban</a></li>
+                            <li><a href="{{route('lpjPage')}}">Lembar Pertanggungjawaban</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -208,6 +208,7 @@
     </script>
     @stack('detail_transaksi-script')
     @stack('edit_transfer-script')
+    @stack('lpjPage-script')
 
 </body>
 

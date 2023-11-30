@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ReportController;
 
  
 
@@ -51,8 +52,5 @@ Route::delete('transaksi/rincian{id}',[TransactionController::class,'destroyRinc
 Route::put('transaksi/rincian{id}',[TransactionController::class,'updateRincian'])->name('updateRincian');
 Route::resource('transaksi',TransactionController::class);
 
-// Route::get('transaksi/month/{periode}',[TransactionController::class,'monthFilter']);
-
-// Route::view('transaksi', '\transaksi/transaksi');
-Route::view('rincian_transaksi', '\transaksi/rincian_transaksi');
-Route::view('pertanggungjawaban', '\laporan/pertanggungjawaban');
+Route::get('pertanggungjawaban', [ReportController::class,'lpjPage'])->name('lpjPage');
+Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->name('lpjCetak');

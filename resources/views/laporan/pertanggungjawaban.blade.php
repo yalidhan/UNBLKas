@@ -23,18 +23,27 @@
                                 </br>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <form>
+                                        <form action="{{route('lpjCetak')}}" method="GET">
                                         <div class="row">
                                             <div class="col">
-                                            <label for="dari">Dari Tanggal</label>
-                                            <input id="dari" type="date" class="form-control" placeholder="Dari Tanggal">
+                                                <label for="dari">Dari Tanggal</label>
+                                                <input required id="dari" name="dari" type="date" class="form-control" placeholder="Dari Tanggal">
                                             </div>
                                             <div class="col">
-                                            <label for="sampai">Sampai Tanggal</label>
-                                            <input id="sampai" type="date" class="form-control" placeholder="Sampai Tanggal">
+                                                <label for="sampai">Sampai Tanggal</label>
+                                                <input required id="sampai" name="sampai" type="date" class="form-control" placeholder="Sampai Tanggal">
+                                            </div>
+                                            <div class="col">
+                                                <label for="departement">Departemen Tujuan:</label>
+                                                    <select id="departement" data-width="100%" name="departement" class="form-control">
+                                                        <option value="" selected disabled hidden>Pilih Departement Tujuan</option>
+                                                        @foreach($departement as $departementvalue)
+                                                            <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
+                                                        @endforeach
+                                                </select>
                                             </div>
                                         </div>
-                                        </br><button type="button" class="btn mb-1 btn-primary">Lihat Laporan<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                        </br><button type="submit" class="btn mb-1 btn-primary">Lihat Laporan<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
                                             </button>
                                         </form>
                                     </div>
@@ -50,4 +59,13 @@
             Content body end
         ***********************************-->
 @endsection
+@push('lpjPage-script')
+    <script>    
+        $(document).ready(function() {
+            $('.departement').select2();
+        });
+        $('#departement').select2({
+        });
+    </script>
+@endpush
 

@@ -243,13 +243,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php $saldo = 0 ; @endphp
-                                            @foreach ($saldoDebitList as $saldoDebit)
-                                                    @php $saldo=$saldo+$saldoDebit->total_debit; @endphp
-                                            @endforeach
-                                            @foreach ($saldoKreditList as $saldoKredit)
-                                                    @php $saldo=$saldo-$saldoKredit->total_kredit; @endphp
-                                            @endforeach
+                                            @php 
+                                                $saldo = 0 ;
+                                                $saldo=$saldo+$saldoLastMonth;
+                                            @endphp
                                             <tr>
                                                 <td colspan="6"><b>Saldo Awal</b></td>
                                                 <td colspan="2" style="text-align:left;white-space: nowrap;" ><b>Rp {{number_format($saldo,0,',','.')}}</b></td>

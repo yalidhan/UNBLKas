@@ -29,27 +29,27 @@
                                             <tr>
                                                 <td>Departemen</td>
                                                 <td>&nbsp;:</td>
-                                                <td>&nbsp;{{$showTransaction[0]->departement}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{$showTransaction[0]->departement}}</td>
                                             </tr>
                                             <tr>
                                                 <td>No. SPB</td>
                                                 <td>&nbsp;:</td>
-                                                <td>&nbsp;{{$showTransaction[0]->no_spb}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{$showTransaction[0]->no_spb}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Keterangan</td>
                                                 <td>&nbsp;:</td>
-                                                <td>&nbsp;{{$showTransaction[0]->keterangan}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{$showTransaction[0]->keterangan}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Tanggal</td>
                                                 <td>&nbsp;:</td>
-                                                <td>&nbsp;{{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d/m/Y')}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d/m/Y')}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Total Transaksi</td>
+                                                <td style="white-space: nowrap;">Total Transaksi</td>
                                                 <td>&nbsp;:</td>
-                                                <td>&nbsp;Rp {{number_format($showTransaction[0]->total,0,',','.')}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showTransaction[0]->total,0,',','.')}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

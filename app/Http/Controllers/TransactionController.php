@@ -58,18 +58,30 @@ class TransactionController extends Controller
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
-            WHERE departement_id=$departement_id and tanggal <'$year-$month-01' and dk=1 GROUP BY transaction_id"
+            WHERE departement_id=$departement_id and tanggal <'$year-$month-01' and dk=1 GROUP BY departement_id"
         );
+        if ($saldoDebit){
+            $saldoDebit=$saldoDebit[0]->total_debit;
+        }
+        else{
+            $saldoDebit=0;
+        }
         $saldoKredit=DB::select(
             "SELECT t.id, t.no_spb,t.tanggal,   
                 d.dk,sum(d.nominal) AS total_kredit
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
-            WHERE departement_id=$departement_id and tanggal <'$year-$month-01' and dk=2 GROUP BY transaction_id"
+            WHERE departement_id=$departement_id and tanggal <'$year-$month-01' and dk=2 GROUP BY departement_id"
         );
-        // dd($saldoKredit);
-        // dd($year,$month);
+        if ($saldoKredit){
+            $saldoKredit=$saldoKredit[0]->total_kredit;
+        }
+        else{
+            $saldoKredit=0;
+        }
+        $saldoLastMonth=$saldoDebit-$saldoKredit;
+
         $departement=Departement::where('status','=','1')->get();
         $accountHarta=Account::where('nama','LIKE','Kas%')->where('status','=','1')->orderBy('no')->get();
         $accountPendapatan=Account::get()->where('tipe','=','Pendapatan')->where('status','=','1')->sortBy('no');
@@ -80,8 +92,7 @@ class TransactionController extends Controller
                 ->with('month',$month)
                 ->with('accountlistHarta',$accountHarta)
                 ->with('listDepartement',$departement)
-                ->with('saldoDebitList',$saldoDebit)
-                ->with('saldoKreditList',$saldoKredit);
+                ->with('saldoLastMonth',$saldoLastMonth);
     }
 
     /**
@@ -107,21 +118,23 @@ class TransactionController extends Controller
             ]);
             $nominal_pemasukan_int=$request->nominal_pemasukan;
             $nominal_pemasukan_int=str_replace('.','',$nominal_pemasukan_int);
-            Transaction::create([
+            $queryTransaction=Transaction::create([
                 'tanggal'=>$request->tgl_pemasukan,
                 'no_spb'=>$request->kode_pemasukan,
                 'keterangan'=>$request->keterangan_pemasukan,
                 'departement_id'=>$request->id_departement,
                 'user_id'=>$request->user_id,
             ]);
-        
-            $last_transaction=Transaction::orderBy('id','desc')->first();
-            Transaction_detail::create([
-                'transaction_id'=>$last_transaction->id,
-                'account_id'=>$request->akun_pendapatan,
-                'nominal'=>$nominal_pemasukan_int,
-                'dk'=>$request->dk,
-            ]);}
+            if($queryTransaction){
+                Transaction_detail::create([
+                    'transaction_id'=>$queryTransaction->id,
+                    'account_id'=>$request->akun_pendapatan,
+                    'nominal'=>$nominal_pemasukan_int,
+                    'dk'=>$request->dk,
+                ]);}
+            }else{
+
+            }
         if ($request->tp_trx=='pengeluaran'){
             $request->validate([
                 'tgl_pengeluaran'=>'required',
@@ -160,7 +173,7 @@ class TransactionController extends Controller
                 $no_trf="TF.1";
                 // dd("$no_trf");
             };
-            Transaction::create([
+            $transferQuery=Transaction::create([
                 'tanggal'=>$request->tgl_transfer,
                 'no_spb'=>$request->no_spb_transfer,
                 'keterangan'=>$request->keterangan_transfer,
@@ -168,28 +181,34 @@ class TransactionController extends Controller
                 'user_id'=>$request->user_id,
                 'no_trf'=>$no_trf,
             ]);
-            $last_transaction=Transaction::orderBy('id','desc')->first();
-            Transaction_detail::create([
-                'transaction_id'=>$last_transaction->id,
-                'account_id'=>$request->akun_kas_awal,
-                'nominal'=>$nominal_transfer_int,
-                'dk'=>$request->dk_1,
-            ]);
-            Transaction::create([
-                'tanggal'=>$request->tgl_transfer,
-                'no_spb'=>$request->no_spb_transfer,
-                'keterangan'=>$request->keterangan_transfer,
-                'departement_id'=>$request->departement_tujuan,
-                'user_id'=>$request->user_id,
-                'no_trf'=>$no_trf,
-            ]);
-            $last_transaction=Transaction::orderBy('id','desc')->first();
-            Transaction_detail::create([
-                'transaction_id'=>$last_transaction->id,
-                'account_id'=>$request->akun_kas_tujuan,
-                'nominal'=>$nominal_transfer_int,
-                'dk'=>$request->dk_2,
-            ]);}
+            if ($transferQuery){
+                Transaction_detail::create([
+                    'transaction_id'=>$transferQuery->id,
+                    'account_id'=>$request->akun_kas_awal,
+                    'nominal'=>$nominal_transfer_int,
+                    'dk'=>$request->dk_1,
+                ]);
+                $transferQuery2=Transaction::create([
+                    'tanggal'=>$request->tgl_transfer,
+                    'no_spb'=>$request->no_spb_transfer,
+                    'keterangan'=>$request->keterangan_transfer,
+                    'departement_id'=>$request->departement_tujuan,
+                    'user_id'=>$request->user_id,
+                    'no_trf'=>$no_trf,
+                ]);
+                    if($transferQuery2){
+                        Transaction_detail::create([
+                            'transaction_id'=>$transferQuery2->id,
+                            'account_id'=>$request->akun_kas_tujuan,
+                            'nominal'=>$nominal_transfer_int,
+                            'dk'=>$request->dk_2,
+                        ]);}
+                    }else{
+
+                    }
+            }else{
+
+            }
         return redirect::back()->with ('message','Berhasil menambahkan data Transaksi');
         
     }
