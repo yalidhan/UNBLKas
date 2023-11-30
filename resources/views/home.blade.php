@@ -113,7 +113,7 @@
                                     <div class="stat-digit gradient-4-text">Rp {{number_format($saldoKreditList,0,',','.')}}</div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
-                                    <div class="progress-bar bg-warning active progress-bar-striped" style="width: {{$persentasePengeluaran}}%;" role="progressbar">{{$persentasePengeluaran}}%
+                                    <div class="progress-bar bg-warning active progress-bar-striped" style="width: {{number_format($persentasePengeluaran, 2, '.', ',')}}%" role="progressbar">{{number_format($persentasePengeluaran, 2, '.', ',')}}%
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
                                     <div class="stat-digit gradient-4-text">Rp {{number_format($saldoLastMonth+$saldoDebitList-$saldoKreditList,0,',','.')}}</div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
-                                    <div class="progress-bar bg-danger active progress-bar-striped" style="width: {{$persentaseSaldo}}%;" role="progressbar">{{$persentaseSaldo}}%
+                                    <div class="progress-bar bg-danger active progress-bar-striped" style="width: {{number_format($persentaseSaldo, 2, '.', ',')}}%" role="progressbar">{{number_format($persentaseSaldo, 2, '.', ',')}}%
                                     </div>
                                 </div>
                             </div>

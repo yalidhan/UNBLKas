@@ -5,8 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" type="/assets/image/png" sizes="16x16" href="/assets/images/unbl.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
+        /* Tooltip container */
+        .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+        }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #ffffff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        z-index: 1;
+        }
+
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+        visibility: visible;
+        }
         table.static{
             position: relative;
             border:1px solid black;
@@ -19,6 +46,9 @@
 </head>
 <body>
     <div class="form-group">
+        <div class="tooltip"><button onClick="window.print()"><i class="fa fa-print" style="font-size:34px;"></i></button>
+            <span class="tooltiptext">Cetak Laporan</span>
+    </div>   
         <h2 align="center"><b>LAPORAN PERTANGGUNGJAWABAN UANG OPERASIONAL</b></h2>
         <h3 align="center">"{{$departementNama->nama}}"</h3>
         <h4 align="center">Periode {{\Carbon\Carbon::parse($periode['dari'])->format('d F Y')}} - {{\Carbon\Carbon::parse($periode['sampai'])->format('d F Y')}}</h4>
@@ -96,7 +126,7 @@
                 </tr>
                 <tr style="border-left-style: hidden;">
                     <td style="border-right-style: hidden;" colspan="4"></td>
-                    <td style="border-right-style: hidden;" colspan="4"><br>Banjarbaru, 31 Juli 2023<br><br></td>
+                    <td style="border-right-style: hidden;" colspan="4"><br>Banjarbaru, {{\Carbon\Carbon::now()->format('d F Y')}}<br><br></td>
                 </tr>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>
@@ -104,11 +134,11 @@
                 </tr>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>
-                    <td style="border-style: hidden;" colspan="4">Bendahara Operasional<br><br><br><br><br></td>
+                    <td style="border-style: hidden;" colspan="4">{{auth()->user()->jabatan}}<br><br><br><br><br></td>
                 </tr>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>
-                    <td style="border-style: hidden;" colspan="4">Muhammad Dedek Yalidhan, S.Kom</td>
+                    <td style="border-style: hidden;" colspan="4">{{auth()->user()->name}}</td>
                 </tr>
         </table>
     </div>

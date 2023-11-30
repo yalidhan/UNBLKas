@@ -33,15 +33,19 @@
                                                 <label for="sampai">Sampai Tanggal</label>
                                                 <input required id="sampai" name="sampai" type="date" class="form-control" placeholder="Sampai Tanggal">
                                             </div>
-                                            <div class="col">
-                                                <label for="departement">Departemen Tujuan:</label>
-                                                    <select id="departement" data-width="100%" name="departement" class="form-control">
-                                                        <option value="" selected disabled hidden>Pilih Departement Tujuan</option>
-                                                        @foreach($departement as $departementvalue)
-                                                            <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
-                                                        @endforeach
-                                                </select>
-                                            </div>
+                                            @if (auth()->user()->departement_id==1)
+                                                <div class="col">
+                                                    <label for="departement">Departemen Tujuan:</label>
+                                                        <select id="departement" data-width="100%" name="departement" class="form-control">
+                                                            <option value="" selected disabled hidden>Pilih Departement Tujuan</option>
+                                                            @foreach($departement as $departementvalue)
+                                                                <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
+                                                            @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+
+                                            @endif
                                         </div>
                                         </br><button type="submit" class="btn mb-1 btn-primary">Lihat Laporan<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
                                             </button>

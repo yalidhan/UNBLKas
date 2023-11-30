@@ -62,7 +62,7 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="kode_pemasukan" class="col-form-label">Kode Pemasukan:</label>
-                                                                        <input required name="kode_pemasukan" type="text" class="form-control" id="kode_pemasukan" placeholder="No Cek/No Ref/No Record/Kode Transaksi">
+                                                                        <input maxlength="25" required name="kode_pemasukan" type="text" class="form-control" id="kode_pemasukan" placeholder="No Cek/No Ref/No Record/Kode Transaksi">
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan</label>
@@ -77,11 +77,11 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea name="keterangan_pemasukan" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_pemasukan" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="nominal_pemasukan" class="col-form-label">Nominal Pemasukan:</label>
-                                                                        <input required name="nominal_pemasukan" type="text" class="form-control" id="nominal_pemasukan" placeholder="Rp">
+                                                                        <input required name="nominal_pemasukan" type="text" maxlength="14" class="form-control" id="nominal_pemasukan" placeholder="Rp">
                                                                     </div>
                                                                     <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement">
                                                                     <input type="hidden" value="{{auth()->user()->id}}" name="user_id">
@@ -119,13 +119,13 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="no_spb_pengeluaran" class="col-form-label">No.SPB:</label>
-                                                                        <input required name="no_spb_pengeluaran" type="text" class="form-control" id="no_spb_pengeluaran" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                                        <input required name="no_spb_pengeluaran" maxlength="25" type="text" class="form-control" id="no_spb_pengeluaran" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea required name="keterangan_pengeluaran" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea required name="keterangan_pengeluaran" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                 </div>
                                                                         <div class="modal-footer">
@@ -197,17 +197,17 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="no_spb_transfer" class="col-form-label">No.SPB:</label>
-                                                                        <input required name="no_spb_transfer" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                                        <input required name="no_spb_transfer" maxlength="25" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_transfer" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
-                                                                        <input required name="nominal_transfer" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
+                                                                        <input required name="nominal_transfer" maxlength="14" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
                                                                     </div>
                                                                     </div>
                                                                         <input type="hidden" value="{{auth()->user()->departement_id}}" name="id_departement_pengirim">

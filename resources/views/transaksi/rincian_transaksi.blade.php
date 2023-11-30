@@ -77,13 +77,13 @@
                                                     </div>
                                                 <div class="form-group">
                                                     <label for="no_spb_edit" class="col-form-label">No.SPB:</label>
-                                                    <input required name="no_spb_edit" value="{{$showTransaction[0]->no_spb}}" type="text" class="form-control" id="no_spb_edit" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                    <input required name="no_spb_edit" value="{{$showTransaction[0]->no_spb}}" maxlength="25"type="text" class="form-control" id="no_spb_edit" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                 </div>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Keterangan</span>
                                                     </div>
-                                                    <textarea required name="keterangan_edit" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
+                                                    <textarea required name="keterangan_edit" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
                                                 </div>
                                             </div>
                                                     <div class="modal-footer">
@@ -143,7 +143,7 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="nominal_tambah_rincian_edit" class="col-form-label">Nominal :</label>
-                                                                    <input required name="nominal_tambah_rincian_edit" value="{{$value->nominal}}" type="text" class="form-control" id="nominal_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
+                                                                    <input required name="nominal_tambah_rincian_edit" value="{{$value->nominal}}" maxlength="14" type="text" class="form-control" id="nominal_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
                                                                 </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -194,7 +194,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="nominal_tambah_rincian" class="col-form-label">Nominal :</label>
-                                                        <input required name="nominal_tambah_rincian" type="text" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
+                                                        <input required name="nominal_tambah_rincian" type="text" maxlength="14" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
                                                     </div>
                                                     <input type="hidden" name="transaction_id" value="{{$showTransaction[0]->id}}">
                                             </div>

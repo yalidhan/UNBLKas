@@ -60,17 +60,17 @@
                         </div>
                     <div class="form-group">
                         <label for="no_spb_transfer" class="col-form-label">No.SPB:</label>
-                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="no_spb_transfer" value="{{$showTransaction[0]->no_spb}}" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="no_spb_transfer" value="{{$showTransaction[0]->no_spb}}" type="text" class="form-control" id="no_spb_transfer" maxlength="25" placeholder="No.Urut/Departemen/UNBL/Tahun">
                     </div>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Keterangan</span>
                         </div>
-                        <textarea @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
+                        <textarea @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" maxlength="100" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
-                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="nominal_transfer" value="{{$showDetailTransaction1[0]->nominal}}" type="text" class="form-control" id="nominal_transfer" placeholder="Rp">
+                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="nominal_transfer" value="{{$showDetailTransaction1[0]->nominal}}" type="text" class="form-control" id="nominal_transfer" maxlength="14" placeholder="Rp">
                     </div>
                     </div>
                     <input type="text" hidden value="{{$showTransaction[0]->id}}" name="id_1">
