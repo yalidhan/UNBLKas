@@ -97,13 +97,13 @@ class HomeController extends Controller
         }
         $saldoKreditLastMonth=DB::select(
             "SELECT t.id,t.departement_id, t.no_spb,t.tanggal,   
-                d.dk,sum(d.nominal) AS total_debit
+                d.dk,sum(d.nominal) AS total_kredit
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
             WHERE departement_id=$departement_id and tanggal <'$year-$month-01' and dk=2 GROUP BY departement_id"
         );
-
+        // dd($saldoKreditLastMonth);
         if ($saldoKreditLastMonth){
             $saldoKreditLastMonth=$saldoKreditLastMonth[0]->total_kredit;
         }

@@ -170,8 +170,9 @@
                 </div>
                 <center>
                     <a href="{{ route('transaksi.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
+                    @if (auth()->user()->id==$showTransaction[0]->user_id)
                     <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
-                </center>
+                </center>          
                     <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
@@ -206,7 +207,9 @@
                                         </div>
                                 </div>
                             </div>      
-            </div>
+                    </div>
+                @else
+                @endif   
         </div>
     </div>
 </div>
@@ -237,6 +240,7 @@
         dropdownParent: $('#editRincian{{$valueDropdown->id}}')
             });
     </script>
+    @endforeach
     <script type="text/javascript">
         $(document).on('click', '#submitForm', function(e){
         e.preventDefault();
@@ -255,6 +259,5 @@
             }
         });
     });
-    </script>  
-    @endforeach  
+    </script>    
 @endpush
