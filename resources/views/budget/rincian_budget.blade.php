@@ -121,6 +121,7 @@
                     <tr>
                         <th scope="col">Kode Akun</th>
                         <th scope="col">Akun</th>
+                        <th scope="col">Kelompok</th>
                         <th scope="col">Total Nominal</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col">Aksi</th>
@@ -131,7 +132,8 @@
                     <tr>
                         <td>{{$value->no}}</td>
                         <td>{{$value->tipe}} || {{$value->nama}}</td>
-                        <td> Rp {{number_format($value->nominal,0,',','.')}}</td>
+                        <td>{{$value->kelompok}}</td>
+                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
@@ -236,7 +238,7 @@
                                                 <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>
                                                     <option value="" selected disabled hidden>Pilih Akun</option>
                                                     @foreach($accountList as $accountvalue)
-                                                    <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                    <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} ||{{$accountvalue->kelompok}} || {{ $accountvalue->nama}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -247,7 +249,7 @@
                                             <input type="hidden" name="budget_id" value="{{$showBudget[0]->id}}">
                                             <div class="form-group summernote">
                                                 <label for="summernote" class="col-form-label">Keterangan Rincian :</label>
-                                                <textarea  required name="keterangan_rincian"  class="form-control" id="summernote"></textarea>
+                                                <textarea name="keterangan_rincian"  class="form-control" id="summernote"></textarea>
                                             </div>
                                     </div>
                                     <div class="modal-footer">

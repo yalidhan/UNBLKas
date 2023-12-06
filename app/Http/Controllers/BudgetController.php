@@ -86,7 +86,7 @@ class BudgetController extends Controller
         // $showBudget=Budget::find($id);
         // dd($showBudget);
         $showDetailBudget=DB::select(
-            "SELECT bd.nominal, bd.id, bd.keterangan, a.nama,a.id as account_id, a.tipe, a.no
+            "SELECT bd.nominal, bd.id, bd.keterangan, a.nama,a.id as account_id, a.tipe, a.no, a.kelompok
             FROM budget_details bd
             LEFT JOIN accounts a
             ON bd.account_id = a.id

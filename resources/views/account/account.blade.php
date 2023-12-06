@@ -53,15 +53,14 @@
                                                                     <option value="05">Beban</option>
                                                                 </select>
                                                 
-                                                                @error('kode_akun')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
                                                             </div>
                                                         <div class="form-group">
                                                             <label for="nama" class="col-form-label">Nama Akun:</label>
                                                             <input required value="{{ old('nama')}}" name="nama" type="text" class="form-control" id="nama">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="kelompok" class="col-form-label">Kelompok:</label>
+                                                            <input required value="{{ old('kelompok')}}" name="kelompok" type="text" class="form-control" id="kelompok">
                                                         </div>
                                                 </div>
                                                         <div class="modal-footer">
@@ -79,6 +78,7 @@
                                             <tr>
                                                 <th>No Akun</th>
                                                 <th>Tipe Akun</th>
+                                                <th>Kelompok</th>
                                                 <th>Nama Akun</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>
@@ -89,6 +89,7 @@
                                             <tr>
                                                 <td>{{$account->no}}</td>
                                                 <td>{{$account->tipe}}</td>
+                                                <td>{{$account->kelompok}}</td>
                                                 <td>{{$account->nama}}</td>
                                                 <td>
                                                     <a href="/akunstat/{{$account->id}}" class="btn btn-sm btn-{{$account->status ? 'success' : 'danger'}}">
@@ -103,6 +104,7 @@
                                             <tr>
                                                 <th>No Akun</th>
                                                 <th>Tipe Akun</th>
+                                                <th>Kelompok</th>
                                                 <th>Nama Akun</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>

@@ -14,5 +14,6 @@ class Account extends Model
         'no',
         'tipe',
         'nama',
+        'kelompok',
     ];
 }

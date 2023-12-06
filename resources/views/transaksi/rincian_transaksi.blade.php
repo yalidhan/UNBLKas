@@ -115,7 +115,7 @@
                             <tr>
                                 <td>{{$no++}}</td>
                                 <td>{{$value->tipe}} || {{$value->nama}}</td>
-                                <td> Rp {{number_format($value->nominal,0,',','.')}}</td>
+                                <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
                                 <td><span style="display: flex;">
                                     @if (auth()->user()->id==$showTransaction[0]->user_id)
                                         <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->

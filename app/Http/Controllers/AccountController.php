@@ -77,6 +77,7 @@ class AccountController extends Controller
         'nama'=>$request->nama,
         'no'=>$no_akun,
         'tipe'=>$tipe_akun,
+        'kelompok'=>$request->kelompok,
         ]);
         return redirect()->route('akun.index')->with ('message','Berhasil menambahkan data Akun');
     }

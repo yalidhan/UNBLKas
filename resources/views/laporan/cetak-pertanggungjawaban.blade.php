@@ -77,13 +77,13 @@
                 @foreach ($transactionList as $transaction)     
                 @php
                     $detailTransaction=DB::select(
-                                "SELECT t.id, t.keterangan,d.account_id,d.nominal, a.nama,a.no 
+                                "SELECT t.id, t.keterangan,d.account_id,d.nominal, a.nama,a.no,a.tipe 
                                 FROM transactions t 
                                 LEFT JOIN transaction_details d 
                                     ON t.id = d.transaction_id 
                                 LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                                WHERE t.departement_id=$transaction->departement_id and t.id=$transaction->id and tanggal BETWEEN '2023-11-01' and '2023-11-30' ORDER BY tanggal ASC, id ASC;"
+                                WHERE t.departement_id=$transaction->departement_id and t.id=$transaction->id and tanggal BETWEEN '$periode[dari]' and '$periode[sampai]' ORDER BY tanggal ASC, id ASC;"
                             );
                     $arrayCount=count($detailTransaction);
                 @endphp
@@ -111,7 +111,7 @@
                 </tr>
                     @foreach ($detailTransaction as $value)
                     <tr>
-                        <td>{{$value->no}}</td>
+                        <td>{{$value->no}} || {{$value->tipe}}</td>
                         <td>{{$value->nama}}
                             <br>(Rp {{number_format($value->nominal,0,',','.')}})
                         </td>

@@ -73,7 +73,7 @@ class ReportController extends Controller
         }
         $saldoKreditLastMonth=DB::select(
             "SELECT t.id,t.departement_id, t.no_spb,t.tanggal,   
-                d.dk,sum(d.nominal) AS total_debit
+                d.dk,sum(d.nominal) AS total_kredit
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
@@ -88,6 +88,7 @@ class ReportController extends Controller
         }
         $saldoLastMonth=$saldoDebitLastMonth-$saldoKreditLastMonth;
         $departementNama=Departement::find($departement_id);
+        // dd($periode);
         return view('\laporan/cetak-pertanggungjawaban')
                 ->with('transactionList',$transaction)
                 ->with('departementNama',$departementNama)
