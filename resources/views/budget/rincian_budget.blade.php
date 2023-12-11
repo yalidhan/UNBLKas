@@ -164,8 +164,8 @@
                             @if (auth()->user()->id==$showBudget[0]->user_id)
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
                                 <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div class="modal fade" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                                    <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="editRincianModalLabel{{$value->id}}">Edit Data Rincian</h5>
@@ -180,7 +180,7 @@
                                                             <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
                                                             <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
                                                                 @foreach($accountList as $accountvalue)
-                                                                    <option value="{{ $accountvalue->id }}"{{$value->account_id == $accountvalue->id  ? 'selected' : ''}}>{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option>
+                                                                    <option value="{{ $accountvalue->id }}"{{$value->account_id == $accountvalue->id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
                                                                     <!-- <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option> -->
                                                                 @endforeach
                                                             </select>
@@ -238,7 +238,7 @@
                                                 <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>
                                                     <option value="" selected disabled hidden>Pilih Akun</option>
                                                     @foreach($accountList as $accountvalue)
-                                                    <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} ||{{$accountvalue->kelompok}} || {{ $accountvalue->nama}}</option>
+                                                    <option value="{{ $accountvalue->id }}">({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

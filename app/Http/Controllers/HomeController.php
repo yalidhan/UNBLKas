@@ -124,12 +124,53 @@ class HomeController extends Controller
         }
         // dd($persentaseSaldo);
         // dd($persentasePengeluaran,$persentaseSaldo);
+        $rencana_anggaran=DB::select(
+        "SELECT b.id, b.departement_id,b.tahun,
+            dp.nama,
+            bd.budget_id,sum(bd.nominal) as total
+            FROM budgets b
+            LEFT JOIN departements dp
+                ON b.departement_id = dp.id
+            LEFT JOIN budget_details bd
+                ON b.id = bd.budget_id
+            WHERE departement_id=$departement_id AND tahun=$year
+            GROUP BY b.id"
+            );
+        $realisasi_anggaran=DB::select(
+        "SELECT t.id,t.departement_id,t.tanggal,
+                d.transaction_id, d.account_id,sum(d.nominal) as total, 
+                a.id,a.no,a.nama 
+        FROM transactions t 
+        LEFT JOIN transaction_details d 
+            ON t.id = d.transaction_id 
+        LEFT JOIN accounts a 
+            ON d.account_id = a.id 
+        WHERE t.departement_id=$departement_id AND YEAR('$year-12-01') AND DK=2 AND a.nama NOT LIKE 'Kas%'
+        GROUP BY departement_id
+        ");
+        
+        if (empty($realisasi_anggaran) or $realisasi_anggaran[0]->total==0){
+            $realisasi_anggaran=0;
+        }
+        if (empty($rencana_anggaran) or $rencana_anggaran[0]->total==0){
+            $rencana_anggaran=0;
+        }
+        // dd($realisasi_anggaran,$rencana_anggaran);
+        if($realisasi_anggaran==0 or $rencana_anggaran==0){
+            $persentaseRealisasi=0;
+        }else{
+            $persentaseRealisasi=$realisasi_anggaran[0]->total/($rencana_anggaran[0]->total)*100;
+        }
+        // dd($persentaseRealisasi);
         return view('home',
             ['transactionlist'=>$transaction])
                 ->with('saldoDebitList',$saldoDebit)
                 ->with('saldoKreditList',$saldoKredit)
                 ->with('saldoLastMonth',$saldoLastMonth)
                 ->with('persentasePengeluaran',$persentasePengeluaran)
+                ->with('rencana_anggaran',$rencana_anggaran)
+                ->with('realisasi_anggaran',$realisasi_anggaran)
+                ->with('persentaseRealisasi',$persentaseRealisasi)
                 ->with('persentaseSaldo',$persentaseSaldo);
     }
 }

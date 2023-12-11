@@ -19,11 +19,67 @@ class ReportController extends Controller
     {
         $this->middleware('auth');
     }
+    public function realisasiPage()
+    {
+        $departement=Departement::where('status','=','1')->get();
+        // $account=Account::where('kelompok','!=','""')->groupby('kelompok')->get();
+        \DB::statement("SET SQL_MODE=''");
+        $account=DB::select(
+            "SELECT * FROM accounts WHERE kelompok !='' GROUP BY kelompok"
+        );
+        // dd($account);
+        return view('\laporan/realisasianggaran')
+            ->with('account',$account)
+            ->with('departement',$departement);
+    }
+
+    public function realisasiCetak(Request $request)
+    {
+        if ($request->departement==""){
+            $departement_id=auth()->user()->departement_id;
+        }else{
+            $departement_id=$request->departement;
+        }
+
+        if ($request->kelompok_anggaran==""){
+            $kelompok="!=''";
+        }else{
+            $kelompok="='$request->kelompok_anggaran'";
+        }
+        $departement=Departement::find($departement_id);
+        
+        $tahun=Carbon::parse($request->sampai)->format('Y');
+        $sd=Carbon::parse($request->sampai)->format('F Y');
+        // dd($departement);
+        \DB::statement("SET SQL_MODE=''");
+        $kelompok=DB::select(
+            "SELECT b.id, b.departement_id,b.tahun,
+            dp.nama,
+            bd.budget_id,bd.id,bd.account_id,sum(bd.nominal) as total,
+            a.kelompok
+            FROM budgets b
+            LEFT JOIN departements dp
+                ON b.departement_id = dp.id
+            LEFT JOIN budget_details bd
+                ON b.id = bd.budget_id
+            LEFT JOIN accounts a
+                ON bd.account_id = a.id
+            WHERE departement_id=$departement_id AND tahun=$tahun AND kelompok $kelompok
+            GROUP BY kelompok
+            ORDER BY account_id ASC"
+        );
+        // dd($kelompok);
+        return view('\laporan/cetak-realisasianggaran')
+                    ->with('kelompok',$kelompok)
+                    ->with('sd',$sd)
+                    ->with('tahun',$tahun)
+                    ->with('departement',$departement);
+    }
 
     public function lpjPage()
     {
         $departement=Departement::where('status','=','1')->get();
-    return view('\laporan/pertanggungjawaban')->with('departement',$departement);
+        return view('\laporan/pertanggungjawaban')->with('departement',$departement);
     }
 
     public function lpjCetak(Request $request)

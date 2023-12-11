@@ -223,7 +223,7 @@ class TransactionController extends Controller
         \DB::statement("SET SQL_MODE=''");
         $showTransaction=DB::select(
             "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,t.user_id,
-                dp.nama AS departement,sum(d.nominal) AS total
+                dp.id AS departement_id, dp.nama AS departement,sum(d.nominal) AS total
             FROM transactions t
             LEFT JOIN transaction_details d
             ON t.id = d.transaction_id
@@ -231,8 +231,10 @@ class TransactionController extends Controller
             ON t.departement_id = dp.id
             WHERE transaction_id=$id"
         );
+        $departement_id=$showTransaction[0]->departement_id;
+        $tahun=Carbon::parse($showTransaction[0]->tanggal)->format('Y');
         $showDetailTransaction=DB::select(
-            "SELECT dt.nominal, a.nama,a.id as account_id, a.tipe,dt.id, dt.dk
+            "SELECT dt.nominal, a.nama, a.no, a.id as account_id, a.tipe, a.kelompok, dt.id, dt.dk
             FROM transaction_details dt
             LEFT JOIN accounts a
             ON dt.account_id = a.id
@@ -249,9 +251,23 @@ class TransactionController extends Controller
             $accountList=Account::where('tipe','=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
         }
         else{
-            $accountList=Account::where('tipe','!=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+            // $accountList=Account::where('tipe','!=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+            $accountList=DB::select(
+                "SELECT b.id,b.departement_id,b.tahun,
+                        bd.budget_id,bd.id,bd.account_id,
+                        a.nama,a.tipe,a.kelompok,a.status
+                FROM budgets b
+                LEFT JOIN budget_details bd
+                    ON bd.budget_id = b.id
+                LEFT JOIN accounts a
+                    ON a.id = bd.account_id
+                WHERE 
+                    departement_id=$departement_id AND tahun=$tahun AND status=1
+                ORDER BY
+                    account_id ASC;"
+            );
+            // dd($accountList);
         }
-        
         return view('\transaksi\rincian_transaksi',compact('showTransaction','showDetailTransaction','accountList'));
     }
 

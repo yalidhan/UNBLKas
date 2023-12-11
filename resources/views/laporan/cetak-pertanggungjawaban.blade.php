@@ -10,7 +10,10 @@
     <style>
         /* Tooltip container */
         .tooltip {
-        position: relative;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        /* position: relative; */
         display: inline-block;
         border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
         }
@@ -111,7 +114,7 @@
                 </tr>
                     @foreach ($detailTransaction as $value)
                     <tr>
-                        <td>{{$value->no}} || {{$value->tipe}}</td>
+                        <td style="white-space: nowrap;">{{$value->no}} || {{$value->tipe}}</td>
                         <td>{{$value->nama}}
                             <br>(Rp {{number_format($value->nominal,0,',','.')}})
                         </td>

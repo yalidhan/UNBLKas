@@ -19,6 +19,7 @@
     body{
             color:#000000;
         }
+
     </style>
 </head>
 
@@ -153,6 +154,9 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{route('lpjPage')}}">Lembar Pertanggungjawaban</a></li>
+                        </ul>
+                        <ul aria-expanded="false">
+                            <li><a href="{{route('realisasiPage')}}">Realisasi Anggaran</a></li>
                         </ul>
                     </li>
                 </ul>

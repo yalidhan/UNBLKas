@@ -17,7 +17,7 @@
 
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12">
+                    <!-- <div class="col-12">
                         <div class="card">
                             <div class="card-body">
                             @if (session('status'))
@@ -29,7 +29,7 @@
                             {{ __('You are logged in!') }}
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-sm-4">
@@ -37,7 +37,7 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white">Periode Berjalan</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">JULI 2023</h2>
+                                    <h2 class="text-white">{{\Carbon\Carbon::now()->format(' F Y')}}</h2>
                                     <!-- <p class="text-white mb-0">Jan - March 2019</p> -->
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-calendar-check-o"></i></span>
@@ -47,9 +47,14 @@
                     <div class="col-lg-4 col-sm-4">
                         <div class="card gradient-2">
                             <div class="card-body">
-                                <h3 class="card-title text-white">Anggaran UNBL</h3>
+                                <h3 class="card-title text-white">Anggaran {{auth()->user()->departement->nama}}</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">Rp 1.700.000.000</h2>
+                                    <h2 class="text-white">Rp @if ($rencana_anggaran!=0)
+                                        {{number_format($rencana_anggaran[0]->total,0,',','.')}}
+                                        @else
+                                            0
+                                        @endif
+                                    </h2>
                                     <!-- <p class="text-white mb-0">Jan - March 2019</p> -->
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
@@ -61,7 +66,11 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white">Realisasi Anggaran</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">Rp 850.000.000</h2>
+                                    <h2 class="text-white">Rp @if ($realisasi_anggaran!=0)
+                                        {{number_format($realisasi_anggaran[0]->total,0,',','.')}}
+                                        @else
+                                            0
+                                        @endif
                                     <!-- <p class="text-white mb-0">Jan - March 2019</p> -->
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-balance-scale"></i></span>
@@ -75,9 +84,9 @@
                             <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <center><h3>Progress Realisasi Anggaran UNBL</h3>
+                                    <center><h3>Progress Realisasi Anggaran {{auth()->user()->departement->nama}}</h3>
                                     <div class="progress" style="height: 9px">
-                                        <div class="progress-bar bg-success" style="width: 50%;" role="progressbar">50%</div>
+                                        <div class="progress-bar bg-success" style="color:#000000;width:{{number_format($persentaseRealisasi, 2, '.', ',')}}%;" role="progressbar">{{number_format($persentaseRealisasi, 2, '.', ',')}}%</div>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +122,7 @@
                                     <div class="stat-digit gradient-4-text">Rp {{number_format($saldoKreditList,0,',','.')}}</div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
-                                    <div class="progress-bar bg-warning active progress-bar-striped" style="width: {{number_format($persentasePengeluaran, 2, '.', ',')}}%" role="progressbar">{{number_format($persentasePengeluaran, 2, '.', ',')}}%
+                                    <div class="progress-bar bg-warning active progress-bar-striped" style="color:#000000;width:{{number_format($persentasePengeluaran, 2, '.', ',')}}%;" role="progressbar">{{number_format($persentasePengeluaran, 2, '.', ',')}}%
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +137,7 @@
                                     <div class="stat-digit gradient-4-text">Rp {{number_format($saldoLastMonth+$saldoDebitList-$saldoKreditList,0,',','.')}}</div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
-                                    <div class="progress-bar bg-danger active progress-bar-striped" style="width: {{number_format($persentaseSaldo, 2, '.', ',')}}%" role="progressbar">{{number_format($persentaseSaldo, 2, '.', ',')}}%
+                                    <div class="progress-bar bg-danger active progress-bar-striped" style="color:#000000;width:{{number_format($persentaseSaldo, 2, '.', ',')}}%;" role="progressbar">{{number_format($persentaseSaldo, 2, '.', ',')}}%
                                     </div>
                                 </div>
                             </div>

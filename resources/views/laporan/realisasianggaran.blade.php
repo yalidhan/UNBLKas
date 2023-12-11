@@ -19,18 +19,14 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Laporan Pertanggungjawaban</h4>
+                                <h4 class="card-title">Laporan Realisasi Anggaran</h4>
                                 </br>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <form action="{{route('lpjCetak')}}" target="_blank" method="GET">
+                                        <form action="{{route('realisasiCetak')}}" target="_blank" method="GET">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="dari">Dari Tanggal</label>
-                                                <input required id="dari" name="dari" type="date" class="form-control" placeholder="Dari Tanggal">
-                                            </div>
-                                            <div class="col">
-                                                <label for="sampai">Sampai Tanggal</label>
+                                                <label for="sampai">Sampai Dengan Tanggal</label>
                                                 <input required id="sampai" name="sampai" type="date" class="form-control" placeholder="Sampai Tanggal">
                                             </div>
                                             @if (auth()->user()->departement_id==1)
@@ -46,6 +42,17 @@
                                             @else
 
                                             @endif
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="kelompok_anggaran"><br>Kelompok Anggaran:</label>
+                                                <select id="kelompok_anggaran" data-width="100%" name="kelompok_anggaran" class="form-control">
+                                                            <option value="" selected disabled hidden>Kosongkan Untuk Pilih Semua</option>
+                                                            @foreach($account as $accountvalue)
+                                                                <option value="{{ $accountvalue->kelompok }}">{{ $accountvalue->kelompok}}</option>
+                                                            @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                         </br><button type="submit" class="btn mb-1 btn-primary">Lihat Laporan<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
                                             </button>
@@ -69,6 +76,13 @@
             $('.departement').select2();
         });
         $('#departement').select2({
+        });
+    </script>
+        <script>    
+        $(document).ready(function() {
+            $('.kelompok_anggaran').select2();
+        });
+        $('#kelompok_anggaran').select2({
         });
     </script>
 @endpush

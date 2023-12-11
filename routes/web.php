@@ -60,3 +60,6 @@ Route::resource('transaksi',TransactionController::class);
 
 Route::get('pertanggungjawaban', [ReportController::class,'lpjPage'])->name('lpjPage');
 Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->name('lpjCetak');
+
+Route::get('realisasianggaran', [ReportController::class,'realisasiPage'])->name('realisasiPage');
+Route::get('realisasianggaran/cetak', [ReportController::class,'realisasiCetak'])->name('realisasiCetak');
