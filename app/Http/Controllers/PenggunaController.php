@@ -19,6 +19,9 @@ class PenggunaController extends Controller
     public function index()
     {
         //
+        if (auth()->user()->departement_id !=1){
+            return redirect('/');
+        }
         $pengguna=User::all();
         return view('pengguna',compact('pengguna'));
     }
@@ -53,6 +56,9 @@ class PenggunaController extends Controller
     public function edit(string $id)
     {
         //
+        if (auth()->user()->departement_id !=1){
+            return redirect('/');
+        }
         $departement=Departement::where('status','1')
         ->get();
         $pengguna=User::find($id);

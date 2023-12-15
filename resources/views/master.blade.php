@@ -14,12 +14,11 @@
     <link href="/assets/css/select2.min.css" rel="stylesheet">
     <link href="/assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- <link href="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet"> -->
-    @stack('rincian_budget-style');
+    @stack('rincian_budget-style')
     <style>
     body{
             color:#000000;
         }
-
     </style>
 </head>
 
@@ -133,9 +132,12 @@
                             <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Data</span>
                         </a>
                         <ul aria-expanded="false">
+                            @if (auth()->user()->departement_id==1)
                             <li><a href="{{route('pengguna.index')}}">Pengguna</a></li>
                             <li><a href="{{route('departement.index')}}">Departemen</a></li>
                             <li><a href="{{route('akun.index')}}">Akun</a></li>
+                            @else
+                            @endif
                             <li><a href="{{route('anggaran.index')}}">Anggaran</a></li>
                         </ul>
                     <li class="nav-label">Transaksi</li>

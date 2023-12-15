@@ -21,12 +21,27 @@ class ReportController extends Controller
     }
     public function realisasiPage()
     {
+        $tahun=Carbon::now()->format('Y');
+        $departement_id=$departement_id=auth()->user()->departement_id;
         $departement=Departement::where('status','=','1')->get();
         // $account=Account::where('kelompok','!=','""')->groupby('kelompok')->get();
         \DB::statement("SET SQL_MODE=''");
-        $account=DB::select(
-            "SELECT * FROM accounts WHERE kelompok !='' GROUP BY kelompok"
-        );
+        if($departement_id==1){
+            $account=DB::select(
+                "SELECT * FROM accounts WHERE kelompok !='' GROUP BY kelompok"
+            );
+        }else{
+            $account=DB::select(
+                "SELECT a.kelompok FROM budgets b 
+                    LEFT JOIN departements dp ON b.departement_id = dp.id 
+                    LEFT JOIN budget_details bd ON b.id = bd.budget_id 
+                    LEFT JOIN accounts a ON bd.account_id = a.id 
+                    WHERE departement_id=$departement_id AND tahun=$tahun 
+                    GROUP BY kelompok;"
+            );
+        }
+
+        
         // dd($account);
         return view('\laporan/realisasianggaran')
             ->with('account',$account)

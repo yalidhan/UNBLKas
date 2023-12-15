@@ -91,6 +91,9 @@ class RegisterController extends Controller
 }
 public function showRegistrationForm()
 {
+    if (auth()->user()->departement_id !=1){
+        return redirect('/');
+    }
     $departement=Departement::where('status','=','1')->get();
     return view('auth.register',compact('departement'));
 }

@@ -16,6 +16,10 @@ class AccountController extends Controller
     public function index()
     {
         //
+        if (auth()->user()->departement_id !=1){
+            return redirect('/');
+        }
+
         $account=Account::get();
         return view('\account/account',['accountlist'=>$account]);
     }
@@ -65,11 +69,12 @@ class AccountController extends Controller
         if($last_data){
             $no_urut_str=substr($last_data->no,3);
             $no_urut_int=(int)$no_urut_str+1;
-            $no_akun="$kode_akun.$no_urut_int";
-            // dd($no_urut);
+            $no_urut_str_pad=str_pad($no_urut_int,2,"0",STR_PAD_LEFT);
+            $no_akun="$kode_akun.$no_urut_str_pad";
+            // dd($no_akun);
         }
         else{
-            $no_akun="$kode_akun.1";
+            $no_akun="$kode_akun.01";
             // dd("$no_urut");
         };
         
@@ -96,6 +101,9 @@ class AccountController extends Controller
     public function edit(string $id)
     {
         //
+        if (auth()->user()->departement_id !=1){
+            return redirect('/');
+        }
         $akun=Account::find($id);
         // dd($departement);
         return view('/account/account_edit',compact('akun'));

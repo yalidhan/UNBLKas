@@ -104,7 +104,7 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Saldo Bulan Lalu+Penerimaan</div>
-                                    <div class="stat-digit gradient-6-text">Rp {{number_format($saldoLastMonth+$saldoDebitList,0,',','.')}}</div>
+                                    <div class="stat-digit gradient-6-text"><h3>Rp {{number_format($saldoLastMonth+$saldoDebitList,0,',','.')}}</h3></div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
                                     <div class="progress-bar bg-success active progress-bar-striped" style="width: 100%;" role="progressbar"><span class="sr-only">100% Complete</span>
@@ -119,7 +119,7 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Pengeluaran</div>
-                                    <div class="stat-digit gradient-4-text">Rp {{number_format($saldoKreditList,0,',','.')}}</div>
+                                    <div class="stat-digit gradient-4-text"><h3>Rp {{number_format($saldoKreditList,0,',','.')}}</h3></div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
                                     <div class="progress-bar bg-warning active progress-bar-striped" style="color:#000000;width:{{number_format($persentasePengeluaran, 2, '.', ',')}}%;" role="progressbar">{{number_format($persentasePengeluaran, 2, '.', ',')}}%
@@ -134,7 +134,7 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Saldo</div>
-                                    <div class="stat-digit gradient-4-text">Rp {{number_format($saldoLastMonth+$saldoDebitList-$saldoKreditList,0,',','.')}}</div>
+                                    <div class="stat-digit gradient-4-text"><h3>Rp {{number_format($saldoLastMonth+$saldoDebitList-$saldoKreditList,0,',','.')}}</h3></div>
                                 </div>
                                 <div class="progress mb-3" style="height: 13px">
                                     <div class="progress-bar bg-danger active progress-bar-striped" style="color:#000000;width:{{number_format($persentaseSaldo, 2, '.', ',')}}%;" role="progressbar">{{number_format($persentaseSaldo, 2, '.', ',')}}%

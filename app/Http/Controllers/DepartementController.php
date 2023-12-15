@@ -16,6 +16,9 @@ class DepartementController extends Controller
     }
     public function index()
     {
+        if (auth()->user()->departement_id !=1){
+            return redirect('/');
+        }
         $departement=Departement::get();
         return view('\departement/departement',['daftardepartement'=>$departement]);
     }

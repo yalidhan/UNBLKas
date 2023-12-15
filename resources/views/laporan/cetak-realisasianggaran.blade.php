@@ -84,7 +84,7 @@
                 @foreach ($detail_anggaran as $da_value)
                 @php 
                     $transaksi=DB::select(
-                            "SELECT t.id,t.tanggal, d.account_id,d.nominal, 
+                            "SELECT t.id,t.tanggal, d.account_id,sum(d.nominal) AS total,
                                 a.id,a.no,a.kelompok 
                             FROM transactions t 
                             LEFT JOIN transaction_details d 
@@ -94,13 +94,15 @@
                             WHERE t.departement_id=$departement->id AND YEAR('$tahun-12-01') AND account_id=$da_value->account_id"
                             );    
                 @endphp
-                    <tr @if ($transaksi[0]->nominal > $da_value->nominal)style="background-color:#ff0000;color:#ffffff;" @else @endif>
+                
+                <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
                         <td></td>
                         <td>{{$da_value->nama}}</td>
                         <td>Rp {{number_format($da_value->nominal,0,',','.')}}</td>
-                        <td>Rp {{number_format($transaksi[0]->nominal,0,',','.'),$total_transaksi=$total_transaksi+$transaksi[0]->nominal}}</td>
-                        <td align="center">{{number_format(($transaksi[0]->nominal/$da_value->nominal)*100, 2, '.', ',')}}%</td>
+                        <td>Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
+                        <td align="center">{{number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}}%</td>
                     </tr>
+
                 @endforeach
                     <!-- <tr>
                         <td></td>
