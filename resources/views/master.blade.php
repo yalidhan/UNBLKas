@@ -139,6 +139,7 @@
                             @else
                             @endif
                             <li><a href="{{route('anggaran.index')}}">Anggaran</a></li>
+                            <li><a href="#">Perencanaan</a></li>
                         </ul>
                     <li class="nav-label">Transaksi</li>
                     <li>
