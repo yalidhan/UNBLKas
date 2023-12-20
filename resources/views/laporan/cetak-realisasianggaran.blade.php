@@ -9,14 +9,7 @@
 
     <style>
         /* Tooltip container */
-        .tooltip {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        /* position: relative; */
-        display: inline-block;
-        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-        }
+
 
         /* Tooltip text */
         .tooltip .tooltiptext {
@@ -52,8 +45,19 @@
         <div class="tooltip"><button onClick="window.print()"><i class="fa fa-print" style="font-size:34px;"></i></button>
             <span class="tooltiptext">Cetak Laporan</span>
         </div>   
-        <h2 align="center"><b>LAPORAN REALISASI ANGGARAN</b></h2>
-        <h3 align="center">"{{$departement->nama}}"</h3>
+        <h2 align="center"><b>LAPORAN REALISASI ANGGARAN</b></h2>                  
+            @if (!empty($departement->nama))
+            <h2 align="center">{{$departement->pusat}}</h2>
+            @else 
+                
+            @endif    
+        <h3 align="center">"
+            @if (!empty($departement->nama))
+                {{$departement->nama}}
+            @else 
+                {{$departement['nama']}}
+            @endif
+            "</h3>
         <h4 align="center">Sampai Dengan {{$sd}}</h4>
 
         <table class="static" align="center" border="0" >
@@ -81,10 +85,18 @@
                             ON bd.account_id = a.id
                         WHERE budget_id=$kelompokvalue->budget_id AND kelompok='$kelompokvalue->kelompok'
                         ORDER BY account_id ASC"
-                        );          
+                        );
+                              
                 @endphp
                 @foreach ($detail_anggaran as $da_value)
-                @php 
+                <?php 
+                    if (!empty($departement->id)){                    
+                    $departement_sql="t.departement_id=$departement->id";}
+                    else{    
+                    $dp_id=$departement['id'];                
+                    $departement_sql="t.departement_id!=$dp_id";}
+                ?>
+                @php
                     $transaksi=DB::select(
                             "SELECT t.id,t.tanggal, d.account_id,sum(d.nominal) AS total,
                                 a.id,a.no,a.kelompok 
@@ -93,18 +105,18 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE t.departement_id=$departement->id AND YEAR('$tahun-12-01') AND account_id=$da_value->account_id"
+                            WHERE $departement_sql AND YEAR('$tahun-12-01') AND account_id=$da_value->account_id"
                             );    
                 @endphp
                 
                 <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
                         <td></td>
                         <td>{{$da_value->nama}}</td>
-                        <td>Rp {{number_format($da_value->nominal,0,',','.')}}</td>
-                        <td>Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
-                        <td align="center">{{number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
-                        <td>Rp {{number_format(($da_value->nominal-$transaksi),0,',','.')}}</td>
-                        <td>{{100-number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
+                        <td style="white-space: nowrap;">Rp {{number_format($da_value->nominal,0,',','.')}}</td>
+                        <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
+                        <td align="center"style="white-space: nowrap;">{{number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
+                        <td style="white-space: nowrap;">Rp {{number_format(($da_value->nominal-$transaksi),0,',','.')}}</td>
+                        <td style="white-space: nowrap;">{{100-number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
                     </tr>
 
                 @endforeach
@@ -124,18 +136,18 @@
                     </tr> -->
                 <tr style="color:#000080;">
                     <td colspan="2" align="left"><b>Total {{$kelompokvalue->kelompok,$total_anggaran=$total_anggaran+$kelompokvalue->total,$gt_anggaran=$gt_anggaran+$total_anggaran,$gt_transaksi=$gt_transaksi+$total_transaksi}}</b></td>
-                    <td style="border-top:1pt solid black;"><b>Rp {{number_format($kelompokvalue->total,0,',','.')}}</b></td>
-                    <td style="border-top:1pt solid black;"><b>Rp{{number_format($total_transaksi,0,',','.')}}</b></td>
+                    <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format($kelompokvalue->total,0,',','.')}}</b></td>
+                    <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format($total_transaksi,0,',','.')}}</b></td>
                     <td style="border-top:1pt solid black;" align="center"><b>{{number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ',')}}% </b></td>
-                    <td style="border-top:1pt solid black;"><b>Rp {{number_format(($kelompokvalue->total-$total_transaksi),0,',','.')}}</b></td>
-                    <td style="border-top:1pt solid black;"><b>{{100-number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ','),$total_transaksi=0,$total_anggaran=0}} %</b></td>
+                    <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format(($kelompokvalue->total-$total_transaksi),0,',','.')}}</b></td>
+                    <td style="border-top:1pt solid black;white-space: nowrap;"><b>{{100-number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ','),$total_transaksi=0,$total_anggaran=0}} %</b></td>
                 </tr>
                 @endforeach
                 <tr style="color:#ff6347;">
                     <td colspan="2" style="font-size:18px;" align="left"><b>Total Keseluruhan</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;"><b>Rp {{number_format($gt_anggaran,0,',','.')}}</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;"><b>Rp {{number_format($gt_transaksi,0,',','.')}}</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;" align="center"><b>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format($gt_anggaran,0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format($gt_transaksi,0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;" align="center"><b>
                         @if($gt_anggaran==0)
                             0
                         @else
@@ -144,8 +156,8 @@
                         @endif
                         %</b>
                     </td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;"><b>Rp {{number_format(($gt_anggaran-$gt_transaksi),0,',','.')}}</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;"><b>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format(($gt_anggaran-$gt_transaksi),0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>
                         @if($gt_anggaran==0)
                                 0
                         @else   

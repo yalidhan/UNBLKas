@@ -51,18 +51,27 @@ class ReportController extends Controller
     public function realisasiCetak(Request $request)
     {
         if ($request->departement==""){
-            $departement_id=auth()->user()->departement_id;
-        }else{
-            $departement_id=$request->departement;
+            $d_id=auth()->user()->departement_id;
+            $departement_id="departement_id=$d_id";
+            $departement=Departement::find(auth()->user()->departement_id);
+        }elseif($request->departement==0){
+            $departement_id="departement_id!=1";
+            $departement=array(
+                "nama"=>"Universitas Borneo Lestari",
+                "id"=>"0"
+            );
         }
-
+        else{
+            $departement_id="departement_id=$request->departement";
+            $departement=Departement::find($request->departement);
+        }
+        // dd($departement['nama']);
         if ($request->kelompok_anggaran==""){
             $kelompok="!=''";
         }else{
             $kelompok="='$request->kelompok_anggaran'";
         }
-        $departement=Departement::find($departement_id);
-        
+
         $tahun=Carbon::parse($request->sampai)->format('Y');
         $sd=Carbon::parse($request->sampai)->format('F Y');
         // dd($departement);
@@ -79,11 +88,12 @@ class ReportController extends Controller
                 ON b.id = bd.budget_id
             LEFT JOIN accounts a
                 ON bd.account_id = a.id
-            WHERE departement_id=$departement_id AND tahun=$tahun AND kelompok $kelompok
+            WHERE $departement_id AND tahun=$tahun AND kelompok $kelompok
             GROUP BY kelompok
             ORDER BY account_id ASC"
         );
         // dd($kelompok);
+
         return view('\laporan/cetak-realisasianggaran')
                     ->with('kelompok',$kelompok)
                     ->with('sd',$sd)

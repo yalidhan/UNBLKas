@@ -9,14 +9,7 @@
 
     <style>
         /* Tooltip container */
-        .tooltip {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        /* position: relative; */
-        display: inline-block;
-        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-        }
+
 
         /* Tooltip text */
         .tooltip .tooltiptext {
@@ -53,6 +46,7 @@
             <span class="tooltiptext">Cetak Laporan</span>
     </div>   
         <h2 align="center"><b>LAPORAN PERTANGGUNGJAWABAN UANG OPERASIONAL</b></h2>
+        <h2 align="center">{{$departementNama->pusat}}</h2>
         <h3 align="center">"{{$departementNama->nama}}"</h3>
         <h4 align="center">Periode {{\Carbon\Carbon::parse($periode['dari'])->format('d F Y')}} - {{\Carbon\Carbon::parse($periode['sampai'])->format('d F Y')}}</h4>
         <table class="static" align="center" rules="all">

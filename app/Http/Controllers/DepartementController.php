@@ -39,9 +39,11 @@ class DepartementController extends Controller
         //
         $request->validate([
             'nama'=>'required',
+            'pusat'=>'required',
         ]);
         Departement::create([
             'nama'=>$request->nama,
+            'pusat'=>$request->pusat,
         ]);
         return redirect()->route('departement.index')->with ('message','Berhasil menambahkan data Departemen');
     }
@@ -70,9 +72,11 @@ class DepartementController extends Controller
         //
         $request->validate([
             'nama' => 'required',
+            'pusat'=> 'required',
         ]);
         $departement->update([
-            'nama' => $request->nama
+            'nama' => $request->nama,
+            'pusat' => $request->pusat
         ]);
 
         return redirect()->route('departement.index')->with('message', 'Berhasil Merubah Data');

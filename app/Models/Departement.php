@@ -13,6 +13,7 @@ class Departement extends Model
     protected $fillable = [
         'nama',
         'status',
+        'pusat',
     ];
 
     public function users()

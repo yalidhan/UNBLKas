@@ -33,7 +33,8 @@
                                                 <div class="col">
                                                     <label for="departement">Departemen Tujuan:</label>
                                                         <select id="departement" data-width="100%" name="departement" class="form-control">
-                                                            <option value="" selected disabled hidden>Pilih Departement Tujuan</option>
+                                                            <option value="" selected disabled hidden>Pilih Departemen Tujuan</option>
+                                                            <option value="0">Seluruh Departemen</option>
                                                             @foreach($departement as $departementvalue)
                                                                 <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
                                                             @endforeach

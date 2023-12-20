@@ -94,10 +94,18 @@
 
                         <div class="row mb-3">
                             <label for="jabatan" class="col-md-4 col-form-label text-md-end">{{ __('Jabatan') }}</label>
-
                             <div class="col-md-6">
-                                <input id="jabatan" type="text" class="form-control @error('jabatan') is-invalid @enderror" name="jabatan" value="{{ old('jabatan') }}" required autocomplete="jabatan" autofocus>
-
+                                    <select id="jabatan" name="jabatan" class="form-control @error('jabatan') is-invalid @enderror" required autocomplete="jabatan" autofocus>
+                                        <option value="" selected disabled hidden>Pilih Jabatan</option>
+                                        <option value="Super Admin">Super Admin</option>
+                                        <option value="Bendahara Yayasan">Bendahara Yayasan</option>
+                                        <option value="Rektor">Rektor</option> 
+                                        <option value="Wakil Rektor II">Wakil Rektor II</option>
+                                        <option value="Kabid Keuangan">Kabid Keuangan</option>
+                                        <option value="Kabid Perencanaan">Kabid Perencanaan</option>
+                                        <option value="Dekan">Dekan</option>  
+                                        <option value="Bendahara Operasional">Bendahara Operasional</option>     
+                                    </select>
                                 @error('jabatan')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

@@ -71,8 +71,17 @@
                             <label for="jabatan" class="col-md-4 col-form-label text-md-end">{{ __('Jabatan') }}</label>
 
                             <div class="col-md-6">
-                                <input id="jabatan" type="text" class="form-control @error('jabatan') is-invalid @enderror" name="jabatan" value="{{ $pengguna->jabatan }}" required autocomplete="jabatan" autofocus>
-
+                                <select id="jabatan" name="jabatan" class="form-control @error('jabatan') is-invalid @enderror" required autocomplete="jabatan" autofocus>
+                                        <option value="" selected disabled hidden>Pilih Jabatan</option>
+                                        <option value="Super Admin"{{ $pengguna->jabatan == "Super Admin" ?'selected':'' }}>Super Admin</option>
+                                        <option value="Bendahara Yayasan" {{ $pengguna->jabatan == "Bendahara Yayasan" ?'selected':'' }}>Bendahara Yayasan</option>
+                                        <option value="Rektor" {{ $pengguna->jabatan == "Rektor" ?'selected':'' }}>Rektor</option> 
+                                        <option value="Wakil Rektor II" {{ $pengguna->jabatan == "Wakil Rektor II" ?'selected':'' }}>Wakil Rektor II</option>
+                                        <option value="Kabid Keuangan" {{ $pengguna->jabatan == "Kabid Keuangan" ?'selected':'' }}>Kabid Keuangan</option>
+                                        <option value="Kabid Perencanaan" {{ $pengguna->jabatan == "Kabid Perencanaan" ?'selected':'' }}>Kabid Perencanaan</option>
+                                        <option value="Dekan" {{ $pengguna->jabatan == "Dekan" ?'selected':'' }}>Dekan</option>  
+                                        <option value="Bendahara Operasional"{{ $pengguna->jabatan == "Bendahara Operasional" ?'selected':'' }}>Bendahara Operasional</option>     
+                                    </select>
                                 @error('jabatan')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
