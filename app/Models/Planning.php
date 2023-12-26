@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Budget extends Model
+class Planning extends Model
 {
     use HasFactory;
-    protected $table = 'budgets';
+    protected $table = 'plannings';
 
     protected $fillable = [
-        'tahun',
+        'for_bulan',
         'departement_id',
         'user_id',    
+        'budget_id',
+        'is_approved_wr2',
+        'is_approved_rektor',
     ];
 
     public function departement()
@@ -26,13 +29,13 @@ class Budget extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function budget_details()
+    public function budget()
     {
-        return $this->hasMany(Budget_detail::class);
+        return $this->belongsTo(Budget::class);
     }
-    
-    public function plannings()
-    {
-        return $this->hasMany(Planning::class);
-    }    
+
+    // public function budget_details()
+    // {
+    //     return $this->hasMany(Budget_detail::class);
+    // }    
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\PlanningController;
 
  
 
@@ -50,6 +51,8 @@ Route::put('anggaran/rincian{id}',[BudgetController::class,'updateRincianA'])->n
 Route::delete('anggaran/rincian{id}',[BudgetController::class,'destroyRincianA'])->name('destroyRincianA');
 Route::post('anggaran/rincian',[BudgetController::class,'storeRincianA'])->name('storeRincianA');
 Route::resource('anggaran',BudgetController::class);
+
+Route::resource('perencanaan',PlanningController::class);
 
 Route::get('transaksi/transfer/{id}',[TransactionController::class,'showTransfer'])->name('showTransfer');
 Route::put('transaksi/transfer{id}',[TransactionController::class,'updateTransfer'])->name('updateTransfer');
