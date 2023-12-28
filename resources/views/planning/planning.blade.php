@@ -35,7 +35,7 @@
                                     <div class="tab-content br-n pn">
                                         <div id="navpills-1" class="tab-pane active">
                                             <div class="row align-items-center">
-                                                <table class="table table-striped table-bordered zero-configuration">
+                                                <table class="table table-striped table-bordered zero-configuration" id="plannings">
                                                     <thead>
                                                         <tr>
                                                             <th>Untuk Bulan</th>
@@ -316,7 +316,7 @@
                                     @else
                                     @endif
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered zero-configuration">
+                                        <table class="table table-striped table-bordered zero-configuration" id="plannings">
                                             <thead>
                                                 <tr>
                                                     <th>Untuk Bulan</th>
@@ -400,6 +400,7 @@
         ***********************************-->
 @endsection
 @push ('budget-script')
+
 <script type="text/javascript">
         $(document).on('click', '#submitForm', function(e){
         e.preventDefault();
@@ -418,7 +419,9 @@
             }
         });
     });
-
+$('#plannings').dataTable( {
+  "pageLength": 25
+} );
 </script>
 
 @endpush

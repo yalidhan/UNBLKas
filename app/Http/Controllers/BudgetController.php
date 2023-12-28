@@ -123,7 +123,7 @@ class BudgetController extends Controller
         }else{
             $departement_id=$request->departement_edit;
         }
-
+        
         $budget = Budget::find($id);
         $budget->tahun = $request->tahun_anggaran_edit;
         $budget->departement_id =$departement_id;
@@ -149,9 +149,14 @@ class BudgetController extends Controller
             'nominal_tambah_rincian'=>'required',
             'budget_id'=>'required',
         ]);
+        // dd($request->akun_rincian);
         $nominal_rincian_int=$request->nominal_tambah_rincian;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-        
+        $find=Budget_detail::where('budget_id','=',$request->budget_id)->where('account_id','=',$request->akun_rincian)->get();
+        // dd(!$find->isEmpty());
+        if (!$find->isEmpty()){
+            return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
+        }
         Budget_detail::create([
             'budget_id'=>$request->budget_id,
             'account_id'=>$request->akun_rincian,
@@ -173,10 +178,22 @@ class BudgetController extends Controller
             'akun_rincian_edit' => 'required',
             'nominal_tambah_rincian_edit' => 'required'
         ]);
-        
+        // dd($request->current_account,$request->akun_rincian_edit);
         $nominal_rincian_int=$request->nominal_tambah_rincian_edit;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-
+        $find=Budget_detail::where('budget_id','=',$request->budget_id)->where('account_id','=',$request->akun_rincian_edit)->get();
+        // dd(!$find->isEmpty());
+        if (!$find->isEmpty()){
+            if($request->current_account==$request->akun_rincian_edit){
+                $updateRincian = Budget_detail::find($id);
+                $updateRincian->account_id = $request->akun_rincian_edit;
+                $updateRincian->nominal = $nominal_rincian_int;
+                $updateRincian->keterangan = $request->keterangan_rincian_edit;
+                $updateRincian->update();
+                return redirect::back()->with('message', 'Berhasil mengubah data rincian');
+            }
+            return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
+        }
         $updateRincian = Budget_detail::find($id);
         $updateRincian->account_id = $request->akun_rincian_edit;
         $updateRincian->nominal = $nominal_rincian_int;

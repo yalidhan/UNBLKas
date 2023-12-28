@@ -52,6 +52,9 @@ Route::delete('anggaran/rincian{id}',[BudgetController::class,'destroyRincianA']
 Route::post('anggaran/rincian',[BudgetController::class,'storeRincianA'])->name('storeRincianA');
 Route::resource('anggaran',BudgetController::class);
 
+Route::put('perencanaan/rincian{id}',[PlanningController::class,'updateRincianP'])->name('updateRincianP');
+Route::delete('perencanaan/rincian{id}',[PlanningController::class,'destroyRincianP'])->name('destroyRincianP');
+Route::post('perencanaan/rincian',[PlanningController::class,'storeRincianP'])->name('storeRincianP');
 Route::resource('perencanaan',PlanningController::class);
 
 Route::get('transaksi/transfer/{id}',[TransactionController::class,'showTransfer'])->name('showTransfer');

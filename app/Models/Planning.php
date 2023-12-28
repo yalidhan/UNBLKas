@@ -34,8 +34,8 @@ class Planning extends Model
         return $this->belongsTo(Budget::class);
     }
 
-    // public function budget_details()
-    // {
-    //     return $this->hasMany(Budget_detail::class);
-    // }    
+    public function planning_details()
+    {
+        return $this->hasMany(Planning_detail::class);
+    }    
 }

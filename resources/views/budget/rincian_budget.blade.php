@@ -191,9 +191,10 @@
                                                         </div>
                                                         <div class="form-group summernote">
                                                             <label for="summernote{{$value->id}}" class="col-form-label">Keterangan Rincian :</label>
-                                                            <textarea  required name="keterangan_rincian_edit"  class="form-control" id="summernote{{$value->id}}">{!!$value->keterangan!!}</textarea>
+                                                            <textarea name="keterangan_rincian_edit"  class="form-control" id="summernote{{$value->id}}">{!!$value->keterangan!!}</textarea>
                                                         </div>
-                                                        
+                                                            <input type="hidden" name="budget_id" value="{{$showBudget[0]->id}}">
+                                                            <input type="hidden" name="current_account" value="{{$value->account_id}}">
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                                             <button type="submit" class="btn btn-primary">Simpan</button>

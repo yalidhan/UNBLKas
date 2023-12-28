@@ -6,6 +6,11 @@ use App\Models\Planning;
 use App\Models\Departement;
 use App\Models\Budget;
 use Illuminate\Http\Request;
+use App\Models\Account;
+use App\Models\Budget_detail;
+use App\Models\Perencanaan_detail;
+use Illuminate\Support\Facades\DB;
+use Redirect;
 
 class PlanningController extends Controller
 {
@@ -71,9 +76,53 @@ class PlanningController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Planning $planning)
+    public function show(string $id)
     {
         //
+        \DB::statement("SET SQL_MODE=''");
+        $showPlanning=DB::select(
+            "SELECT p.created_at, p.user_id, p.id, p.for_bulan, 
+            dp.id AS departement_id,dp.nama AS departement,
+            sum(pd.nominal) AS total_perencanaan
+            FROM plannings p
+            LEFT JOIN planning_details pd
+            ON p.id = pd.planning_id
+            LEFT JOIN departements dp
+            ON p.departement_id = dp.id
+            WHERE planning_id=$id"
+        );
+        $departement=$showPlanning[0]->departement_id;
+        $date=explode('-',$showPlanning[0]->for_bulan);
+        $month=$date[1];
+        $tahun_anggaran=$date[0];
+
+        $showDetailPlanning=DB::select(
+            "SELECT a.id as account_id,
+                pd.id
+            FROM planning_details pd
+            LEFT JOIN accounts a
+            ON pd.account_id = a.id
+            WHERE planning_id = $id;"
+        );
+        // dd($showDetailBudget);
+        // $accountList=Account::where('status','=','1')->orderBy('no', 'ASC')->get();
+        $accountList=DB::select(
+            "SELECT b.id,b.departement_id,b.tahun,
+                    bd.budget_id,bd.id,bd.account_id,
+                    a.nama,a.tipe,a.kelompok
+            FROM budgets b
+            LEFT JOIN budget_details bd
+                ON bd.budget_id = b.id
+            LEFT JOIN accounts a
+                ON a.id = bd.account_id
+            WHERE 
+                departement_id=$departement AND tahun=$tahun_anggaran
+            ORDER BY
+                account_id ASC;"
+        );
+        // dd($accountList);
+
+        return view('\planning\rincian_planning',compact('showPlanning','showDetailPlanning','accountList'));
     }
 
     /**
@@ -87,9 +136,19 @@ class PlanningController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Planning $planning)
+    public function update(Request $request, string $id)
     {
         //
+        $request->validate([
+            'for_bulan_edit' => 'required'
+        ]);
+        $user_id=auth()->user()->id;
+
+        $budget = Planning::find($id);
+        $budget->for_bulan = $request->for_bulan_edit.'-1';
+        $budget->update();
+
+        return redirect::back()->with('message', 'Berhasil Mengubah Data Perencanaan');
     }
 
     /**

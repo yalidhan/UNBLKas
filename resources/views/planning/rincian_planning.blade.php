@@ -1,30 +1,13 @@
 @extends('master')
-@push('rincian_budget-style')
-    <style>
-        .summernote .table td{
-        border-color: #000000;
-        }
-        .summernote .table-bordered {
-        border: 1px solid #000000;
-        }
-        .note-editable ul li{
-        list-style: disc !important;
-        list-style-position: inside !important;
-        }
-        .note-editable ol li {
-        list-style: decimal !important;
-        list-style-position: inside !important;
-        }
-    </style>
-@endpush
+
 @section('content')
 <div class="content-body">
     <div class="row page-titles mx-0">
         <div class="col p-md-0">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/home">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="/anggaran">Budget</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Rincian Anggaran</a></li>
+                <li class="breadcrumb-item"><a href="/perencanaan">Perencanaan</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Rincian Perencanaan</a></li>
             </ol>
         </div>
     </div>
@@ -33,10 +16,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><h5 class="card-title">Rincian Anggaran</h5></div>
+                    <div class="card-header"><h5 class="card-title">Rincian Perencanaan</h5></div>
                         <div class="card text-left" style="font-weight:bold;font-size:120%;">
                         <div class="card-header">
-                            Data Anggaran
+                            Data Perencanaan
                         </div>
                     <div class="card-body">
                         <div class="table-responsive"> 
@@ -45,24 +28,29 @@
                                             <tr>
                                                 <td>Departemen</td>
                                                 <td>&nbsp;:</td>
-                                                <td style="white-space: nowrap;">&nbsp;{{$showBudget[0]->departement}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{$showPlanning[0]->departement}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Tahun Anggaran</td>
+                                                <td>Dijukan Pada</td>
                                                 <td>&nbsp;:</td>
-                                                <td style="white-space: nowrap;">&nbsp;{{$showBudget[0]->tahun}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{\Carbon\Carbon::parse($showPlanning[0]->created_at)->format('d-F-Y h:i:s')}}</td>
                                             </tr>
                                             <tr>
-                                                <td style="white-space: nowrap;">Total Anggaran</td>
+                                                <td>Untuk Bulan</td>
                                                 <td>&nbsp;:</td>
-                                                <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showBudget[0]->total_anggaran,0,',','.')}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{\Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('F-Y')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="white-space: nowrap;">Total Perencanaan</td>
+                                                <td>&nbsp;:</td>
+                                                <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showPlanning[0]->total_perencanaan,0,',','.')}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                         </div>
                     </div>
                     <div class="card-footer text-muted">
-                            @if (auth()->user()->id==$showBudget[0]->user_id)
+                            @if (auth()->user()->id==$showPlanning[0]->user_id)
                             <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#edit"><span class="btn-icon-left" style="background: #ffbe88;"><i class="fa fa-edit color-warning"></i></span>Edit Data</button>
                                 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -73,26 +61,13 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{route('anggaran.update',$showBudget[0]->id)}}" method="POST">
+                                                <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="form-group">
-                                                            <label for="tahun_anggaran_edit" class="col-form-label">Tahun Anggaran:</label>
-                                                            <input value="{{$showBudget[0]->tahun}}" onkeypress='validate(event)' required value="{{ old('tahun_anggaran_edit')}}" name="tahun_anggaran_edit" type="text" maxlength="4" placeholder="Cth. 2023" class="form-control" id="tahun_anggaran_edit">
+                                                            <label for="for_bulan_edit" class="col-form-label">Untuk Bulan:</label>
+                                                            <input value="{{\Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('Y-m')}}" required value="{{ old('for_bulan_edit')}}" name="for_bulan_edit" type="month" class="form-control" id="for_bulan_edit">
                                                 </div>
-                                                @if (auth()->user()->departement_id==1)
-                                                <div class="form-group">
-                                                        <label for="departement_edit" class="col-form-label">Departemen:</label>
-                                                        <select id="departement_edit" data-width="100%" name="departement_edit" class="form-control" required>
-                                                            <option value="" selected disabled hidden>Pilih Departemen</option>
-                                                            @foreach($departements as $departementvalue)
-                                                                <option value="{{ $departementvalue->id }}"{{$showBudget[0]->departement_id == $departementvalue->id  ? 'selected' : ''}}>{{ $departementvalue->nama}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                </div>
-                                                @else
-                                                
-                                                @endif
                                             </div>    
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -107,33 +82,51 @@
                                 @endif
                     </div>                         
                 </div>
-            </div>
-        </div>
-        @if($errors->first())
-            <div class="alert alert-danger" role="alert">
-            {{$errors->first()}}
-            </div>
-            @else
-        @endif
-        <div class="table-responsive"> 
-            <table class="table table-striped table-bordered zero-configuration" style="border:3px;">
+                <div class="table-responsive"> 
+            <table id="r_plannings" class="table table-striped table-bordered zero-configuration" style="border:3px;">
                 <thead>
                     <tr>
-                        <th scope="col">Kode Akun</th>
-                        <th scope="col">Akun</th>
-                        <th scope="col">Kelompok</th>
-                        <th scope="col">Total Nominal</th>
-                        <th scope="col">Keterangan</th>
+                        <th scope="col">Jenis</th>
+                        @if ($showPlanning[0]->departement_id==6)
+                        <th scope="col">Kelompok Rektorat</th>
+                        @else
+                        @endif
+                        <th scope="col">Kegiatan</th>
+                        <th scope="col">Penanggung Jawab Kegiatan</th>
+                        <th scope="col">Jumlah Anggaran</th>
+                        <th scope="col">Satuan Ukur Kinerja Kegiatan</th>
+                        <th scope="col">Target Kinerja(Target Output)</th>
+                        <th scope="col">Capaian Kinerja(Realisasi Output)</th>
+                        <th scope="col">Target Waktu Pelaksanaan</th>
+                        <th scope="col">Capaian Target Waktu</th>
+                        <th scope="col">Jml. Anggaran Disetujui</th>
+                        <th scope="col">Disetujui WR II</th>
+                        <th scope="col">Catatan WR II</th>
+                        <th scope="col">Disetujui Rektor</th>
+                        <th scope="col">Catatan Rektor</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($showDetailBudget as $value)
+                    @foreach ($showDetailPlanning as $value)
                     <tr>
-                        <td>{{$value->no}}</td>
-                        <td>{{$value->tipe}} || {{$value->nama}}</td>
-                        <td>{{$value->kelompok}}</td>
+                        <td>RKA</td>
+                        @if ($showPlanning[0]->departement_id==6)
+                        <td>{{$value->group_rektorat}}</td>
+                        @else
+                        @endif
+                        <td>{{$value->nama}}</td>
+                        <td>{{$value->pj}}</td>
                         <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
+                        <td>{{$value->satuan_ukur_kinerja}}</td>
+                        <td>{{$value->target_kinerja}}</td>
+                        <td>{{$value->capaian_kinerja}}</td>
+                        <td>{{$value->waktu_pelaksanaan	}}</td>
+                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal_disetujui,0,',','.')}}</td>
+                        <td>{{$value->approved_by_wr2}}</td>
+                        <td>{{$value->note_wr2}}</td>
+                        <td>{{$value->approved_by_rektor}}</td>
+                        <td>{{$value->note_rektor}}</td>
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
@@ -145,7 +138,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Anggaran</h5>
+                                    <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Perencanaan</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
@@ -161,7 +154,7 @@
                             </div>                           
                         </td>
                         <td><span style="display: flex;">
-                            @if (auth()->user()->id==$showBudget[0]->user_id)
+                            @if (auth()->user()->id==$showPlanning[0]->user_id)
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
                                 <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
@@ -173,7 +166,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{route('updateRincianA',$value->id)}}" method="POST">
+                                                    <form action="{{route('updateRincianP',$value->id)}}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                         <div class="form-group">
@@ -203,7 +196,7 @@
                                             </div>
                                         </div>
                                     </div>                                 
-                                <form method="POST" action="{{route('destroyRincianA',$value->id)}}"> 
+                                <form method="POST" action="{{route('destroyRincianP',$value->id)}}"> 
                                     @csrf
                                     @method('DELETE')
                                     <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
@@ -218,8 +211,8 @@
             </table>
         </div>
         <center>
-        <a href="{{ route('anggaran.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
-        @if (auth()->user()->id==$showBudget[0]->user_id)
+        <a href="{{ route('perencanaan.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
+        @if (auth()->user()->id==$showPlanning[0]->user_id)
         <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
         </center>
         <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
@@ -231,7 +224,7 @@
                                     </button>
                                 </div>
                                     <div class="modal-body">
-                                        <form action="{{route('storeRincianA')}}" method="POST" id="forms">
+                                        <form action="{{route('storeRincianP')}}" method="POST" id="forms">
                                             @csrf
                                             <div class="form-group">
                                                 <label for="akun_rincian" class="col-form-label">Akun :</label>
@@ -246,7 +239,7 @@
                                                 <label for="nominal_tambah_rincian" class="col-form-label">Total Nominal :</label>
                                                 <input  required name="nominal_tambah_rincian" type="text" maxlength="14" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
                                             </div>
-                                            <input type="hidden" name="budget_id" value="{{$showBudget[0]->id}}">
+                                            <input type="hidden" name="budget_id" value="{{$showPlanning[0]->id}}">
                                             <div class="form-group summernote">
                                                 <label for="summernote" class="col-form-label">Keterangan Rincian :</label>
                                                 <textarea name="keterangan_rincian"  class="form-control" id="summernote"></textarea>
@@ -265,12 +258,22 @@
                 @endif   
             </div>
         </div>
+            
+        </div>
+        @if($errors->first())
+            <div class="alert alert-danger" role="alert">
+            {{$errors->first()}}
+            </div>
+            @else
+        @endif
+
     </div>
+</div>
 </div>
 @endsection
 @push('nominal-mask')
     $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
-    @foreach ($showDetailBudget as $valueMask)
+    @foreach ($showDetailPlanning as $valueMask)
     $('#nominal_tambah_rincian_edit{{$valueMask->id}}').mask('#.##0', {reverse: true});
     @endforeach
 @endpush
@@ -278,53 +281,11 @@
 @push('detail_budget-script')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-    <script>
-            $('#summernote').summernote({
-            shortcuts:false,
-            // tableClassName: 'table table-striped',
-            disableDragAndDrop: true,
-            placeholder: 'Buat detil dari total nominal anggaran di sini, bisa menggunakan tabel',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['view', ['fullscreen']],
-            ],
-        });
-    </script>
-    @foreach ($showDetailBudget as $valueSummernote)
-    <script>
-            $('#summernote{{$valueSummernote->id}}').summernote({
-            shortcuts:false,
-            // tableClassName: 'table table-striped',
-            disableDragAndDrop: true,
-            placeholder: 'Buat detil dari total nominal anggaran di sini, bisa menggunakan tabel',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['view', ['fullscreen']],
-            ],
-        });
-    </script>
-    @endforeach
+
     <script>    
-        $(document).ready(function() {
-            $('.departement_edit').select2();
-        });
-        $('#departement_edit').select2({
-        dropdownParent: $('#edit')
-        });
+        $('#r_plannings').dataTable( {
+        "pageLength": 25
+        } );
     </script>
     <script>    
         $(document).ready(function() {
@@ -334,7 +295,7 @@
         dropdownParent: $('#tambah_rincian')
         });
     </script>
-    @foreach ($showDetailBudget as $valueDropdown)
+    @foreach ($showDetailPlanning as $valueDropdown)
     <script>    
         $(document).ready(function() {
             $('.akun_rincian_edit{{$valueDropdown->id}}').select2();

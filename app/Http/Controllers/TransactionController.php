@@ -256,14 +256,14 @@ class TransactionController extends Controller
             $accountList=DB::select(
                 "SELECT b.id,b.departement_id,b.tahun,
                         bd.budget_id,bd.id,bd.account_id,
-                        a.nama,a.tipe,a.kelompok,a.status
+                        a.nama,a.tipe,a.kelompok
                 FROM budgets b
                 LEFT JOIN budget_details bd
                     ON bd.budget_id = b.id
                 LEFT JOIN accounts a
                     ON a.id = bd.account_id
                 WHERE 
-                    departement_id=$departement_id AND tahun=$tahun AND status=1
+                    departement_id=$departement_id AND tahun=$tahun
                 ORDER BY
                     account_id ASC;"
             );
