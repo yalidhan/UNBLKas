@@ -33,7 +33,12 @@
                                                 <label for="sampai">Sampai Tanggal</label>
                                                 <input required id="sampai" name="sampai" type="date" class="form-control" placeholder="Sampai Tanggal">
                                             </div>
-                                            @if (auth()->user()->departement_id==1)
+                                            @if (auth()->user()->departement_id==1 
+                                                OR auth()->user()->jabatan=="Rektor"
+                                                OR auth()->user()->jabatan=="Wakil Rektor II"
+                                                OR auth()->user()->jabatan=="Kabid Keuangan"
+                                                OR auth()->user()->jabatan=="Kabid Perencanaan"
+                                                ) 
                                                 <div class="col">
                                                     <label for="departement">Departemen Tujuan:</label>
                                                         <select id="departement" data-width="100%" name="departement" class="form-control">

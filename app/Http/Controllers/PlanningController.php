@@ -23,7 +23,10 @@ class PlanningController extends Controller
         if (auth()->user()->jabatan=="Bendahara Yayasan" 
             or auth()->user()->jabatan=="Rektor"
             or auth()->user()->jabatan=="Wakil Rektor II"
-            or auth()->user()->jabatan=="Super Admin"){
+            or auth()->user()->jabatan=="Super Admin"
+            or auth()->user()->jabatan=="Kabid Keuangan"
+            or auth()->user()->jabatan=="Kabid Perencanaan"
+            ){
             $plannings=Planning::orderby('for_bulan','DESC')->orderBy('created_at','ASC')->get();
         }else{
             $plannings=Planning::where('departement_id','=',auth()->user()->departement_id)->orderBy('created_at','DESC')->get();
@@ -81,7 +84,7 @@ class PlanningController extends Controller
         //
         \DB::statement("SET SQL_MODE=''");
         $showPlanning=DB::select(
-            "SELECT p.created_at, p.user_id, p.id, p.for_bulan, 
+            "SELECT p.created_at, p.user_id, p.id,p.budget_id, p.for_bulan, 
             dp.id AS departement_id,dp.nama AS departement,
             sum(pd.nominal) AS total_perencanaan
             FROM plannings p
@@ -97,14 +100,16 @@ class PlanningController extends Controller
         $tahun_anggaran=$date[0];
 
         $showDetailPlanning=DB::select(
-            "SELECT a.id as account_id,
-                pd.id
+            "SELECT a.id as account_id,a.nama,
+                pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,
+                pd.target_kinerja,pd.capaian_kinerja,pd.waktu_pelaksanaan,pd.approved_by_wr2,pd.note_wr2,
+                pd.approved_by_rektor,pd.note_rektor,pd.capaian_target_waktu
             FROM planning_details pd
             LEFT JOIN accounts a
             ON pd.account_id = a.id
             WHERE planning_id = $id;"
         );
-        // dd($showDetailBudget);
+        // dd($showDetailPlanning);
         // $accountList=Account::where('status','=','1')->orderBy('no', 'ASC')->get();
         $accountList=DB::select(
             "SELECT b.id,b.departement_id,b.tahun,

@@ -23,9 +23,12 @@ class BudgetController extends Controller
     public function index()
     {
         //
-        if (auth()->user()->departement_id==1){
+        if (auth()->user()->departement_id==1 ){
             $budgets=Budget::all();
-        }else{
+        }elseif(auth()->user()->departement_id==6){
+            $budgets=Budget::where('departement_id','!=','1')->get();
+        }
+        else{
             $budgets=Budget::where('departement_id','=',auth()->user()->departement_id)->get();
         }
         

@@ -20,7 +20,10 @@
                         @if(auth()->user()->jabatan=='Bendahara Yayasan' 
                             OR auth()->user()->jabatan=='Wakil Rektor II' 
                             OR auth()->user()->jabatan=='Rektor'
-                            OR auth()->user()->jabatan=='Super Admin') 
+                            OR auth()->user()->jabatan=='Super Admin'
+                            OR auth()->user()->jabatan=='Kabid Keuangan'
+                            OR auth()->user()->jabatan=='Kabid Perencanaan'
+                            ) 
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Perencanaan Seluruh Departemen</h4>

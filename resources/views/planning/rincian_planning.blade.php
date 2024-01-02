@@ -92,13 +92,14 @@
                         @else
                         @endif
                         <th scope="col">Kegiatan</th>
+                        <th scope="col">Keterangan Anggaran</th>
                         <th scope="col">Penanggung Jawab Kegiatan</th>
                         <th scope="col">Jumlah Anggaran</th>
                         <th scope="col">Satuan Ukur Kinerja Kegiatan</th>
                         <th scope="col">Target Kinerja(Target Output)</th>
                         <th scope="col">Capaian Kinerja(Realisasi Output)</th>
                         <th scope="col">Target Waktu Pelaksanaan</th>
-                        <th scope="col">Capaian Target Waktu</th>
+                        <th scope="col">Capaian Target Waktu Penyelesaian</th>
                         <th scope="col">Jml. Anggaran Disetujui</th>
                         <th scope="col">Disetujui WR II</th>
                         <th scope="col">Catatan WR II</th>
@@ -116,18 +117,14 @@
                         @else
                         @endif
                         <td>{{$value->nama}}</td>
-                        <td>{{$value->pj}}</td>
-                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
-                        <td>{{$value->satuan_ukur_kinerja}}</td>
-                        <td>{{$value->target_kinerja}}</td>
-                        <td>{{$value->capaian_kinerja}}</td>
-                        <td>{{$value->waktu_pelaksanaan	}}</td>
-                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal_disetujui,0,',','.')}}</td>
-                        <td>{{$value->approved_by_wr2}}</td>
-                        <td>{{$value->note_wr2}}</td>
-                        <td>{{$value->approved_by_rektor}}</td>
-                        <td>{{$value->note_rektor}}</td>
                         <td>
+                            @php
+                            $budget_id=$showPlanning[0]->budget_id;
+                            $account_id=$value->id;
+                                $keterangan=DB::select(
+                                    "SELECT * FROM budget_details WHERE budget_id=$budget_id and account_id=$account_id"
+                                ); 
+                            @endphp
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
                             Lihat Keterangan 
@@ -138,21 +135,58 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Perencanaan</h5>
+                                    <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Anggaran</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body summernote">
-                                    {!!$value->keterangan!!}
+                                <div class="modal-body">
+                                    {!!$keterangan[0]->keterangan!!}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                                 </div>
                             </div>
-                            </div>                           
+                            </div>    
+
                         </td>
+                        <td>{{$value->pj}}</td>
+                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
+                        <td><button type="button" class="btn btn-primary"                            
+                            onclick="window.open('{{$value->satuan_ukur_kinerja}}', 
+                            'newwindow', 
+                            'width=680,height=780'); 
+                            return false;">                                
+                            Link Dokumen Satuan Ukur Kinerja Kegiatan
+                            </button>
+
+                        </td>
+                        <td>{{$value->target_kinerja}}</td>
+                        <td>{{$value->capaian_kinerja}}</td>
+                        <td>{{$value->waktu_pelaksanaan}}</td>
+                        <td>{{$value->capaian_target_waktu}}</td>
+                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal_disetujui,0,',','.')}}</td>
+                        <td>
+                            @if($value->approved_by_wr2==0)
+                                <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
+                            @elseif($value->approved_by_wr2==1)
+                                <a href="#" class="badge badge-success">Disetujui</a>
+                            @elseif($value->approved_by_wr2==2)
+                                <a href="#" class="badge badge-danger">Ditolak</a>   
+                            @endif 
+                        </td>
+                        <td>{{$value->note_wr2}}</td>
+                        <td>
+                            @if($value->approved_by_rektor==0)
+                                <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
+                            @elseif($value->approved_by_rektor==1)
+                                <a href="#" class="badge badge-success">Disetujui</a>
+                            @elseif($value->approved_by_rektor==2)
+                                <a href="#" class="badge badge-danger">Ditolak</a>   
+                            @endif 
+                        </td>
+                        <td>{{$value->note_rektor}}</td>
                         <td><span style="display: flex;">
                             @if (auth()->user()->id==$showPlanning[0]->user_id)
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
@@ -181,10 +215,6 @@
                                                         <div class="form-group">
                                                             <label for="nominal_tambah_rincian_edit{{$value->id}}" class="col-form-label">Nominal :</label>
                                                             <input style="padding:0px 0px 0px 5px;" required name="nominal_tambah_rincian_edit" value="{{$value->nominal}}" maxlength="14" type="text" class="form-control" id="nominal_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
-                                                        </div>
-                                                        <div class="form-group summernote">
-                                                            <label for="summernote{{$value->id}}" class="col-form-label">Keterangan Rincian :</label>
-                                                            <textarea  required name="keterangan_rincian_edit"  class="form-control" id="summernote{{$value->id}}">{!!$value->keterangan!!}</textarea>
                                                         </div>
                                                         
                                                         <div class="modal-footer">
@@ -236,14 +266,34 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="nominal_tambah_rincian" class="col-form-label">Total Nominal :</label>
-                                                <input  required name="nominal_tambah_rincian" type="text" maxlength="14" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
+                                                <label for="jumlah_anggaran_tambah_rincian" class="col-form-label">Jumlah Anggaran :</label>
+                                                <input  required name="jumlah_anggaran_tambah_rincian" type="text" maxlength="14" class="form-control" id="jumlah_anggaran_tambah_rincian" placeholder="Rp">
                                             </div>
-                                            <input type="hidden" name="budget_id" value="{{$showPlanning[0]->id}}">
-                                            <div class="form-group summernote">
-                                                <label for="summernote" class="col-form-label">Keterangan Rincian :</label>
-                                                <textarea name="keterangan_rincian"  class="form-control" id="summernote"></textarea>
+                                            <div class="form-group">
+                                                <label for="group_rektorat" class="col-form-label">{{ __('Group Rektorat:') }}</label>
+                                                    <select id="group_rektorat" name="group_rektorat" class="form-control @error('group_rektorat') is-invalid @enderror" required autocomplete="group_rektorat" autofocus>
+                                                    <option value="" selected disabled hidden>Pilih Group Rektorat</option>
+                                                        <option value="Wakil Rektor I">Wakil Rektor I</option>
+                                                        <option value="Wakil Rektor II">Wakil Rektor II</option>
+                                                        <option value="Wakil Rektor III">Wakil Rektor III</option>
+                                                        <option value="Laboratorium">Laboratorium</option>
+                                                        <option value="Perpustakaan">Perpustakaan</option>
+                                                        <option value="LPPM">LPPM</option>
+                                                        <option value="LPMI">LPMI</option>
+                                                    </select>                                             
                                             </div>
+                                            <div class="form-group">
+                                                <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
+                                                <input  required name="pj" type="text" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
+                                                <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
+                                            </div>
+
+
+                                            <input type="hidden" name="planning_id" value="{{$showPlanning[0]->id}}">
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -272,16 +322,13 @@
 </div>
 @endsection
 @push('nominal-mask')
-    $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
+    $('#jumlah_anggaran_tambah_rincian').mask('#.##0', {reverse: true});
     @foreach ($showDetailPlanning as $valueMask)
-    $('#nominal_tambah_rincian_edit{{$valueMask->id}}').mask('#.##0', {reverse: true});
+    $('#jumlah_anggaran_tambah_rincian_edit{{$valueMask->id}}').mask('#.##0', {reverse: true});
     @endforeach
 @endpush
 
 @push('detail_budget-script')
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-
     <script>    
         $('#r_plannings').dataTable( {
         "pageLength": 25
