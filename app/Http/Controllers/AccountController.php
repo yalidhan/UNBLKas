@@ -21,7 +21,7 @@ class AccountController extends Controller
         }
 
         $account=Account::get();
-        return view('\account/account',['accountlist'=>$account]);
+        return view('account/account',['accountlist'=>$account]);
     }
 
     /**

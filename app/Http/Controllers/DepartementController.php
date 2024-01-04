@@ -20,7 +20,7 @@ class DepartementController extends Controller
             return redirect('/');
         }
         $departement=Departement::get();
-        return view('\departement/departement',['daftardepartement'=>$departement]);
+        return view('departement/departement',['daftardepartement'=>$departement]);
     }
 
     /**

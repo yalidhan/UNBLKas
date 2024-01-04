@@ -33,7 +33,7 @@ class PlanningController extends Controller
         }
         // dd($plannings);
         $departements=Departement::where('status','=','1')->get();
-        return view('\planning/planning',compact('plannings'));
+        return view('planning/planning',compact('plannings'));
     }
 
     /**
@@ -127,7 +127,7 @@ class PlanningController extends Controller
         );
         // dd($accountList);
 
-        return view('\planning\rincian_planning',compact('showPlanning','showDetailPlanning','accountList'));
+        return view('planning/rincian_planning',compact('showPlanning','showDetailPlanning','accountList'));
     }
 
     /**

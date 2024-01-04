@@ -86,7 +86,7 @@ class TransactionController extends Controller
         $accountHarta=Account::where('nama','LIKE','Kas Kecil%')->where('status','=','1')->orderBy('no')->get();
         $accountPendapatan=Account::where(function($q){$q->where('tipe','=','Pendapatan')->orWhere('nama','LIKE','Kas Bank%');})->where('status','=','1')->orderBy('no')->get();
         // dd($accountPendapatan);
-        return view('\transaksi/transaksi',
+        return view('transaksi/transaksi',
             ['transactionlist'=>$transaction],
             ['accountlistPendapatan'=>$accountPendapatan])
                 ->with ('year',$year)
@@ -269,7 +269,7 @@ class TransactionController extends Controller
             );
             // dd($accountList);
         }
-        return view('\transaksi\rincian_transaksi',compact('showTransaction','showDetailTransaction','accountList'));
+        return view('transaksi/rincian_transaksi',compact('showTransaction','showDetailTransaction','accountList'));
     }
 
     /**
@@ -375,7 +375,7 @@ class TransactionController extends Controller
 
         $departement=Departement::where('status','=','1')->get();
         $accountHarta=Account::where('nama','LIKE','Kas%')->where('status','=','1')->orderBy('no')->get();
-        return view('\transaksi\edit_transfer')
+        return view('/transaksi/edit_transfer')
             ->with('accountlistHarta',$accountHarta)
             ->with('listDepartement',$departement)
             ->with('showTransaction',$showTransaction)

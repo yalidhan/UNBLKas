@@ -33,7 +33,7 @@ class BudgetController extends Controller
         }
         
         $departements=Departement::where('status','=','1')->get();
-        return view('\budget/budget',compact('budgets','departements'));
+        return view('budget/budget',compact('budgets','departements'));
     }
 
     /**
@@ -99,7 +99,7 @@ class BudgetController extends Controller
         $accountList=Account::where('status','=','1')->orderBy('no', 'ASC')->get();
         // dd($accountList);
         $departements=Departement::where('status','=','1')->get();
-        return view('\budget\rincian_budget',compact('showBudget','showDetailBudget','accountList','departements'));
+        return view('budget/rincian_budget',compact('showBudget','showDetailBudget','accountList','departements'));
     }
 
     /**

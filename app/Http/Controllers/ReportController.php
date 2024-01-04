@@ -47,7 +47,7 @@ class ReportController extends Controller
 
         
         // dd($account);
-        return view('\laporan/realisasianggaran')
+        return view('laporan/realisasianggaran')
             ->with('account',$account)
             ->with('departement',$departement);
     }
@@ -98,7 +98,7 @@ class ReportController extends Controller
         );
         // dd($kelompok);
 
-        return view('\laporan/cetak-realisasianggaran')
+        return view('laporan/cetak-realisasianggaran')
                     ->with('kelompok',$kelompok)
                     ->with('sd',$sd)
                     ->with('tahun',$tahun)
@@ -113,7 +113,7 @@ class ReportController extends Controller
             $departement=Departement::where('status','=','1')->where('id','!=','1')->get();
         }
         
-        return view('\laporan/pertanggungjawaban')->with('departement',$departement);
+        return view('laporan/pertanggungjawaban')->with('departement',$departement);
     }
 
     public function lpjCetak(Request $request)
@@ -179,7 +179,7 @@ class ReportController extends Controller
         $saldoLastMonth=$saldoDebitLastMonth-$saldoKreditLastMonth;
         $departementNama=Departement::find($departement_id);
         // dd($periode);
-        return view('\laporan/cetak-pertanggungjawaban')
+        return view('laporan/cetak-pertanggungjawaban')
                 ->with('transactionList',$transaction)
                 ->with('departementNama',$departementNama)
                 ->with('periode',$periode)
