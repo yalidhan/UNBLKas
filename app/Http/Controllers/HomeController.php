@@ -145,7 +145,7 @@ class HomeController extends Controller
             ON t.id = d.transaction_id 
         LEFT JOIN accounts a 
             ON d.account_id = a.id 
-        WHERE t.departement_id=$departement_id AND YEAR('$year-12-01') AND DK=2 AND a.nama NOT LIKE 'Kas%'
+        WHERE t.departement_id=$departement_id AND YEAR(tanggal)=$year AND DK=2 AND a.no NOT LIKE '01.%'
         GROUP BY departement_id
         ");
         

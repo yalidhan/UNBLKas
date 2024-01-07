@@ -139,7 +139,7 @@
                             @else
                             @endif
                             <li><a href="{{route('anggaran.index')}}">Anggaran</a></li>
-                            <li><a href="{{route('perencanaan.index')}}">Perencanaan</a></li>
+                            <!-- <li><a href="{{route('perencanaan.index')}}">Perencanaan</a></li> -->
                         </ul>
                     <li class="nav-label">Transaksi</li>
                     <li>

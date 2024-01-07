@@ -78,6 +78,8 @@ class ReportController extends Controller
 
         $tahun=Carbon::parse($request->sampai)->format('Y');
         $sd=Carbon::parse($request->sampai)->format('F Y');
+        $sd2=$request->sampai;
+        // dd($sd2);
         // dd($departement);
         \DB::statement("SET SQL_MODE=''");
         $kelompok=DB::select(
@@ -101,6 +103,7 @@ class ReportController extends Controller
         return view('laporan/cetak-realisasianggaran')
                     ->with('kelompok',$kelompok)
                     ->with('sd',$sd)
+                    ->with('sd2',$sd2)
                     ->with('tahun',$tahun)
                     ->with('departement',$departement);
     }
