@@ -66,7 +66,7 @@
                     <td></td>
                     <td></td>
                     <td style="border-bottom:3pt solid black;">Pagu Anggaran</td>
-                    <td style="border-bottom:3pt solid black;">Relasisasi</td>
+                    <td style="border-bottom:3pt solid black;">Realisasi</td>
                     <td style="border-bottom:3pt solid black;">%</td>
                     <td style="border-bottom:3pt solid black;">Sisa Anggaran</td>
                     <td style="border-bottom:3pt solid black;">%</td>
@@ -77,15 +77,32 @@
                     <td style="color:#000080;"colspan="5" align="left"><b>{{$kelompokvalue->kelompok}}</b></td>
                 </tr>
                 @php 
-                    $detail_anggaran=DB::select(
-                        "SELECT bd.budget_id,bd.id,bd.account_id,bd.nominal,
-                            a.kelompok,a.nama,a.no
-                        FROM budget_details bd
-                        LEFT JOIN accounts a
-                            ON bd.account_id = a.id
-                        WHERE budget_id=$kelompokvalue->budget_id AND kelompok='$kelompokvalue->kelompok'
-                        ORDER BY account_id ASC"
-                        );
+                    if (!empty($departement->id)){
+                        $detail_anggaran=DB::select(
+                            "SELECT bd.budget_id,bd.id,bd.account_id,bd.nominal,
+                                a.kelompok,a.nama,a.no
+                            FROM budget_details bd
+                            LEFT JOIN accounts a
+                                ON bd.account_id = a.id
+                            WHERE budget_id=$kelompokvalue->budget_id AND kelompok='$kelompokvalue->kelompok'
+                            ORDER BY account_id ASC"
+                            );}
+                    else{
+                        $detail_anggaran=DB::select(
+                            "SELECT
+                                bd.budget_id,bd.id,bd.account_id,sum(bd.nominal) as nominal,
+                                b.tahun,
+                                a.kelompok,a.nama,a.no
+                            FROM budget_details bd
+                            LEFT JOIN accounts a
+                                ON bd.account_id = a.id
+                            LEFT JOIN budgets b
+                                ON bd.budget_id = b.id
+                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok'
+                            GROUP BY a.nama
+                            ORDER BY account_id ASC"
+                            );
+                    }
                               
                 @endphp
                 @foreach ($detail_anggaran as $da_value)
