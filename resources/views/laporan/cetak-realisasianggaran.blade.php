@@ -91,14 +91,14 @@
                         $detail_anggaran=DB::select(
                             "SELECT
                                 bd.budget_id,bd.id,bd.account_id,sum(bd.nominal) as nominal,
-                                b.tahun,
+                                b.tahun,b.departement_id,
                                 a.kelompok,a.nama,a.no
                             FROM budget_details bd
                             LEFT JOIN accounts a
                                 ON bd.account_id = a.id
                             LEFT JOIN budgets b
                                 ON bd.budget_id = b.id
-                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok'
+                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id!=1
                             GROUP BY a.nama
                             ORDER BY account_id ASC"
                             );
