@@ -114,6 +114,7 @@
                     $departement_sql="t.departement_id!=$dp_id";}
                 ?>
                 @php
+                if (!empty($departement->id)){
                     $transaksi=DB::select(
                             "SELECT t.id,t.tanggal, d.account_id,sum(d.nominal) AS total,
                                 a.id,a.no,a.kelompok 
@@ -123,7 +124,20 @@
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
                             WHERE $departement_sql AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id"
-                            );    
+                            );
+                    }
+                else{
+                    $transaksi=DB::select(
+                            "SELECT t.id,t.tanggal,t.departement_id, d.account_id,sum(d.nominal) AS total,
+                                a.id,a.no,a.kelompok 
+                            FROM transactions t 
+                            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+                            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+                            WHERE departement_id!=1 AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id"
+                            );
+                    }
                 @endphp
                 
                 <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
