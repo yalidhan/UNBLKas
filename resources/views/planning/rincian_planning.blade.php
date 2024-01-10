@@ -261,7 +261,7 @@
                                                 <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>
                                                     <option value="" selected disabled hidden>Pilih Akun</option>
                                                     @foreach($accountList as $accountvalue)
-                                                    <option value="{{ $accountvalue->id }}">({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
+                                                    <option value="{{ $accountvalue->account_id }}">({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -269,6 +269,7 @@
                                                 <label for="jumlah_anggaran_tambah_rincian" class="col-form-label">Jumlah Anggaran :</label>
                                                 <input  required name="jumlah_anggaran_tambah_rincian" type="text" maxlength="14" class="form-control" id="jumlah_anggaran_tambah_rincian" placeholder="Rp">
                                             </div>
+                                            @if ($showPlanning[0]->departement_id==6)
                                             <div class="form-group">
                                                 <label for="group_rektorat" class="col-form-label">{{ __('Group Rektorat:') }}</label>
                                                     <select id="group_rektorat" name="group_rektorat" class="form-control @error('group_rektorat') is-invalid @enderror" required autocomplete="group_rektorat" autofocus>
@@ -282,6 +283,8 @@
                                                         <option value="LPMI">LPMI</option>
                                                     </select>                                             
                                             </div>
+                                            @else
+                                            @endif
                                             <div class="form-group">
                                                 <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
                                                 <input  required name="pj" type="text" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
@@ -289,6 +292,22 @@
                                             <div class="form-group">
                                                 <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
                                                 <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
+                                                <textarea name="target_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="target_kinerja" placeholder="Target Output"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="capaian_kinerja" class="col-form-label">Capaian Kinerja(Realisasi Output) :</label>
+                                                <textarea name="capaian_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="target_waktu_pelaksanaan" class="col-form-label">Target Waktu Pelaksanaan:</label>
+                                                <textarea name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="25" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="capaian_target_waktu_penyelesaian" class="col-form-label">Capaian Target Waktu Penyelesaian:</label>
+                                                <textarea name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="25" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian"></textarea>
                                             </div>
 
 

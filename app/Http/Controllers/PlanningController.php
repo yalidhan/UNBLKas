@@ -8,7 +8,7 @@ use App\Models\Budget;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Budget_detail;
-use App\Models\Perencanaan_detail;
+use App\Models\Planning_detail;
 use Illuminate\Support\Facades\DB;
 use Redirect;
 
@@ -165,5 +165,40 @@ class PlanningController extends Controller
         // dd($perencanaan);
         Planning::where('id',$perencanaan)->delete();
         return redirect()->route('perencanaan.index')->withErrors(['message' => ''])->with('message','Berhasil menghapus data perencanaan');
+    }
+
+    public function storeRincianP(Request $request)
+    {
+        $request->validate([
+            'akun_rincian'=>'required',
+            'jumlah_anggaran_tambah_rincian'=>'required',
+            'pj'=>'required',
+            'satuan_ukur_kinerja'=>'required',
+            'target_kinerja'=>'required',
+            'capaian_kinerja'=>'required',
+            'target_waktu_pelaksanaan'=>'required',
+            'capaian_target_waktu_penyelesaian'=>'required',
+            'planning_id'=>'required',
+        ]);
+        // dd($request->akun_rincian);
+        $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian;
+        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+        $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian)->get();
+        // dd(!$find->isEmpty());
+        if (!$find->isEmpty()){
+            return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
+        }
+        Planning_detail::create([
+            'planning_id'=>$request->planning_id,
+            'account_id'=>$request->akun_rincian,
+            'nominal'=>$nominal_rincian_int,
+            'pj'=>$request->pj,
+            'satuan_ukur_kinerja'=>$request->satuan_ukur_kinerja,
+            'target_kinerja'=>$request->target_kinerja,
+            'capaian_kinerja'=>$request->capaian_kinerja,
+            'waktu_pelaksanaan'=>$request->target_waktu_pelaksanaan,
+            'capaian_target_waktu'=>$request->capaian_target_waktu_penyelesaian,
+        ]);
+        return redirect::back()->with ('message','Berhasil menmbah rincian perencanaan');
     }
 }

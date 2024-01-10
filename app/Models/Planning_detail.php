@@ -24,6 +24,7 @@ class Planning_detail extends Model
         'target_kinerja',
         'capaian_kinerja',
         'waktu_pelaksanaan',
+        'capaian_target_waktu',	
 
     ];
 
