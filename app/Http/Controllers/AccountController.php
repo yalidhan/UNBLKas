@@ -119,7 +119,8 @@ class AccountController extends Controller
             'nama' => 'required',
         ]);
         $akun->update([
-            'nama' => $request->nama
+            'nama' => $request->nama,
+            'kelompok' => $request->kelompok
         ]);
 
         return redirect()->route('akun.index')->with('message', 'Berhasil Merubah Data');
