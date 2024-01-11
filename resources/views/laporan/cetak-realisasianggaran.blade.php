@@ -116,15 +116,25 @@
                 @php
                 if (!empty($departement->id)){
                     $transaksi=DB::select(
-                            "SELECT t.id,t.tanggal, d.account_id,sum(d.nominal) AS total,
+                            "SELECT t.id,t.tanggal,d.dk, d.account_id,sum(d.nominal) AS total,
                                 a.id,a.no,a.kelompok 
                             FROM transactions t 
                             LEFT JOIN transaction_details d 
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE $departement_sql AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id"
+                            WHERE $departement_sql AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
                             );
+                    $transaksiPengembalian=DB::select(
+                        "SELECT t.id,t.tanggal,d.dk, d.account_id,sum(d.nominal) AS total,
+                            a.id,a.no,a.kelompok 
+                        FROM transactions t 
+                        LEFT JOIN transaction_details d 
+                            ON t.id = d.transaction_id 
+                        LEFT JOIN accounts a 
+                            ON d.account_id = a.id 
+                        WHERE $departement_sql AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
+                        );                    
                     }
                 else{
                     $transaksi=DB::select(
@@ -135,7 +145,18 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE departement_id!=1 AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id"
+                            WHERE departement_id!=1 AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
+                            );
+                    
+                    $transaksiPengembalian=DB::select(
+                            "SELECT t.id,t.tanggal,t.departement_id,d.dk, d.account_id,sum(d.nominal) AS total,
+                                a.id,a.no,a.kelompok 
+                            FROM transactions t 
+                            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+                            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+                            WHERE departement_id!=1 AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
                             );
                     }
                 @endphp
@@ -144,7 +165,7 @@
                         <td></td>
                         <td>{{$da_value->nama}}</td>
                         <td style="white-space: nowrap;">Rp {{number_format($da_value->nominal,0,',','.')}}</td>
-                        <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
+                        <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total-$transaksiPengembalian[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
                         <td align="center"style="white-space: nowrap;">{{number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
                         <td style="white-space: nowrap;">Rp {{number_format(($da_value->nominal-$transaksi),0,',','.')}}</td>
                         <td style="white-space: nowrap;">{{100-number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>

@@ -139,10 +139,15 @@
                                                                 <div class="form-group">
                                                                     <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
                                                                     <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
+                                                                        @if ($value->dk==2)
                                                                         @foreach($accountList as $accountvalue)
-                                                                            <option value="{{ $accountvalue->account_id }}"{{$value->account_id == $accountvalue->account_id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
-                                                                            <!-- <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option> -->
+                                                                            <option value="{{$accountvalue->account_id}}"{{$value->account_id == $accountvalue->account_id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
                                                                         @endforeach
+                                                                        @else
+                                                                        @foreach($accountList as $accountvalue)
+                                                                            <option value="{{$accountvalue->id}}"{{$value->account_id == $accountvalue->id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
+                                                                        @endforeach
+                                                                        @endif
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group">

@@ -38,11 +38,11 @@
                                     <div class="col-md-9 align-self-center">
                                             <!-- <button type="button" class="btn mb-1 btn-primary">pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></span></button> -->
                                             <!-- <div class="bootstrap-modal"> -->
-                                                @if (auth()->user()->departement_id==1)
+                                                <!-- if (auth()->user()->departement_id==1) -->
                                                     <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#pemasukan">Pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></button>
-                                                @else
+                                                <!-- else
                                                 
-                                                @endif
+                                                endif -->
                                                 <div class="modal fade bd-example-modal-lg" id="pemasukan" tabindex="-1" role="dialog" aria-labelledby="pemasukanModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
@@ -65,7 +65,7 @@
                                                                         <input maxlength="25" required name="kode_pemasukan" type="text" class="form-control" id="kode_pemasukan" placeholder="No Cek/No Ref/No Record/Kode Transaksi">
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan</label>
+                                                                        <label for="akun_pendapatan" class="col-form-label">Akun Pendapatan/Pengembalian</label>
                                                                         <select id="akun_pendapatan" data-width="100%" name="akun_pendapatan" class="form-control" required>
                                                                             <option value="" selected disabled hidden>Pilih Akun</option>
                                                                             @foreach($accountlistPendapatan as $accountvalue)

@@ -172,7 +172,7 @@ class BudgetController extends Controller
     public function destroyRincianA(string $id)
     {
        Budget_detail::where('id',$id)->delete();
-        return redirect::back()->withErrors(['message' => ''])->with('message','Berhasil menghapus rincian budget');
+        return redirect::back()->withErrors(['message' => ''])->with('message','Berhasil menghapus rincian anggaran');
     }
 
     public function updateRincianA(Request $request,$id)

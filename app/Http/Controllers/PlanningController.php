@@ -86,7 +86,7 @@ class PlanningController extends Controller
         $showPlanning=DB::select(
             "SELECT p.created_at, p.user_id, p.id,p.budget_id, p.for_bulan, 
             dp.id AS departement_id,dp.nama AS departement,
-            sum(pd.nominal) AS total_perencanaan
+            pd.account_id,sum(pd.nominal) AS total_perencanaan
             FROM plannings p
             LEFT JOIN planning_details pd
             ON p.id = pd.planning_id
@@ -192,6 +192,7 @@ class PlanningController extends Controller
             'planning_id'=>$request->planning_id,
             'account_id'=>$request->akun_rincian,
             'nominal'=>$nominal_rincian_int,
+            'group_rektorat'=>$request->group_rektorat,
             'pj'=>$request->pj,
             'satuan_ukur_kinerja'=>$request->satuan_ukur_kinerja,
             'target_kinerja'=>$request->target_kinerja,
@@ -200,5 +201,49 @@ class PlanningController extends Controller
             'capaian_target_waktu'=>$request->capaian_target_waktu_penyelesaian,
         ]);
         return redirect::back()->with ('message','Berhasil menmbah rincian perencanaan');
+    }
+
+    public function destroyRincianP(string $id)
+    {
+       Planning_detail::where('id',$id)->delete();
+        return redirect::back()->withErrors(['message' => ''])->with('message','Berhasil menghapus rincian perencanaan');
+    }
+
+    public function updateRincianP(Request $request,$id)
+    {
+        $request->validate([
+            'planning_id'=>$request->planning_id,
+            'account_id'=>$request->akun_rincian,
+            'nominal'=>$nominal_rincian_int,
+            'pj'=>$request->pj,
+            'satuan_ukur_kinerja'=>$request->satuan_ukur_kinerja,
+            'target_kinerja'=>$request->target_kinerja,
+            'capaian_kinerja'=>$request->capaian_kinerja,
+            'waktu_pelaksanaan'=>$request->target_waktu_pelaksanaan,
+            'capaian_target_waktu'=>$request->capaian_target_waktu_penyelesaian,
+        ]);
+        // dd($request->current_account,$request->akun_rincian_edit);
+        $nominal_rincian_int=$request->nominal_tambah_rincian_edit;
+        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+        $find=Budget_detail::where('budget_id','=',$request->budget_id)->where('account_id','=',$request->akun_rincian_edit)->get();
+        // dd(!$find->isEmpty());
+        if (!$find->isEmpty()){
+            if($request->current_account==$request->akun_rincian_edit){
+                $updateRincian = Budget_detail::find($id);
+                $updateRincian->account_id = $request->akun_rincian_edit;
+                $updateRincian->nominal = $nominal_rincian_int;
+                $updateRincian->keterangan = $request->keterangan_rincian_edit;
+                $updateRincian->update();
+                return redirect::back()->with('message', 'Berhasil mengubah data rincian');
+            }
+            return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
+        }
+        $updateRincian = Budget_detail::find($id);
+        $updateRincian->account_id = $request->akun_rincian_edit;
+        $updateRincian->nominal = $nominal_rincian_int;
+        $updateRincian->keterangan = $request->keterangan_rincian_edit;
+        $updateRincian->update();
+
+        return redirect::back()->with('message', 'Berhasil mengubah data rincian');
     }
 }

@@ -120,7 +120,7 @@
                         <td>
                             @php
                             $budget_id=$showPlanning[0]->budget_id;
-                            $account_id=$value->id;
+                            $account_id=$value->account_id;
                                 $keterangan=DB::select(
                                     "SELECT * FROM budget_details WHERE budget_id=$budget_id and account_id=$account_id"
                                 ); 
@@ -213,10 +213,25 @@
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="nominal_tambah_rincian_edit{{$value->id}}" class="col-form-label">Nominal :</label>
-                                                            <input style="padding:0px 0px 0px 5px;" required name="nominal_tambah_rincian_edit" value="{{$value->nominal}}" maxlength="14" type="text" class="form-control" id="nominal_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
+                                                            <label for="jumlah_anggaran_tambah_rincian_edit{{$value->id}}" class="col-form-label">Nominal :</label>
+                                                            <input style="padding:0px 0px 0px 5px;" required name="jumlah_anggaran_tambah_rincian_edit" value="{{$value->nominal}}" maxlength="14" type="text" class="form-control" id="jumlah_anggaran_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
                                                         </div>
-                                                        
+                                                        @if ($showPlanning[0]->departement_id==6)
+                                                        <div class="form-group">
+                                                            <label for="group_rektorat" class="col-form-label">{{ __('Group Rektorat:') }}</label>
+                                                                <select id="group_rektorat" name="group_rektorat" class="form-control @error('group_rektorat') is-invalid @enderror" required autocomplete="group_rektorat" autofocus>
+                                                                <option value="" selected disabled hidden>Pilih Group Rektorat</option>
+                                                                    <option value="Wakil Rektor I" {{ $value->group_rektorat == "Wakil Rektor I" ?'selected':'' }}>Wakil Rektor I</option>
+                                                                    <option value="Wakil Rektor II" {{ $value->group_rektorat == "Wakil Rektor II" ?'selected':'' }}>Wakil Rektor II</option>
+                                                                    <option value="Wakil Rektor III" {{ $value->group_rektorat == "Wakil Rektor III" ?'selected':'' }}>Wakil Rektor III</option>
+                                                                    <option value="Laboratorium" {{ $value->group_rektorat == "Laboratorium" ?'selected':'' }}>Laboratorium</option>
+                                                                    <option value="Perpustakaan" {{ $value->group_rektorat == "Perpustakaan" ?'selected':'' }}>Perpustakaan</option>
+                                                                    <option value="LPPM" {{ $value->group_rektorat == "LPPM" ?'selected':'' }}>LPPM</option>
+                                                                    <option value="LPMI" {{ $value->group_rektorat == "LPMI" ?'selected':'' }}>LPMI</option>
+                                                                </select>                                             
+                                                        </div>
+                                                        @else
+                                                        @endif
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                                             <button type="submit" class="btn btn-primary">Simpan</button>

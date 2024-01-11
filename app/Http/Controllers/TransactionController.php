@@ -84,7 +84,8 @@ class TransactionController extends Controller
 
         $departement=Departement::where('status','=','1')->get();
         $accountHarta=Account::where('nama','LIKE','Kas Kecil%')->where('status','=','1')->orderBy('no')->get();
-        $accountPendapatan=Account::where(function($q){$q->where('tipe','=','Pendapatan')->orWhere('nama','LIKE','Kas Bank%')->orWhere('tipe','=','Modal');})->where('status','=','1')->orderBy('no')->get();
+        // $accountPendapatan=Account::where(function($q){$q->where('tipe','=','Pendapatan')->orWhere('nama','LIKE','Kas Bank%')->orWhere('tipe','=','Modal');})->where('status','=','1')->orderBy('no')->get();
+        $accountPendapatan=Account::where('status','=','1')->orderBy('no')->get();
         // dd($accountPendapatan);
         return view('transaksi/transaksi',
             ['transactionlist'=>$transaction],
@@ -249,8 +250,11 @@ class TransactionController extends Controller
         }
         
         if ($dk==1){
-            $accountList=Account::where('tipe','=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+            // $accountList=Account::where('tipe','=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
+            $accountList=Account::where('status','=','1')->orderBy('no', 'ASC')->get();
+
         }
+        
         else{
             // $accountList=Account::where('tipe','!=','Pendapatan')->where('status','=','1')->orderBy('no', 'ASC')->get();
             $accountList=DB::select(
