@@ -162,12 +162,15 @@
                                                             </form>
                                                     </div>
                                                 </div>
-                                            </div>                                 
+                                            </div>
+                                            @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2)                                 
                                         <form method="POST" action="{{route('destroyRincian',$value->id)}}"> 
                                             @csrf
                                             @method('DELETE')
                                             <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                        </form>   
+                                        </form>  
+                                            @else
+                                            @endif
                                     @else
                                     @endif         
                                     </span>                         
@@ -179,7 +182,7 @@
                 </div>
                 <center>
                     <a href="{{ route('transaksi.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
-                    @if (auth()->user()->id==$showTransaction[0]->user_id)
+                    @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2)
                     <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
                 </center>          
                     <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
