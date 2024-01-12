@@ -14,6 +14,10 @@ use Redirect;
 
 class PlanningController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -212,36 +216,47 @@ class PlanningController extends Controller
     public function updateRincianP(Request $request,$id)
     {
         $request->validate([
-            'planning_id'=>$request->planning_id,
-            'account_id'=>$request->akun_rincian,
-            'nominal'=>$nominal_rincian_int,
-            'pj'=>$request->pj,
-            'satuan_ukur_kinerja'=>$request->satuan_ukur_kinerja,
-            'target_kinerja'=>$request->target_kinerja,
-            'capaian_kinerja'=>$request->capaian_kinerja,
-            'waktu_pelaksanaan'=>$request->target_waktu_pelaksanaan,
-            'capaian_target_waktu'=>$request->capaian_target_waktu_penyelesaian,
+            'akun_rincian_edit'=>'required',
+            'jumlah_anggaran_tambah_rincian_edit'=>'required',
+            'pj'=>'required',
+            'satuan_ukur_kinerja'=>'required',
+            'target_kinerja'=>'required',
+            'capaian_kinerja'=>'required',
+            'target_waktu_pelaksanaan'=>'required',
+            'capaian_target_waktu_penyelesaian'=>'required',
         ]);
         // dd($request->current_account,$request->akun_rincian_edit);
-        $nominal_rincian_int=$request->nominal_tambah_rincian_edit;
+        $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian_edit;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-        $find=Budget_detail::where('budget_id','=',$request->budget_id)->where('account_id','=',$request->akun_rincian_edit)->get();
+        $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian_edit)->get();
         // dd(!$find->isEmpty());
         if (!$find->isEmpty()){
             if($request->current_account==$request->akun_rincian_edit){
-                $updateRincian = Budget_detail::find($id);
+                $updateRincian = Planning_detail::find($id);
                 $updateRincian->account_id = $request->akun_rincian_edit;
                 $updateRincian->nominal = $nominal_rincian_int;
-                $updateRincian->keterangan = $request->keterangan_rincian_edit;
+                $updateRincian->group_rektorat = $request->group_rektorat;
+                $updateRincian->pj = $request->pj;
+                $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+                $updateRincian->target_kinerja = $request->target_kinerja;
+                $updateRincian->capaian_kinerja = $request->capaian_kinerja;
+                $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
+                $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
                 $updateRincian->update();
                 return redirect::back()->with('message', 'Berhasil mengubah data rincian');
             }
             return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
         }
-        $updateRincian = Budget_detail::find($id);
+        $updateRincian = Planning_detail::find($id);
         $updateRincian->account_id = $request->akun_rincian_edit;
         $updateRincian->nominal = $nominal_rincian_int;
-        $updateRincian->keterangan = $request->keterangan_rincian_edit;
+        $updateRincian->group_rektorat = $request->group_rektorat;
+        $updateRincian->pj = $request->pj;
+        $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+        $updateRincian->target_kinerja = $request->target_kinerja;
+        $updateRincian->capaian_kinerja = $request->capaian_kinerja;
+        $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
+        $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
         $updateRincian->update();
 
         return redirect::back()->with('message', 'Berhasil mengubah data rincian');

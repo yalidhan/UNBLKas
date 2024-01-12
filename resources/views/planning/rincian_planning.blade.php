@@ -207,7 +207,7 @@
                                                             <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
                                                             <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
                                                                 @foreach($accountList as $accountvalue)
-                                                                    <option value="{{ $accountvalue->id }}"{{$value->account_id == $accountvalue->id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
+                                                                    <option value="{{ $accountvalue->account_id }}"{{$value->account_id == $accountvalue->account_id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
                                                                     <!-- <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option> -->
                                                                 @endforeach
                                                             </select>
@@ -219,7 +219,7 @@
                                                         @if ($showPlanning[0]->departement_id==6)
                                                         <div class="form-group">
                                                             <label for="group_rektorat" class="col-form-label">{{ __('Group Rektorat:') }}</label>
-                                                                <select id="group_rektorat" name="group_rektorat" class="form-control @error('group_rektorat') is-invalid @enderror" required autocomplete="group_rektorat" autofocus>
+                                                                <select style="padding:0px 0px 0px 5px;" id="group_rektorat" name="group_rektorat" class="form-control @error('group_rektorat') is-invalid @enderror" required autocomplete="group_rektorat" autofocus>
                                                                 <option value="" selected disabled hidden>Pilih Group Rektorat</option>
                                                                     <option value="Wakil Rektor I" {{ $value->group_rektorat == "Wakil Rektor I" ?'selected':'' }}>Wakil Rektor I</option>
                                                                     <option value="Wakil Rektor II" {{ $value->group_rektorat == "Wakil Rektor II" ?'selected':'' }}>Wakil Rektor II</option>
@@ -232,6 +232,32 @@
                                                         </div>
                                                         @else
                                                         @endif
+                                                        <div class="form-group">
+                                                            <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
+                                                            <input style="padding:0px 0px 0px 5px;" required name="pj" type="text" value="{{$value->pj}}" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive">{{$value->satuan_ukur_kinerja}}</textarea>
+                                                        </div>   
+                                                        <div class="form-group">
+                                                            <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="target_kinerja" placeholder="Target Output">{{$value->target_kinerja}}</textarea>
+                                                        </div>             
+                                                        <div class="form-group">
+                                                            <label for="capaian_kinerja" class="col-form-label">Capaian Kinerja(Realisasi Output) :</label>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output">{{$value->capaian_kinerja}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="target_waktu_pelaksanaan" class="col-form-label">Target Waktu Pelaksanaan:</label>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="25" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan">{{$value->waktu_pelaksanaan}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="capaian_target_waktu_penyelesaian" class="col-form-label">Capaian Target Waktu Penyelesaian:</label>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="25" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian">{{$value->capaian_target_waktu}}</textarea>
+                                                        </div>    
+                                                        <input type="hidden" name="planning_id" value="{{$showPlanning[0]->id}}">                                    
+                                                        <input type="hidden" name="current_account" value="{{$value->account_id}}">
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                                             <button type="submit" class="btn btn-primary">Simpan</button>
