@@ -47,7 +47,7 @@ class TransactionController extends Controller
             WHERE t.departement_id=$departement_id and month (tanggal)=$month
                 and year (tanggal)=$year
             GROUP BY 
-                transaction_id
+                d.transaction_id,t.id
             ORDER BY 
                 tanggal ASC,
                 id ASC"
@@ -143,13 +143,16 @@ class TransactionController extends Controller
                 'no_spb_pengeluaran'=>'required',
                 'keterangan_pengeluaran'=>'required',
             ]);
-            Transaction::create([
+            $pengeluaranQuery=Transaction::create([
                 'tanggal'=>$request->tgl_pengeluaran,
                 'no_spb'=>$request->no_spb_pengeluaran,
                 'keterangan'=>$request->keterangan_pengeluaran,
                 'departement_id'=>$request->id_departement,
                 'user_id'=>$request->user_id,
-            ]);}
+            ]);
+            $transId=$pengeluaranQuery->id;
+            return redirect('transaksi/'.$transId);
+            }
         if($request->tp_trx=='transfer'){
             $request->validate([
                 'departement_tujuan'=>'required',

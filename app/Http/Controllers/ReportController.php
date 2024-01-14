@@ -26,7 +26,7 @@ class ReportController extends Controller
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
         }else{  
-            $departement=Departement::where('status','=','1')->where('id','!=','1')->get();
+            $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
         }
         // $account=Account::where('kelompok','!=','""')->groupby('kelompok')->get();
         \DB::statement("SET SQL_MODE=''");
@@ -59,7 +59,7 @@ class ReportController extends Controller
             $departement_id="departement_id=$d_id";
             $departement=Departement::find(auth()->user()->departement_id);
         }elseif($request->departement==0){
-            $departement_id="departement_id!=1";
+            $departement_id="departement_id NOT IN (1,18)";
             $departement=array(
                 "nama"=>"Universitas Borneo Lestari",
                 "id"=>"0"
@@ -98,7 +98,7 @@ class ReportController extends Controller
             GROUP BY kelompok
             ORDER BY account_id ASC"
         );
-        // dd($kelompok);
+        // dd($departement);
 
         return view('laporan/cetak-realisasianggaran')
                     ->with('kelompok',$kelompok)
@@ -113,7 +113,7 @@ class ReportController extends Controller
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
         }else{  
-            $departement=Departement::where('status','=','1')->where('id','!=','1')->get();
+            $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
         }
         
         return view('laporan/pertanggungjawaban')->with('departement',$departement);
@@ -140,7 +140,7 @@ class ReportController extends Controller
             ON t.departement_id = dp.id
             WHERE t.departement_id=$departement_id and tanggal BETWEEN '$request->dari' and '$request->sampai'
             GROUP BY 
-                transaction_id
+                d.transaction_id, t.id
             ORDER BY 
                 tanggal ASC,
                 id ASC"

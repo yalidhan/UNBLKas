@@ -164,7 +164,7 @@
                                                 </div>
                                             </div>
                                             @if (!empty($showDetailTransaction[0]->dk))
-                                            @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2 )   
+                                                @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2 )   
                                                                              
                                         <form method="POST" action="{{route('destroyRincian',$value->id)}}"> 
                                             @csrf
@@ -187,16 +187,17 @@
                 <center>
                     <a href="{{ route('transaksi.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
                     @if(!empty($showDetailTransaction[0]->dk))
-                    @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2 )
-                        
+                        @if (auth()->user()->id==$showTransaction[0]->user_id AND $showDetailTransaction[0]->dk==2 )
+                            
+                        <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
+        
+                        @else
+                        @endif
+                     @else
                     <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
-       
-                    @else
-                    @endif
-                @else
-                <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
-                </center>   
+                  
                 @endif   
+                </center> 
                 <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
