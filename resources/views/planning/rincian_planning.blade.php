@@ -1,6 +1,21 @@
 @extends('master')
 
 @section('content')
+@push('rincian_planning-style')
+@foreach ($showDetailPlanning as $value)
+    #jumlah{{$value->id}}, #labelJumlah{{$value->id}}{
+        display: none;
+    }
+
+    #setuju{{$value->id}}:checked ~ #jumlah{{$value->id}} {
+        display: flex;
+    }
+    #setuju{{$value->id}}:checked ~ #labelJumlah{{$value->id}} {
+        display: flex;
+    }
+
+@endforeach
+@endpush
 <div class="content-body">
     <div class="row page-titles mx-0">
         <div class="col p-md-0">
@@ -44,6 +59,11 @@
                                                 <td style="white-space: nowrap;">Total Perencanaan</td>
                                                 <td>&nbsp;:</td>
                                                 <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showPlanning[0]->total_perencanaan,0,',','.')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="white-space: nowrap;">Total Disetujui</td>
+                                                <td>&nbsp;:</td>
+                                                <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showPlanning[0]->total_disetujui,0,',','.')}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -92,7 +112,7 @@
                         @else
                         @endif
                         <th scope="col">Kegiatan</th>
-                        <th scope="col">Keterangan Anggaran</th>
+                        <th scope="col">Keterangan Anggaran Tahun Berjalan</th>
                         <th scope="col">Penanggung Jawab Kegiatan</th>
                         <th scope="col">Jumlah Anggaran</th>
                         <th scope="col">Satuan Ukur Kinerja Kegiatan</th>
@@ -121,9 +141,22 @@
                             @php
                             $budget_id=$showPlanning[0]->budget_id;
                             $account_id=$value->account_id;
+                            $departement_id=$showPlanning[0]->departement_id;
+                            $year=Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('Y');
                                 $keterangan=DB::select(
                                     "SELECT * FROM budget_details WHERE budget_id=$budget_id and account_id=$account_id"
-                                ); 
+                                );
+                                $realisasi=DB::select(
+                                    "   SELECT t.id,t.tanggal,d.dk, d.account_id,sum(d.nominal) AS total,
+                                            a.id,a.no,a.kelompok 
+                                        FROM transactions t 
+                                        LEFT JOIN transaction_details d 
+                                            ON t.id = d.transaction_id 
+                                        LEFT JOIN accounts a 
+                                            ON d.account_id = a.id 
+                                        WHERE departement_id=$departement_id AND tanggal BETWEEN '$year-01-01' and '$year-12-01' AND account_id=$account_id AND dk=2    
+                                    "
+                                );
                             @endphp
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
@@ -132,27 +165,32 @@
 
                             <!-- Modal -->
                             <div class="modal fade" id="keterangan{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="keterangan{{$value->id}}Title" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Anggaran</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="keterangan{{$value->id}}Title">Keterangan Anggaran</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {!!$keterangan[0]->keterangan!!}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    {!!$keterangan[0]->keterangan!!}
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                                </div>
-                            </div>
                             </div>    
 
                         </td>
                         <td>{{$value->pj}}</td>
-                        <td style="white-space: nowrap;"> Rp {{number_format($value->nominal,0,',','.')}}</td>
+                        <td style="white-space: nowrap;">Pengajuan <u>Rp {{number_format($value->nominal,0,',','.')}}</u>
+                            <span>
+                                <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
+                                <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                            </span>
+                        </td>
                         <td><button type="button" class="btn btn-primary"                            
                             onclick="window.open('{{$value->satuan_ukur_kinerja}}', 
                             'newwindow', 
@@ -188,8 +226,10 @@
                         </td>
                         <td>{{$value->note_rektor}}</td>
                         <td><span style="display: flex;">
-                            @if (auth()->user()->id==$showPlanning[0]->user_id)
+                            
+                            @if (auth()->user()->id==$showPlanning[0]->user_id )
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
+                                @if ($value->approved_by_wr2==0)
                                 <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
                                         <div class="modal-dialog modal-lg" role="document">
@@ -267,14 +307,120 @@
                                             </div>
                                         </div>
                                     </div>                                 
+                                @else
+                                @endif   
                                 <form method="POST" action="{{route('destroyRincianP',$value->id)}}"> 
                                     @csrf
                                     @method('DELETE')
                                     <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                </form>   
+                                </form>
                             @else
                             @endif         
-                            </span>                         
+                            </span>
+                            @if (auth()->user()->jabatan=="Wakil Rektor II")
+                                <div class="bootstrap-modal">
+                                        <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanWRII{{$value->id}}">Persetujuan WR II</button>
+                                        <div class="modal fade" id="editPersetujuanWRII{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanWRIIModalLabel{{$value->id}}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editPersetujuanWRIIModalLabel{{$value->id}}">Persetujuan Wakil Rektor II</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('updateRincianP',$value->id)}}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <span>
+                                                                        Mata Anggaran <b>"{{$value->nama}}"</b>
+                                                                        <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                            <label class="col-form-label">Persetujuan:</label><br>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input id="setuju{{$value->id}}" type="radio" value="1" name="persetujuan" required> Setuju</label>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input id="tidak" type="radio" value="2" name="persetujuan"> Tidak Setuju</label>
+                                                                <!-- </div> -->
+                                                           <!-- <div class="form-group"> -->
+                                                                <br>
+                                                                <label id="labelJumlah{{$value->id}}" class="col-form-label">Jumlah Disetujui:</label>
+                                                                <input required value="{{$value->nominal}}" id="jumlah{{$value->id}}" maxlength="14" name="jumlah" type="text" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                                <label class="col-form-label">Catatan WR II:</label>
+                                                                <input value="" name="catatan_wrii" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                            </div>                                                            
+                                                            <!-- <div class="form-group"> -->
+                                                            <!-- </div>  -->
+                                                    </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div> 
+                            @endif
+                            @if (auth()->user()->jabatan=="Rektor" AND $value->approved_by_wr2 !=0)
+                                <div class="bootstrap-modal">
+                                        <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanRektor{{$value->id}}">Persetujuan Rektor</button>
+                                        <div class="modal fade" id="editPersetujuanRektor{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanRektorModalLabel{{$value->id}}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editPersetujuanRektorModalLabel{{$value->id}}">Persetujuan Rektor</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('updateRincianP',$value->id)}}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <span>
+                                                                        Mata Anggaran <b>"{{$value->nama}}"</b>
+                                                                        <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                                                        <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                        <br>Disetujui WRII Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                            <label class="col-form-label">Persetujuan:</label><br>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input  type="radio" value="1" name="persetujuan_rektor" required> Setuju</label>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input  type="radio" value="2" name="persetujuan_rektor"> Tidak Setuju</label>
+                                                                <!-- </div> -->
+                                                           <!-- <div class="form-group"> -->
+                                                                <br>
+                                                                <label class="col-form-label">Catatan Rektor:</label>
+                                                                <input value="" name="catatan_rektor" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                            </div>      
+                                                            <input type="hidden" value="{{$value->nominal_disetujui}}" name="jumlah">
+                                                            <input type="hidden" value="{{$value->nominal}}" name="jumlah_awal">                                                       
+                                                            <!-- <div class="form-group"> -->
+                                                            <!-- </div>  -->
+                                                    </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div> 
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -282,6 +428,25 @@
             </table>
         </div>
         <center>
+        @if (auth()->user()->jabatan=="Wakil Rektor II")
+            <br>
+            <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
+            @csrf
+            @method('put')
+                    <input type="hidden" name="pjb" value="wr2">
+                    <button type="submit" id="setujui_ditinjau" class="btn btn-primary">Setujui Semua "Sedang Ditinjau"</button>
+            </form>
+        @endif
+        @if (auth()->user()->jabatan=="Rektor")
+            <br>
+            <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
+            @csrf
+            @method('put')
+                    <input type="hidden" name="pjb" value="rektor">
+                    <button type="submit" id="sesuai_wr2" class="btn btn-primary">Ubah Semua "Sedang Ditinjau" Sesuai Dengan WR II</button>
+            </form>
+        @endif
+        <br>
         <a href="{{ route('perencanaan.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
         @if (auth()->user()->id==$showPlanning[0]->user_id)
         <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
@@ -385,6 +550,7 @@
     $('#jumlah_anggaran_tambah_rincian').mask('#.##0', {reverse: true});
     @foreach ($showDetailPlanning as $valueMask)
     $('#jumlah_anggaran_tambah_rincian_edit{{$valueMask->id}}').mask('#.##0', {reverse: true});
+    $('#jumlah{{$valueMask->id}}').mask('#.##0', {reverse: true});
     @endforeach
 @endpush
 
@@ -424,6 +590,45 @@
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                form.submit();
+            }
+        });
+        });
+    </script>
+        <script type="text/javascript">
+        $(document).on('click', '#setujui_ditinjau', function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+                title: "Anda Yakin Untuk Menyetujui Semua Yang Masih Ditinjau?",
+                text: "Anggaran yang disetujui akan sama dengan yang diajukan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Setujui!"
+        }).then((result) => {
+            if (result.value) {
+                form.submit();
+            }
+        });
+        });
+    </script>
+        </script>
+        <script type="text/javascript">
+        $(document).on('click', '#sesuai_wr2', function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+                title: "Anda Yakin Untuk Menyetujui Semua Sesuai Dengan WR II?",
+                text: "Anggaran yang disetujui akan sama dengan yang dikoreksi WR II!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Setujui!"
         }).then((result) => {
             if (result.value) {
                 form.submit();

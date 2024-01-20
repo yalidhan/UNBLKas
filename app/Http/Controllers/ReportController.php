@@ -71,7 +71,7 @@ class ReportController extends Controller
         }
         // dd($departement['nama']);
         if ($request->kelompok_anggaran==""){
-            $kelompok="!=''";
+            $kelompok="NOT IN('','Transfer Antar Bank')";
         }else{
             $kelompok="='$request->kelompok_anggaran'";
         }
@@ -188,4 +188,10 @@ class ReportController extends Controller
                 ->with('periode',$periode)
                 ->with('saldoLastMonth',$saldoLastMonth);
     }
+
+    public function perencanaanCetak(Request $request)
+    {
+        return view('laporan/cetak-perencanaan');
+    }
+
 }

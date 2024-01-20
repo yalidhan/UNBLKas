@@ -19,6 +19,7 @@
     body{
             color:#000000;
         }
+    @stack('rincian_planning-style')    
     </style>
 </head>
 

@@ -31,12 +31,61 @@ class PlanningController extends Controller
             or auth()->user()->jabatan=="Kabid Keuangan"
             or auth()->user()->jabatan=="Kabid Perencanaan"
             ){
-            $plannings=Planning::orderby('for_bulan','DESC')->orderBy('created_at','ASC')->get();
+            \DB::statement("SET SQL_MODE=''");
+            $plannings=DB::select(
+                "SELECT p.id,p.for_bulan, p.created_at, 
+                    count(case when pd.approved_by_wr2=1 THEN 1 END) AS WR_1, 
+                    count(case when pd.approved_by_wr2=2 THEN 2 END) AS WR_2, 
+                    count(case when pd.approved_by_wr2=0 THEN 0 END) AS WR_0, 
+                    count(case when pd.approved_by_rektor=1 THEN 1 END) AS REKTOR_1, 
+                    count(case when pd.approved_by_rektor=2 THEN 2 END) AS REKTOR_2, 
+                    count(case when pd.approved_by_rektor=0 THEN 0 END) AS REKTOR_0,
+                    sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui, 
+                    d.nama,
+                    b.tahun, 
+                    u.name, u.id AS user_id 
+                    FROM plannings p LEFT JOIN planning_details pd 
+                    ON p.id = pd.planning_id 
+                    LEFT JOIN departements d 
+                    ON p.departement_id = d.id 
+                    LEFT JOIN budgets b 
+                    ON p.budget_id = b.id 
+                    LEFT JOIN users u 
+                    ON p.user_id = u.id 
+                    GROUP by p.id 
+                    ORDER BY p.for_bulan DESC, p.created_at ASC;"
+            );
+            // dd($plannings);
         }else{
-            $plannings=Planning::where('departement_id','=',auth()->user()->departement_id)->orderBy('created_at','DESC')->get();
+            $departement_id=auth()->user()->departement_id;
+            \DB::statement("SET SQL_MODE=''");
+            $plannings=DB::select(
+                "SELECT p.id,p.for_bulan, p.created_at,p.departement_id, 
+                    count(case when pd.approved_by_wr2=1 THEN 1 END) AS WR_1, 
+                    count(case when pd.approved_by_wr2=2 THEN 2 END) AS WR_2, 
+                    count(case when pd.approved_by_wr2=0 THEN 0 END) AS WR_0, 
+                    count(case when pd.approved_by_rektor=1 THEN 1 END) AS REKTOR_1, 
+                    count(case when pd.approved_by_rektor=2 THEN 2 END) AS REKTOR_2, 
+                    count(case when pd.approved_by_rektor=0 THEN 0 END) AS REKTOR_0,
+                    sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui, 
+                    d.nama,
+                    b.tahun, 
+                    u.name, u.id AS user_id 
+                    FROM plannings p LEFT JOIN planning_details pd 
+                    ON p.id = pd.planning_id 
+                    LEFT JOIN departements d 
+                    ON p.departement_id = d.id 
+                    LEFT JOIN budgets b 
+                    ON p.budget_id = b.id 
+                    LEFT JOIN users u 
+                    ON p.user_id = u.id
+                    WHERE p.departement_id=$departement_id
+                    GROUP by p.id 
+                    ORDER BY p.for_bulan DESC, p.created_at ASC;"
+            );
         }
         // dd($plannings);
-        $departements=Departement::where('status','=','1')->get();
+
         return view('planning/planning',compact('plannings'));
     }
 
@@ -70,14 +119,15 @@ class PlanningController extends Controller
             return redirect()->route('perencanaan.index')->withErrors(['message' => 'Tidak Terdapat Data Anggaran Tahun '.$year]);
         }
         // dd($budget_id->tahun);
-        Planning::create([
+        $planningQuery=Planning::create([
             'for_bulan'=>$monthYear,
             'departement_id'=>$departement_id,
             'user_id'=>$user_id,
             'budget_id'=>$budget_id->id,
         ]);
-        
-        return redirect()->route('perencanaan.index')->withErrors(['message' => ''])->with('message','Berhasil menambahkan data anggaran');
+        $planning_id=$planningQuery->id;
+        return redirect('perencanaan/'.$planning_id);
+        // return redirect()->route('perencanaan.index')->withErrors(['message' => ''])->with('message','Berhasil menambahkan data anggaran');
     }
 
     /**
@@ -90,7 +140,7 @@ class PlanningController extends Controller
         $showPlanning=DB::select(
             "SELECT p.created_at, p.user_id, p.id,p.budget_id, p.for_bulan, 
             dp.id AS departement_id,dp.nama AS departement,
-            pd.account_id,sum(pd.nominal) AS total_perencanaan
+            pd.account_id,sum(pd.nominal) AS total_perencanaan,sum(pd.nominal_disetujui) AS total_disetujui
             FROM plannings p
             LEFT JOIN planning_details pd
             ON p.id = pd.planning_id
@@ -148,16 +198,42 @@ class PlanningController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $request->validate([
-            'for_bulan_edit' => 'required'
-        ]);
-        $user_id=auth()->user()->id;
+        if ($request->pjb=="wr2"){
+            $planning_detail=Planning_detail::where('planning_id','=',$id)->where('approved_by_wr2','=','0')->get();
+            // dd($planning_detail);
+            foreach ($planning_detail as $detail){
+                $update = Planning_detail::find($detail['id']);
+                $update->nominal_disetujui=$detail['nominal'];
+                $update->approved_by_wr2=1;
+                $update->save();
+                
+            }
+            return redirect::back()->with('message', 'Berhasil Mensetujui Semua Yang Masih Ditinjau');
 
-        $budget = Planning::find($id);
-        $budget->for_bulan = $request->for_bulan_edit.'-1';
-        $budget->update();
+        }
+        elseif($request->pjb=="rektor"){
+            $planning_detail=Planning_detail::where('planning_id','=',$id)->where('approved_by_rektor','=','0')
+                ->where('approved_by_wr2','!=','0')->get();
+            // dd($planning_detail);
+            foreach ($planning_detail as $detail){
+                $update = Planning_detail::find($detail['id']);
+                $update->approved_by_rektor=$detail->approved_by_wr2;
+                $update->save();
+            }
+            return redirect::back()->with('message', 'Berhasil Mensetujui Semua Yang Masih Ditinjau');
+        }
+        else{
+            $request->validate([
+                'for_bulan_edit' => 'required'
+            ]);
+            $user_id=auth()->user()->id;
 
-        return redirect::back()->with('message', 'Berhasil Mengubah Data Perencanaan');
+            $budget = Planning::find($id);
+            $budget->for_bulan = $request->for_bulan_edit.'-1';
+            $budget->update();
+            return redirect::back()->with('message', 'Berhasil Mengubah Data Perencanaan');
+        }
+        
     }
 
     /**
@@ -215,50 +291,89 @@ class PlanningController extends Controller
 
     public function updateRincianP(Request $request,$id)
     {
-        $request->validate([
-            'akun_rincian_edit'=>'required',
-            'jumlah_anggaran_tambah_rincian_edit'=>'required',
-            'pj'=>'required',
-            'satuan_ukur_kinerja'=>'required',
-            'target_kinerja'=>'required',
-            'capaian_kinerja'=>'required',
-            'target_waktu_pelaksanaan'=>'required',
-            'capaian_target_waktu_penyelesaian'=>'required',
-        ]);
-        // dd($request->current_account,$request->akun_rincian_edit);
-        $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian_edit;
-        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-        $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian_edit)->get();
-        // dd(!$find->isEmpty());
-        if (!$find->isEmpty()){
-            if($request->current_account==$request->akun_rincian_edit){
-                $updateRincian = Planning_detail::find($id);
-                $updateRincian->account_id = $request->akun_rincian_edit;
-                $updateRincian->nominal = $nominal_rincian_int;
-                $updateRincian->group_rektorat = $request->group_rektorat;
-                $updateRincian->pj = $request->pj;
-                $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
-                $updateRincian->target_kinerja = $request->target_kinerja;
-                $updateRincian->capaian_kinerja = $request->capaian_kinerja;
-                $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
-                $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
-                $updateRincian->update();
-                return redirect::back()->with('message', 'Berhasil mengubah data rincian');
-            }
-            return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
-        }
-        $updateRincian = Planning_detail::find($id);
-        $updateRincian->account_id = $request->akun_rincian_edit;
-        $updateRincian->nominal = $nominal_rincian_int;
-        $updateRincian->group_rektorat = $request->group_rektorat;
-        $updateRincian->pj = $request->pj;
-        $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
-        $updateRincian->target_kinerja = $request->target_kinerja;
-        $updateRincian->capaian_kinerja = $request->capaian_kinerja;
-        $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
-        $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
-        $updateRincian->update();
+        if (!empty($request->persetujuan)){
+            $request->validate([
+                'persetujuan'=>'required',
+                'jumlah'=>'required',
+            ]);  
 
+        $nominal_rincian_int=$request->jumlah;
+        $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+            if($request->persetujuan==2){
+                $nominal_rincian_int=0;      
+            }
+        $updateRincian = Planning_detail::find($id);
+        $updateRincian->approved_by_wr2 = $request->persetujuan;
+        $updateRincian->nominal_disetujui = $nominal_rincian_int;
+        $updateRincian->note_wr2 = $request->catatan_wrii;
+        $updateRincian->update();
+        }elseif (!empty($request->persetujuan_rektor)){
+            $request->validate([
+                'persetujuan_rektor'=>'required',
+            ]);
+            $nominal_rincian_int=$request->jumlah;
+            $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+                if($request->persetujuan_rektor==2){
+                    $nominal_rincian_int=0;
+                }
+                elseif($request->persetujuan_rektor==1){
+                    $nominal_rincian_int=$request->jumlah;
+                    if($request->jumlah==0){
+                        $nominal_rincian_int=$request->jumlah_awal;
+                    }
+                } //jika wr2 setuju dan rektor tidak setuju, nominal disetujui==0, tapi jika wr2 setuju & rektor tidak, nominal disetujui kok 0
+            $updateRincian = Planning_detail::find($id);
+            $updateRincian->approved_by_rektor = $request->persetujuan_rektor;
+            $updateRincian->note_rektor = $request->catatan_rektor;
+            $updateRincian->nominal_disetujui = $nominal_rincian_int;
+            $updateRincian->update();           
+        }
+        else{
+
+            $request->validate([
+                'akun_rincian_edit'=>'required',
+                'jumlah_anggaran_tambah_rincian_edit'=>'required',
+                'pj'=>'required',
+                'satuan_ukur_kinerja'=>'required',
+                'target_kinerja'=>'required',
+                'capaian_kinerja'=>'required',
+                'target_waktu_pelaksanaan'=>'required',
+                'capaian_target_waktu_penyelesaian'=>'required',
+            ]);
+            // dd($request->current_account,$request->akun_rincian_edit);
+            $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian_edit;
+            $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
+            $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian_edit)->get();
+            // dd(!$find->isEmpty());
+            if (!$find->isEmpty()){
+                if($request->current_account==$request->akun_rincian_edit){
+                    $updateRincian = Planning_detail::find($id);
+                    $updateRincian->account_id = $request->akun_rincian_edit;
+                    $updateRincian->nominal = $nominal_rincian_int;
+                    $updateRincian->group_rektorat = $request->group_rektorat;
+                    $updateRincian->pj = $request->pj;
+                    $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+                    $updateRincian->target_kinerja = $request->target_kinerja;
+                    $updateRincian->capaian_kinerja = $request->capaian_kinerja;
+                    $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
+                    $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
+                    $updateRincian->update();
+                    return redirect::back()->with('message', 'Berhasil mengubah data rincian');
+                }
+                return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
+            }
+            $updateRincian = Planning_detail::find($id);
+            $updateRincian->account_id = $request->akun_rincian_edit;
+            $updateRincian->nominal = $nominal_rincian_int;
+            $updateRincian->group_rektorat = $request->group_rektorat;
+            $updateRincian->pj = $request->pj;
+            $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+            $updateRincian->target_kinerja = $request->target_kinerja;
+            $updateRincian->capaian_kinerja = $request->capaian_kinerja;
+            $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
+            $updateRincian->capaian_target_waktu = $request->capaian_target_waktu_penyelesaian;
+            $updateRincian->update();
+        }
         return redirect::back()->with('message', 'Berhasil mengubah data rincian');
     }
 }

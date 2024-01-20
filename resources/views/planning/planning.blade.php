@@ -28,11 +28,9 @@
                                 <div class="card-body">
                                     <h4 class="card-title">Perencanaan Seluruh Departemen</h4>
                                     <ul class="nav nav-pills mb-3">
-                                        <li class="nav-item"><a href="#navpills-1" class="nav-link active" data-toggle="tab" aria-expanded="false">Ditinjau</a>
+                                        <li class="nav-item"><a href="#navpills-1" class="nav-link active" data-toggle="tab" aria-expanded="false">Sedang Ditinjau</a>
                                         </li>
-                                        <li class="nav-item"><a href="#navpills-2" class="nav-link" data-toggle="tab" aria-expanded="false">Disetujui</a>
-                                        </li>
-                                        <li class="nav-item"><a href="#navpills-3" class="nav-link" data-toggle="tab" aria-expanded="true">Ditolak</a>
+                                        <li class="nav-item"><a href="#navpills-2" class="nav-link" data-toggle="tab" aria-expanded="false">Selesai</a>
                                         </li>
                                     </ul>
                                     <div class="tab-content br-n pn">
@@ -46,37 +44,33 @@
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
+                                                            <th>Persetujuan WR 2</th>
+                                                            <th>Persetujuan Rektor</th>
+                                                            <th>Total</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                            @if($value->is_approved_wr2==0 or $value->is_approved_rektor==0)
+                                                            @if($value->WR_0>0 OR $value->REKTOR_0>0)
                                                         <tr>
                                                             <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
-                                                            <td>{{$value->departement->nama}}</td>
-                                                            <td>{{$value->user->name}}</td>
-                                                            <td>{{$value->budget->tahun}}</td>
+                                                            <td>{{$value->nama}}</td>
+                                                            <td>{{$value->name}}</td>
+                                                            <td>{{$value->tahun}}</td>
                                                             <td>
-                                                                @if($value->is_approved_wr2==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_wr2==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_wr2==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                             </td>
                                                             <td>
-                                                                @if($value->is_approved_rektor==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_rektor==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_rektor==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                            </td>
+                                                            <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                             </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
@@ -106,8 +100,9 @@
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
+                                                            <th>Persetujuan WR II</th>
+                                                            <th>Persetujuan Rektor</th>
+                                                            <th>Total</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -124,37 +119,33 @@
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
+                                                            <th>Persetujuan WR II</th>
+                                                            <th>Persetujuan Rektor</th>
+                                                            <th>Total</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                            @if(($value->is_approved_wr2==1 and $value->is_approved_rektor==1) or ($value->is_approved_wr2==2 and $value->is_approved_rektor==1) )
+                                                            @if($value->WR_0==0 AND $value->REKTOR_0==0)
                                                         <tr>
                                                             <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
-                                                            <td>{{$value->departement->nama}}</td>
-                                                            <td>{{$value->user->name}}</td>
-                                                            <td>{{$value->budget->tahun}}</td>
+                                                            <td>{{$value->nama}}</td>
+                                                            <td>{{$value->name}}</td>
+                                                            <td>{{$value->tahun}}</td>
                                                             <td>
-                                                                @if($value->is_approved_wr2==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_wr2==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_wr2==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                             </td>
                                                             <td>
-                                                                @if($value->is_approved_rektor==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_rektor==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_rektor==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
+                                                            <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                            </td>
+                                                            <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                             </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
@@ -184,86 +175,8 @@
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
-                                                            <th>Aksi</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div id="navpills-3" class="tab-pane">
-                                            <div class="row align-items-center">
-                                                <table class="table table-striped table-bordered zero-configuration">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Untuk Bulan</th>
-                                                            <th>Diajukan Tanggal</th>
-                                                            <th>Departemen</th>
-                                                            <th>Input Oleh</th>
-                                                            <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
-                                                            <th>Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($plannings as $value) 
-                                                            @if(($value->is_approved_wr2==2 and $value->is_approved_rektor==2) or ($value->is_approved_wr2==1 and $value->is_approved_rektor==2))
-                                                        <tr>
-                                                            <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
-                                                            <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
-                                                            <td>{{$value->departement->nama}}</td>
-                                                            <td>{{$value->user->name}}</td>
-                                                            <td>{{$value->budget->tahun}}</td>
-                                                            <td>
-                                                                @if($value->is_approved_wr2==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_wr2==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_wr2==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
-                                                            </td>
-                                                            <td>
-                                                                @if($value->is_approved_rektor==0)
-                                                                    <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                                @elseif($value->is_approved_rektor==1)
-                                                                    <a href="#" class="badge badge-success">Disetujui</a>
-                                                                @elseif($value->is_approved_rektor==2)
-                                                                    <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                                @endif 
-                                                            </td>
-                                                            <td><span style="display: flex;"> 
-                                                                    <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
-                                                                    @if (auth()->user()->id==$value->user_id)
-                                                                        <form
-                                                                            action="{{route('perencanaan.destroy',$value->id)}}"
-                                                                            method="POST"> 
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                                                        </form>   
-                                                                    @else
-
-                                                                    @endif         
-                                                                </span>                         
-                                                            </td>
-                                                        </tr>
-                                                        @else
-
-                                                        @endif
-                                                        @endforeach
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>Untuk Bulan</th>
-                                                            <th>Diajukan Tanggal</th>
-                                                            <th>Departemen</th>
-                                                            <th>Input Oleh</th>
-                                                            <th>Tahun Anggaran</th>
-                                                            <th>Disetujui WR II</th>
-                                                            <th>Disetujui Rektor</th>
+                                                            <th>Persetujuan WR II</th>
+                                                            <th>Persetujuan Rektor</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -337,26 +250,21 @@
                                                 <tr>
                                                     <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
                                                     <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
-                                                    <td>{{$value->departement->nama}}</td>
-                                                    <td>{{$value->user->name}}</td>
-                                                    <td>{{$value->budget->tahun}}</td>
+                                                    <td>{{$value->nama}}</td>
+                                                    <td>{{$value->name}}</td>
+                                                    <td>{{$value->tahun}}</td>
                                                     <td>
-                                                        @if($value->is_approved_wr2==0)
-                                                            <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                        @elseif($value->is_approved_wr2==1)
-                                                            <a href="#" class="badge badge-success">Disetujui</a>
-                                                        @elseif($value->is_approved_wr2==2)
-                                                            <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                        @endif 
+                                                        <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
+                                                        <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
+                                                        <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                     </td>
                                                     <td>
-                                                        @if($value->is_approved_rektor==0)
-                                                            <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
-                                                        @elseif($value->is_approved_rektor==1)
-                                                            <a href="#" class="badge badge-success">Disetujui</a>
-                                                        @elseif($value->is_approved_rektor==2)
-                                                            <a href="#" class="badge badge-danger">Ditolak</a>   
-                                                        @endif 
+                                                        <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                        <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
+                                                        <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                    </td>
+                                                    <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                        <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                     </td>
                                                     <td><span style="display: flex;"> 
                                                             <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
