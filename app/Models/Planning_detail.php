@@ -21,6 +21,7 @@ class Planning_detail extends Model
         'approved_by_rektor',
         'pj',
         'satuan_ukur_kinerja',
+        'judul_file',
         'target_kinerja',
         'capaian_kinerja',
         'waktu_pelaksanaan',

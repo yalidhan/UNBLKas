@@ -191,7 +191,26 @@ class ReportController extends Controller
 
     public function perencanaanCetak(Request $request)
     {
-        return view('laporan/cetak-perencanaan');
+        $date=explode('-',$request->periode);
+        $month=$date[1];
+        $year=$date[0];
+        // dd($month,$year);
+
+        \DB::statement("SET SQL_MODE=''");
+        $pusat=DB::select(
+            "SELECT p.for_bulan,
+                    d.pusat
+            FROM plannings p
+            LEFT JOIN departements d
+                ON p.departement_id = d.id
+            WHERE p.for_bulan='$year-$month-01' 
+            GROUP BY d.pusat"
+        );
+        return view('laporan/cetak-perencanaan')
+                ->with('month',$month)
+                ->with('year',$year)
+                ->with('pusat',$pusat)
+                ;
     }
 
 }

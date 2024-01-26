@@ -23,7 +23,20 @@
                             OR auth()->user()->jabatan=='Super Admin'
                             OR auth()->user()->jabatan=='Kabid Keuangan'
                             OR auth()->user()->jabatan=='Kabid Perencanaan'
-                            ) 
+                            )
+
+                            <div class="col-md-3">
+                                <form action="report-perencanaan/cetak" method="get">                                                        
+                                    <div class="form-group">
+                                        <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan:<br>Untuk Bulan</label>
+                                            <div class="input-group">
+                                                <input id="periode" type="month" name="periode" required class="form-control">
+                                            </div>   
+                                        </br><button type="submit" class="btn mb-1 btn-success">Cetak<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                    </button>
+                                    </div>
+                                </form>
+                            </div>
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Perencanaan Seluruh Departemen</h4>

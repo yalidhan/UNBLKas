@@ -102,6 +102,14 @@
                                 @endif
                     </div>                         
                 </div>
+                </div>
+                    @if($errors->first())
+                        <div class="alert alert-danger" role="alert">
+                        {{$errors->first()}}
+                        </div>
+                        @else
+                    @endif
+                </div>
                 <div class="table-responsive"> 
             <table id="r_plannings" class="table table-striped table-bordered zero-configuration" style="border:3px;">
                 <thead>
@@ -191,14 +199,18 @@
                                 <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
                             </span>
                         </td>
-                        <td><button type="button" class="btn btn-primary"                            
-                            onclick="window.open('{{$value->satuan_ukur_kinerja}}', 
-                            'newwindow', 
-                            'width=680,height=780'); 
-                            return false;">                                
-                            Link Dokumen Satuan Ukur Kinerja Kegiatan
-                            </button>
-
+                        <td>
+                            @if (!empty($value->satuan_ukur_kinerja))
+                                <p>Judul File : {{$value->judul_file}}</p>
+                                <button type="button" class="btn btn-primary"                            
+                                onclick="window.open('{{$value->satuan_ukur_kinerja}}', 
+                                'newwindow', 
+                                'width=680,height=780'); 
+                                return false;">                                
+                                Link Dokumen Satuan Ukur Kinerja Kegiatan
+                                </button>
+                            @else
+                            @endif
                         </td>
                         <td>{{$value->target_kinerja}}</td>
                         <td>{{$value->capaian_kinerja}}</td>
@@ -279,6 +291,10 @@
                                                         <div class="form-group">
                                                             <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
                                                             <textarea style="padding:0px 0px 0px 5px;" name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive">{{$value->satuan_ukur_kinerja}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="judul_file" class="col-form-label">Judul File :</label>
+                                                            <input style="padding:0px 0px 0px 5px;" required name="judul_file" type="text" value="{{$value->judul_file}}" maxlength="35" class="form-control" id="pj" placeholder="Judul File">
                                                         </div>   
                                                         <div class="form-group">
                                                             <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
@@ -498,6 +514,8 @@
                                             <div class="form-group">
                                                 <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
                                                 <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
+                                                <label for="judul_file" class="col-form-label">Judul File Satuan Ukur Kinerja :</label>
+                                                <input  required name="judul_file" type="text" maxlength="35" class="form-control" id="judul_file" placeholder="Judul File">                                                
                                             </div>
                                             <div class="form-group">
                                                 <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
@@ -534,15 +552,6 @@
             </div>
         </div>
             
-        </div>
-        @if($errors->first())
-            <div class="alert alert-danger" role="alert">
-            {{$errors->first()}}
-            </div>
-            @else
-        @endif
-
-    </div>
 </div>
 </div>
 @endsection

@@ -155,7 +155,7 @@ class PlanningController extends Controller
 
         $showDetailPlanning=DB::select(
             "SELECT a.id as account_id,a.nama,
-                pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,
+                pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
                 pd.target_kinerja,pd.capaian_kinerja,pd.waktu_pelaksanaan,pd.approved_by_wr2,pd.note_wr2,
                 pd.approved_by_rektor,pd.note_rektor,pd.capaian_target_waktu
             FROM planning_details pd
@@ -253,7 +253,6 @@ class PlanningController extends Controller
             'akun_rincian'=>'required',
             'jumlah_anggaran_tambah_rincian'=>'required',
             'pj'=>'required',
-            'satuan_ukur_kinerja'=>'required',
             'target_kinerja'=>'required',
             'capaian_kinerja'=>'required',
             'target_waktu_pelaksanaan'=>'required',
@@ -275,6 +274,7 @@ class PlanningController extends Controller
             'group_rektorat'=>$request->group_rektorat,
             'pj'=>$request->pj,
             'satuan_ukur_kinerja'=>$request->satuan_ukur_kinerja,
+            'judul_file'=>$request->judul_file,
             'target_kinerja'=>$request->target_kinerja,
             'capaian_kinerja'=>$request->capaian_kinerja,
             'waktu_pelaksanaan'=>$request->target_waktu_pelaksanaan,
@@ -334,7 +334,6 @@ class PlanningController extends Controller
                 'akun_rincian_edit'=>'required',
                 'jumlah_anggaran_tambah_rincian_edit'=>'required',
                 'pj'=>'required',
-                'satuan_ukur_kinerja'=>'required',
                 'target_kinerja'=>'required',
                 'capaian_kinerja'=>'required',
                 'target_waktu_pelaksanaan'=>'required',
@@ -353,6 +352,7 @@ class PlanningController extends Controller
                     $updateRincian->group_rektorat = $request->group_rektorat;
                     $updateRincian->pj = $request->pj;
                     $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+                    $updateRincian->judul_file = $request->judul_file;
                     $updateRincian->target_kinerja = $request->target_kinerja;
                     $updateRincian->capaian_kinerja = $request->capaian_kinerja;
                     $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;
@@ -368,6 +368,7 @@ class PlanningController extends Controller
             $updateRincian->group_rektorat = $request->group_rektorat;
             $updateRincian->pj = $request->pj;
             $updateRincian->satuan_ukur_kinerja = $request->satuan_ukur_kinerja;
+            $updateRincian->judul_file = $request->judul_file;
             $updateRincian->target_kinerja = $request->target_kinerja;
             $updateRincian->capaian_kinerja = $request->capaian_kinerja;
             $updateRincian->waktu_pelaksanaan = $request->target_waktu_pelaksanaan;

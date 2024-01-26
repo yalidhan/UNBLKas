@@ -49,9 +49,24 @@
     </div>   
         <h2 align="center" style="line-height: 0.1em;"><b>Universitas Borneo Lestari</b></h2>
         <h2 align="center" style="line-height: 0.1em;">Perencanaan Kegiatan Anggaran RKA</h2>
-        <h3 align="left" style="line-height: 0.1em;">Bulan</h3>
-        <h3 align="left" style="line-height: 0.1em;">Unit Kerja</h3>
-        <h3 align="left" style="line-height: 0.1em;">Tahun Anggaran</h3>
+        <table style="font-size: 20px;font-weight:bold;border-collapse: collapse;border-spacing:0;" cellspacing="0">
+            <tr>
+                <td>Untuk Bulan</td>
+                <td>:</td>
+                <td>{{\Carbon\Carbon::parse(''.$year.'-'.$month.'-01')->format('F')}}</td>
+            </tr>
+            <tr>
+                <td>Unit Kerja</td>
+                <td>:</td>
+                <td>Seluruh Unit Kerja</td>
+            </tr>
+            <tr>
+                <td>Tahun Anggaran</td>
+                <td>:</td>
+                <td>{{\Carbon\Carbon::parse(''.$year.'-01-01')->format('Y')}}</td>
+            </tr>
+        </table>
+
         <p>Berikut ini kami sampaikan perencanaan kegiatan dan anggaran yang akan dilaksanakan:</p>
         <table class="static" align="center" rules="all">
             <thead>
@@ -60,7 +75,7 @@
                     <td>Jenis</td>
                     <td>Kegiatan</td>
                     <td>Penanggungjawab Kegiatan</td>
-                    <td>Jumlah Anggaran(input)</td>
+                    <td>Jumlah Disetujui</td>
                     <td>Satuan Ukur Kinerja Kegiatan</td>
                     <td>Target Kinerja(Target Output)</td>
                     <td>Capaian Kinerja(Realisasi Output)</td>
@@ -79,13 +94,106 @@
                     <td>9</td> 
                     <td>10</td>
                 </tr>
-                <tr>
-                    <td colspan="10" style="background-color:#ebe1e1"><b>Rektorat</b></td>
+                </thead>
+                @php $sub_total_dp=0;$gt_pusat=0;$total_all=0;@endphp
+                @foreach ($pusat as $value)
+                    <tr>
+                        <td colspan="10" style="background-color:#919491"><b>{{$value->pusat}}</b></td>
+                    </tr>
+                    @php 
+                        $departement=DB::select(
+                            "SELECT p.id,p.for_bulan,p.departement_id,
+                                    d.pusat,nama
+                            FROM plannings p
+                            LEFT JOIN departements d
+                                ON p.departement_id = d.id
+                            WHERE p.for_bulan='$year-$month-01' AND d.pusat='$value->pusat'
+                            GROUP BY d.nama");
+                    @endphp
+                    @foreach ($departement as $d_value)
+                    <tr>
+                        <td colspan="10" style="background-color:#ebe1e1"><b>{{$d_value->nama}}</b></td>
+                    </tr>
+                    @php
+                        $detail_perencanaan=DB::select(
+                                "SELECT 
+                                    pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
+                                    sum(pd.nominal_disetujui) as nominal_disetujui,
+                                    pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
+                                    pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
+                                    a.nama,
+                                    p.departement_id,p.for_bulan
+                                FROM planning_details pd
+                                LEFT JOIN accounts a ON pd.account_id = a.id
+                                LEFT JOIN plannings p ON pd.planning_id = p.id
+                                WHERE departement_id=$d_value->departement_id AND for_bulan='$year-$month-01' AND approved_by_rektor=1
+                                GROUP BY a.nama"
+                                );
+                                $no=1;
+                        @endphp
+                        @foreach ($detail_perencanaan as $dp_value)
+                            <tr>
+                                <td>{{$no++}}</td>
+                                <td>RKA</td>
+                                <td>{{$dp_value->nama}}</td>
+                                <td>{{$dp_value->pj}}</td>
+                                <td style="white-space: nowrap;" align="left">Rp {{number_format($dp_value->nominal_disetujui,0,',','.'),$total_all=$total_all+$dp_value->nominal_disetujui,$gt_pusat=$gt_pusat+$dp_value->nominal_disetujui,$sub_total_dp=$sub_total_dp+$dp_value->nominal_disetujui}}</td>
+                                <td>{{$dp_value->judul_file}}</td>
+                                <td>{{$dp_value->target_kinerja}}</td>
+                                <td>{{$dp_value->capaian_kinerja}}</td>
+                                <td>{{$dp_value->waktu_pelaksanaan}}</td> 
+                                <td>{{$dp_value->capaian_target_waktu}}</td>
+                            </tr>
+                        @endforeach
+                    <tr style="background-color:#90f589;">
+                        <td align="center" colspan="4"><b>Sub Total</b></td>
+                        <td style="white-space: nowrap;" align="left"><b>Rp {{number_format($sub_total_dp,0,',','.'),$sub_total_dp=0}}</b></td>
+                        <td align="center"colspan="5"></td>
+                    </tr>
+                    @endforeach
+                    <tr style="background-color:#45f76f;">
+                        <td align="center" colspan="4"><b>Jumlah {{$value->pusat}}</b></td>
+                        <td style="white-space: nowrap;" align="left"><b>Rp {{number_format($gt_pusat,0,',','.'),$gt_pusat=0}}</b></td>
+                        <td align="center"colspan="5"></td>
+                    </tr>
+                        <tr style="background-color:#fae4a7;height:15px;">
+                        <td align="center" colspan="10"></td>
+                    </tr>
+                @endforeach
+                <tr style="background-color:#ebe1e1">
+                    <td align="center" colspan="4"><b>Grand Total(Seluruh Unit)</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp {{number_format($total_all,0,',','.')}}</b></td>
+                    <td align="center"colspan="5"></td>
+
+                <tr style="border-left-style: hidden;">
+                    <td style="border-right-style: hidden;" colspan="7"></td>
+                    <td style="border-right-style: hidden;" colspan="3"><br>Banjarbaru, 24 Januari 2024</td>
                 </tr>
-                <tr>
-                    <td colspan="10" style="background-color:#ebe1e1"><b>Wakil Rektor II</b></td>
+                <tr style="border-style: hidden;">
+                    <td colspan="7"></td>
+                    <td style="border-style: hidden;" colspan="3">Rektor Universitas Borneo Lestari<br><br><br><br><br</td>
                 </tr>
-                <tr>
+                <tr style="border-style: hidden;">
+                    <td colspan="7"></td>
+                    <td style="border-style: hidden;" colspan="3">Dr. Ir. Bambang Joko Priatmadi, M.P</td>
+                </tr>
+        </table>
+
+        <!-- <table class="static" align="center" rules="all">
+            <thead>
+                <tr align="center" style="font-size:large;font-weight:bold;border:3px solid black;background-color:#8f8c8c;">
+                    <td>No</td>
+                    <td>Jenis</td>
+                    <td>Kegiatan</td>
+                    <td>Penanggungjawab Kegiatan</td>
+                    <td>Jumlah Disetujui</td>
+                    <td>Satuan Ukur Kinerja Kegiatan</td>
+                    <td>Target Kinerja(Target Output)</td>
+                    <td>Capaian Kinerja(Realisasi Output)</td>
+                    <td>Target Waktu Pelaksanaan</td>
+                    <td>Capaian Target Waktu</td>
+                </tr>
+                <tr align="center" style="background-color:#ccc8c8;">
                     <td>1</td>
                     <td>2</td>
                     <td>3</td>
@@ -97,8 +205,165 @@
                     <td>9</td> 
                     <td>10</td>
                 </tr>
-            </thead>
-        </table>
+                </thead>
+                <tr>
+                    <td colspan="10" style="background-color:#919491"><b>Rektorat</b></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Wakil Rektor II</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>Honorarium Admin UTS 2023-1</td>
+                    <td>Bendahara Panitia</td>
+                    <td style="white-space: nowrap;" align="left">Rp 1.800.000</td>
+                    <td>Daftar Tenaga Admin UTS</td>
+                    <td>Bukti Pembayaran</td>
+                    <td>Terwujudnya Peningkatan Mutu Pendidikan Yang Baik</td>
+                    <td>Minggu ke 1</td> 
+                    <td>1 Hari</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 1.800.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Wakil Rektor III</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>DPM</td>
+                    <td>Bidang Kemahasiswaan</td>
+                    <td style="white-space: nowrap;" align="left">Rp 500.000</td>
+                    <td>Laporan Pelaksanaan</td>
+                    <td>Kwitansi dan Dokumen Kegiatan</td>
+                    <td>Program Kerja DPM Terlaksana</td>
+                    <td>Minggu ke 1</td> 
+                    <td>Minggu ke 1</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Laboratorium</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>Nutrisi Gizi Laboran(Susu Bear Brand)</td>
+                    <td>KA Unit Laboratorium</td>
+                    <td style="white-space: nowrap;" align="left">Rp 1.200.000</td>
+                    <td></td>
+                    <td>Bukti Pembayaran</td>
+                    <td>Terjaganya Kesehatan Laboran</td>
+                    <td>Minggu ke 1</td> 
+                    <td>Minggu ke 1</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr style="background-color:#45f76f;">
+                    <td align="center" colspan="4"><b>Jumlah Rektorat</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 3.500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                    <tr style="background-color:#fae4a7;height:15px;">
+                    <td align="center" colspan="10"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="10" style="background-color:#919491"><b>Fakultas Farmasi</b></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Dekanat Fakultas Farmasi</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>Honorarium Admin UTS 2023-1</td>
+                    <td>Bendahara Panitia</td>
+                    <td style="white-space: nowrap;" align="left">Rp 1.800.000</td>
+                    <td>Daftar Tenaga Admin UTS</td>
+                    <td>Bukti Pembayaran</td>
+                    <td>Terwujudnya Peningkatan Mutu Pendidikan Yang Baik</td>
+                    <td>Minggu ke 1</td> 
+                    <td>1 Hari</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 1.800.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Prodi PSPPA</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>DPM</td>
+                    <td>Bidang Kemahasiswaan</td>
+                    <td style="white-space: nowrap;" align="left">Rp 500.000</td>
+                    <td>Laporan Pelaksanaan</td>
+                    <td>Kwitansi dan Dokumen Kegiatan</td>
+                    <td>Program Kerja DPM Terlaksana</td>
+                    <td>Minggu ke 1</td> 
+                    <td>Minggu ke 1</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="10" style="background-color:#ebe1e1"><b>Prodi S1 Farmasi</b></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>RKA</td>
+                    <td>Nutrisi Gizi Laboran(Susu Bear Brand)</td>
+                    <td>KA Unit Laboratorium</td>
+                    <td style="white-space: nowrap;" align="left">Rp 1.200.000</td>
+                    <td></td>
+                    <td>Bukti Pembayaran</td>
+                    <td>Terjaganya Kesehatan Laboran</td>
+                    <td>Minggu ke 1</td> 
+                    <td>Minggu ke 1</td>
+                </tr>
+                <tr style="background-color:#90f589;">
+                    <td align="center" colspan="4"><b>Sub Total</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr style="background-color:#45f76f;">
+                    <td align="center" colspan="4"><b>Jumlah Fakultas Farmasi</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 3.500.000</b></td>
+                    <td align="center"colspan="5"></td>
+                </tr>
+                <tr style="background-color:#ebe1e1">
+                    <td align="center" colspan="4"><b>Grand Total(Seluruh Unit)</b></td>
+                    <td style="white-space: nowrap;" align="left"><b>Rp 7.000.000</b></td>
+                    <td align="center"colspan="5"></td>
+
+                <tr style="border-left-style: hidden;">
+                    <td style="border-right-style: hidden;" colspan="7"></td>
+                    <td style="border-right-style: hidden;" colspan="3"><br>Banjarbaru, 24 Januari 2024</td>
+                </tr>
+                <tr style="border-style: hidden;">
+                    <td colspan="7"></td>
+                    <td style="border-style: hidden;" colspan="3">Rektor Universitas Borneo Lestari<br><br><br><br><br</td>
+                </tr>
+                <tr style="border-style: hidden;">
+                    <td colspan="7"></td>
+                    <td style="border-style: hidden;" colspan="3">Dr. Ir. Bambang Joko Priatmadi, M.P</td>
+                </tr>
+        </table> -->
     </div>
 </body>
 </html>

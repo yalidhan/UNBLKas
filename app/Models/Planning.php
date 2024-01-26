@@ -15,8 +15,6 @@ class Planning extends Model
         'departement_id',
         'user_id',    
         'budget_id',
-        'is_approved_wr2',
-        'is_approved_rektor',
     ];
 
     public function departement()
