@@ -344,7 +344,8 @@ class PlanningController extends Controller
             // dd($request->current_account,$request->akun_rincian_edit);
             $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian_edit;
             $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-            $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian_edit)->get();
+            $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian_edit)
+                                    ->where('group_rektorat','=',$request->group_rektorat)->get();
             // dd(!$find->isEmpty());
             if (!$find->isEmpty()){
                 if($request->current_account==$request->akun_rincian_edit){

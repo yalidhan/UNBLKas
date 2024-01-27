@@ -226,6 +226,12 @@
                                             <!-- </div> -->                                    
                                     </div>
                                 </div>
+                                @if($errors->first())
+                                    <div class="alert alert-danger" role="alert">
+                                    {{$errors->first()}}
+                                    </div>
+                                    @else
+                                @endif
                             </br>
                                 <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{\Carbon\Carbon::parse('01-'.$month.'-'.$year.'')->format('F Y')}} </h4></center>
                                 <div class="table-responsive"> 

@@ -143,15 +143,20 @@ class TransactionController extends Controller
                 'no_spb_pengeluaran'=>'required',
                 'keterangan_pengeluaran'=>'required',
             ]);
-            $pengeluaranQuery=Transaction::create([
-                'tanggal'=>$request->tgl_pengeluaran,
-                'no_spb'=>$request->no_spb_pengeluaran,
-                'keterangan'=>$request->keterangan_pengeluaran,
-                'departement_id'=>$request->id_departement,
-                'user_id'=>$request->user_id,
-            ]);
-            $transId=$pengeluaranQuery->id;
-            return redirect('transaksi/'.$transId);
+            $find=Transaction::where('no_spb','=',$request->no_spb_pengeluaran)->get();
+                if (!$find->isEmpty()){
+                    return redirect::back()->withErrors(['message' => 'NO. SPB sudah terdaftar, silahkan cek ulang']);
+                }else{
+                $pengeluaranQuery=Transaction::create([
+                    'tanggal'=>$request->tgl_pengeluaran,
+                    'no_spb'=>$request->no_spb_pengeluaran,
+                    'keterangan'=>$request->keterangan_pengeluaran,
+                    'departement_id'=>$request->id_departement,
+                    'user_id'=>$request->user_id,
+                ]);
+                $transId=$pengeluaranQuery->id;
+                return redirect('transaksi/'.$transId);
+                }
             }
         if($request->tp_trx=='transfer'){
             $request->validate([
