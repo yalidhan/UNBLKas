@@ -234,7 +234,7 @@ class TransactionController extends Controller
             ON t.id = d.transaction_id
             LEFT JOIN departements dp
             ON t.departement_id = dp.id
-            WHERE transaction_id=$id"
+            WHERE t.id=$id"
         );
         $departement_id=$showTransaction[0]->departement_id;
         $tahun=Carbon::parse($showTransaction[0]->tanggal)->format('Y');

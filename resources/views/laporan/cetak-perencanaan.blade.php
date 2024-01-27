@@ -100,37 +100,63 @@
                     <tr>
                         <td colspan="10" style="background-color:#919491"><b>{{$value->pusat}}</b></td>
                     </tr>
-                    @php 
-                        $departement=DB::select(
-                            "SELECT p.id,p.for_bulan,p.departement_id,
-                                    d.pusat,nama
-                            FROM plannings p
-                            LEFT JOIN departements d
-                                ON p.departement_id = d.id
-                            WHERE p.for_bulan='$year-$month-01' AND d.pusat='$value->pusat'
-                            GROUP BY d.nama");
+                    @php
+                        if ($value->pusat=="Rektorat"){
+                            $departement=DB::select(
+                                "SELECT p.id,p.for_bulan,p.departement_id, d.pusat, dp.group_rektorat as nama 
+                                FROM plannings p 
+                                LEFT JOIN departements d ON p.departement_id = d.id 
+                                LEFT JOIN planning_details dp ON p.id = dp.planning_id 
+                                WHERE p.for_bulan='$year-$month-01' AND d.pusat='Rektorat'");
+                        }else{        
+                            $departement=DB::select(
+                                "SELECT p.id,p.for_bulan,p.departement_id,
+                                        d.pusat,nama
+                                FROM plannings p
+                                LEFT JOIN departements d
+                                    ON p.departement_id = d.id
+                                WHERE p.for_bulan='$year-$month-01' AND d.pusat='$value->pusat'
+                                GROUP BY d.nama");
+                        }
                     @endphp
                     @foreach ($departement as $d_value)
                     <tr>
                         <td colspan="10" style="background-color:#ebe1e1"><b>{{$d_value->nama}}</b></td>
                     </tr>
                     @php
-                        $detail_perencanaan=DB::select(
-                                "SELECT 
-                                    pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
-                                    sum(pd.nominal_disetujui) as nominal_disetujui,
-                                    pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
-                                    pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
-                                    a.nama,
-                                    p.departement_id,p.for_bulan
-                                FROM planning_details pd
-                                LEFT JOIN accounts a ON pd.account_id = a.id
-                                LEFT JOIN plannings p ON pd.planning_id = p.id
-                                WHERE departement_id=$d_value->departement_id AND for_bulan='$year-$month-01' AND approved_by_rektor=1
-                                GROUP BY a.nama"
-                                );
-                                $no=1;
-                        @endphp
+                        if ($d_value->pusat=="Rektorat"){
+                            $detail_perencanaan=DB::select(
+                                    "SELECT 
+                                        pd.planning_id,pd.id,pd.group_rektorat,pd.account_id,sum(pd.nominal) as nominal,
+                                        sum(pd.nominal_disetujui) as nominal_disetujui,
+                                        pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
+                                        pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
+                                        a.nama,
+                                        p.departement_id,p.for_bulan
+                                    FROM planning_details pd
+                                    LEFT JOIN accounts a ON pd.account_id = a.id
+                                    LEFT JOIN plannings p ON pd.planning_id = p.id
+                                    WHERE group_rektorat='$d_value->nama' AND for_bulan='$year-$month-01' AND approved_by_rektor=1
+                                    GROUP BY a.nama"
+                                    );
+                        }else{
+                            $detail_perencanaan=DB::select(
+                                    "SELECT 
+                                        pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
+                                        sum(pd.nominal_disetujui) as nominal_disetujui,
+                                        pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
+                                        pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
+                                        a.nama,
+                                        p.departement_id,p.for_bulan
+                                    FROM planning_details pd
+                                    LEFT JOIN accounts a ON pd.account_id = a.id
+                                    LEFT JOIN plannings p ON pd.planning_id = p.id
+                                    WHERE departement_id=$d_value->departement_id AND for_bulan='$year-$month-01' AND approved_by_rektor=1
+                                    GROUP BY a.nama"
+                                    );
+                            }
+                        $no=1;
+                    @endphp
                         @foreach ($detail_perencanaan as $dp_value)
                             <tr>
                                 <td>{{$no++}}</td>

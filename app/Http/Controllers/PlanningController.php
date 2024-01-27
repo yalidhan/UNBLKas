@@ -262,8 +262,10 @@ class PlanningController extends Controller
         // dd($request->akun_rincian);
         $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
-        $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian)->get();
+        $find=Planning_detail::where('planning_id','=',$request->planning_id)->where('account_id','=',$request->akun_rincian)
+                                ->where('group_rektorat','=',$request->group_rektorat)->get();
         // dd(!$find->isEmpty());
+        // dd($find);
         if (!$find->isEmpty()){
             return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
         }

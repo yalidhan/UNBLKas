@@ -294,7 +294,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="judul_file" class="col-form-label">Judul File :</label>
-                                                            <input style="padding:0px 0px 0px 5px;" required name="judul_file" type="text" value="{{$value->judul_file}}" maxlength="35" class="form-control" id="pj" placeholder="Judul File">
+                                                            <input style="padding:0px 0px 0px 5px;" name="judul_file" type="text" value="{{$value->judul_file}}" maxlength="35" class="form-control" id="pj" placeholder="Judul File">
                                                         </div>   
                                                         <div class="form-group">
                                                             <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
@@ -354,6 +354,7 @@
                                                                         Mata Anggaran <b>"{{$value->nama}}"</b>
                                                                         <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
                                                                         <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                                                        <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                     </span>
                                                                 </div>
                                                             </div>
@@ -515,7 +516,7 @@
                                                 <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
                                                 <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
                                                 <label for="judul_file" class="col-form-label">Judul File Satuan Ukur Kinerja :</label>
-                                                <input  required name="judul_file" type="text" maxlength="35" class="form-control" id="judul_file" placeholder="Judul File">                                                
+                                                <input name="judul_file" type="text" maxlength="35" class="form-control" id="judul_file" placeholder="Judul File">                                                
                                             </div>
                                             <div class="form-group">
                                                 <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
