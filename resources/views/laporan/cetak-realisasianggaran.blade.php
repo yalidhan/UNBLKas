@@ -166,9 +166,9 @@
                         <td>{{$da_value->nama}}</td>
                         <td style="white-space: nowrap;">Rp {{number_format($da_value->nominal,0,',','.')}}</td>
                         <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total-$transaksiPengembalian[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
-                        <td align="center"style="white-space: nowrap;">{{number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
+                        <td align="center"style="white-space: nowrap;"><?php if($da_value->nominal!=0){echo number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',');}else{echo"0";} ?> %</td>
                         <td style="white-space: nowrap;">Rp {{number_format(($da_value->nominal-$transaksi),0,',','.')}}</td>
-                        <td style="white-space: nowrap;">{{100-number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',')}} %</td>
+                        <td style="white-space: nowrap;"><?php if($da_value->nominal!=0){echo 100-number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',');}else{echo"0";}?> %</td>
                     </tr>
 
                 @endforeach
@@ -190,9 +190,9 @@
                     <td colspan="2" align="left"><b>Total {{$kelompokvalue->kelompok,$total_anggaran=$total_anggaran+$kelompokvalue->total,$gt_anggaran=$gt_anggaran+$total_anggaran,$gt_transaksi=$gt_transaksi+$total_transaksi}}</b></td>
                     <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format($kelompokvalue->total,0,',','.')}}</b></td>
                     <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format($total_transaksi,0,',','.')}}</b></td>
-                    <td style="border-top:1pt solid black;" align="center"><b>{{number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ',')}}% </b></td>
+                    <td style="border-top:1pt solid black;" align="center"><b><?php if($total_anggaran!=0){echo number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ',');}else{echo"0";} ?> %</b></td>
                     <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format(($kelompokvalue->total-$total_transaksi),0,',','.')}}</b></td>
-                    <td style="border-top:1pt solid black;white-space: nowrap;"><b>{{100-number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ','),$total_transaksi=0,$total_anggaran=0}} %</b></td>
+                    <td style="border-top:1pt solid black;white-space: nowrap;"><b><?php if($total_anggaran!=0){echo 100-number_format(($total_transaksi/$total_anggaran)*100, 2, '.', ',');$total_transaksi=0;$total_anggaran=0;}else{echo"0";}?> %</b></td>
                 </tr>
                 @endforeach
                 <tr style="color:#ff6347;">
