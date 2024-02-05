@@ -196,7 +196,8 @@
                         <td style="white-space: nowrap;">Pengajuan <u>Rp {{number_format($value->nominal,0,',','.')}}</u>
                             <span>
                                 <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
-                                <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} 
+                                    (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
                             </span>
                         </td>
                         <td>
@@ -322,14 +323,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                 
-                                @else
-                                @endif   
-                                <form method="POST" action="{{route('destroyRincianP',$value->id)}}"> 
+                                    </div>  
+                                    <form method="POST" action="{{route('destroyRincianP',$value->id)}}"> 
                                     @csrf
                                     @method('DELETE')
                                     <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                </form>
+                                </form>                               
+                                @else
+                                @endif   
+
                             @else
                             @endif         
                             </span>
@@ -353,7 +355,7 @@
                                                                     <span>
                                                                         Mata Anggaran <b>"{{$value->nama}}"</b>
                                                                         <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
-                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
                                                                         <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                     </span>
                                                                 </div>
@@ -405,7 +407,7 @@
                                                                     <span>
                                                                         Mata Anggaran <b>"{{$value->nama}}"</b>
                                                                         <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
-                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} ({{number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',')}}%)
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
                                                                         <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                         <br>Disetujui WRII Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                     </span>
@@ -465,7 +467,15 @@
         @endif
         <br>
         <a href="{{ route('perencanaan.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
+        <?php
+        $planning_id=$showPlanning[0]->id;
+            $acc_count=DB::select(
+                "SELECT count(case when pd.approved_by_wr2=0 THEN 0 END) AS WR_0
+                FROM planning_details pd
+                WHERE planning_id = $planning_id");
+        ?>
         @if (auth()->user()->id==$showPlanning[0]->user_id)
+        @if ($acc_count[0]->WR_0>0)
         <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
         </center>
         <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
@@ -552,6 +562,9 @@
                 @endif   
             </div>
         </div>
+        @else
+
+        @endif
             
 </div>
 </div>

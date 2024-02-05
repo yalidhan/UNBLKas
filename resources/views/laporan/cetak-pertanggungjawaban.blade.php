@@ -123,7 +123,7 @@
                 </tr>
                 <tr style="border-left-style: hidden;">
                     <td style="border-right-style: hidden;" colspan="4"></td>
-                    <td style="border-right-style: hidden;" colspan="4"><br>Banjarbaru, {{\Carbon\Carbon::now()->format('d F Y')}}<br><br></td>
+                    <td style="border-right-style: hidden;" colspan="4"><br>Banjarbaru, {{\Carbon\Carbon::parse($periode['sampai'])->format('d F Y')}}<br><br></td>
                 </tr>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>

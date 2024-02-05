@@ -103,7 +103,7 @@
                     @php
                         if ($value->pusat=="Rektorat"){
                             $departement=DB::select(
-                                "SELECT p.id,p.for_bulan,p.departement_id, d.pusat, dp.group_rektorat as nama 
+                                "SELECT DISTINCT p.for_bulan,p.departement_id, d.pusat, dp.group_rektorat as nama 
                                 FROM plannings p 
                                 LEFT JOIN departements d ON p.departement_id = d.id 
                                 LEFT JOIN planning_details dp ON p.id = dp.planning_id 

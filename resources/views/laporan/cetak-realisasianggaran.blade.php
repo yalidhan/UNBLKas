@@ -58,7 +58,7 @@
                 {{$departement['nama']}}
             @endif
             "</h3>
-        <h4 align="center">Sampai Dengan {{$sd}}</h4>
+        <h4 align="center">Sampai Dengan {{\Carbon\Carbon::parse($sd2)->format('d F Y')}}</h4>
 
         <table class="static" align="center" border="0" >
             <thead>
@@ -213,7 +213,8 @@
                         @if($gt_anggaran==0)
                                 0
                         @else   
-                            {{100-number_format(($gt_transaksi/$gt_anggaran)*100, 2, '.', ',')}}                         @endif
+                            {{100-number_format(($gt_transaksi/$gt_anggaran)*100, 2, '.', ',')}}                         
+                        @endif
                     %</b></td>
                 </tr>
                 <tr style="border-left-style: hidden;">

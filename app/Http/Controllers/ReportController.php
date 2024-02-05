@@ -79,7 +79,7 @@ class ReportController extends Controller
         $tahun=Carbon::parse($request->sampai)->format('Y');
         $sd=Carbon::parse($request->sampai)->format('F Y');
         $sd2=$request->sampai;
-        // dd($sd2);
+        // dd($sd2,$sd);
         // dd($departement);
         \DB::statement("SET SQL_MODE=''");
         $kelompok=DB::select(

@@ -282,13 +282,28 @@
                                                     <td><span style="display: flex;"> 
                                                             <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
                                                             @if (auth()->user()->id==$value->user_id)
-                                                                <form
-                                                                    action="{{route('perencanaan.destroy',$value->id)}}"
-                                                                    method="POST"> 
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                                                </form>   
+                                                                @if ($value->accounts==0)
+                                                                        <form
+                                                                            action="{{route('perencanaan.destroy',$value->id)}}"
+                                                                            method="POST"> 
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                                        </form>
+                                                                @else
+
+                                                                @endif
+                                                                
+                                                                @if ($value->REKTOR_0!=0 && ($value->REKTOR_1==0 && $value->REKTOR_2==0))
+                                                                    <form
+                                                                        action="{{route('perencanaan.destroy',$value->id)}}"
+                                                                        method="POST"> 
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                                    </form>
+                                                                @else
+                                                                @endif
                                                             @else
 
                                                             @endif         

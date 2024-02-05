@@ -40,7 +40,7 @@ class PlanningController extends Controller
                     count(case when pd.approved_by_rektor=1 THEN 1 END) AS REKTOR_1, 
                     count(case when pd.approved_by_rektor=2 THEN 2 END) AS REKTOR_2, 
                     count(case when pd.approved_by_rektor=0 THEN 0 END) AS REKTOR_0,
-                    sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui, 
+                    sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui,
                     d.nama,
                     b.tahun, 
                     u.name, u.id AS user_id 
@@ -68,6 +68,7 @@ class PlanningController extends Controller
                     count(case when pd.approved_by_rektor=2 THEN 2 END) AS REKTOR_2, 
                     count(case when pd.approved_by_rektor=0 THEN 0 END) AS REKTOR_0,
                     sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui, 
+                    count(pd.account_id) AS accounts,
                     d.nama,
                     b.tahun, 
                     u.name, u.id AS user_id 
