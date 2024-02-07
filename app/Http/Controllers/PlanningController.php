@@ -151,7 +151,7 @@ class PlanningController extends Controller
         );
         $departement=$showPlanning[0]->departement_id;
         $date=explode('-',$showPlanning[0]->for_bulan);
-        $month=$date[1];
+        // $month=$date[1];
         $tahun_anggaran=$date[0];
 
         $showDetailPlanning=DB::select(
