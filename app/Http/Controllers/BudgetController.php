@@ -83,7 +83,7 @@ class BudgetController extends Controller
             ON b.id = bd.budget_id
             LEFT JOIN departements dp
             ON b.departement_id = dp.id
-            WHERE budget_id=$id"
+            WHERE b.id=$id"
         );
         // dd($showBudget);
         // $showBudget=Budget::find($id);
