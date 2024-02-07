@@ -147,7 +147,7 @@ class PlanningController extends Controller
             ON p.id = pd.planning_id
             LEFT JOIN departements dp
             ON p.departement_id = dp.id
-            WHERE planning_id=$id"
+            WHERE p.id=$id"
         );
         $departement=$showPlanning[0]->departement_id;
         $date=explode('-',$showPlanning[0]->for_bulan);
