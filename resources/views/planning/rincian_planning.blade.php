@@ -68,6 +68,16 @@
                                         </tbody>
                                     </table>
                         </div>
+                        <div class="col-md-3">
+                                <form action="/report-perencanaan/cetak" method="get">                                                        
+                                    <br>
+                                    <input id="periode" type="hidden" value="{{$showPlanning[0]->for_bulan}}" name="periode" required class="form-control">
+                                    <input type="hidden" name="departement" value="{{$showPlanning[0]->departement_id}}">
+                                    <input type="hidden" name="p_id" value="{{$showPlanning[0]->id}}">
+                                    <button type="submit" class="btn mb-1 btn-success">Cetak Perencanaan<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                    </button>
+                                </form>
+                        </div>
                     </div>
                     <div class="card-footer text-muted">
                             @if (auth()->user()->id==$showPlanning[0]->user_id)

@@ -186,6 +186,7 @@ class ReportController extends Controller
                 ->with('transactionList',$transaction)
                 ->with('departementNama',$departementNama)
                 ->with('periode',$periode)
+                ->with('departement_id',$departement_id)
                 ->with('saldoLastMonth',$saldoLastMonth);
     }
 
@@ -194,7 +195,14 @@ class ReportController extends Controller
         $date=explode('-',$request->periode);
         $month=$date[1];
         $year=$date[0];
-        // dd($month,$year);
+        $departement_id=$request->departement;
+        $p_id=$request->p_id;
+        if (!empty($request->departement)){
+            $d_query="AND departement_id=$departement_id" ;
+        }
+        else{
+            $d_query="";
+        }
 
         \DB::statement("SET SQL_MODE=''");
         $pusat=DB::select(
@@ -203,13 +211,15 @@ class ReportController extends Controller
             FROM plannings p
             LEFT JOIN departements d
                 ON p.departement_id = d.id
-            WHERE p.for_bulan='$year-$month-01' 
+            WHERE p.for_bulan='$year-$month-01' $d_query 
             GROUP BY d.pusat"
         );
         return view('laporan/cetak-perencanaan')
                 ->with('month',$month)
                 ->with('year',$year)
                 ->with('pusat',$pusat)
+                ->with('departement_id',$departement_id)
+                ->with('p_id',$p_id)
                 ;
     }
 

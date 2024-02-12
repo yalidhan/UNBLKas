@@ -103,7 +103,8 @@
                                         <option value="Wakil Rektor II">Wakil Rektor II</option>
                                         <option value="Kabid Keuangan">Kabid Keuangan</option>
                                         <option value="Kabid Perencanaan">Kabid Perencanaan</option>
-                                        <option value="Dekan">Dekan</option>  
+                                        <option value="Dekan">Dekan</option>
+                                        <option value="Kaprodi">Kaprodi</option>
                                         <option value="Bendahara Operasional">Bendahara Operasional</option>     
                                     </select>
                                 @error('jabatan')

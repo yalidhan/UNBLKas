@@ -129,13 +129,30 @@
                     <td colspan="4"></td>
                     <td style="border-style: hidden;" colspan="4">Penanggungjawab</td>
                 </tr>
+                <?php 
+                    $pejabatQuery=DB::select(
+                        "SELECT u.name,u.jabatan,u.status,
+                                d.nama 
+                        FROM users u
+                        LEFT JOIN departements d ON u.departement_id=d.id
+                        where u.jabatan LIKE 'Bendahara%' AND u.status=1 AND u.departement_id=$departement_id"
+                    );
+                    if(!empty($pejabatQuery)){
+                        $jabatan=$pejabatQuery[0]->jabatan;
+                        $nama=$pejabatQuery[0]->name;
+                    }else{
+                        $jabatan="Bendahara Operasional";
+                        $nama="VACANT";                    
+                    }
+
+                ?>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>
-                    <td style="border-style: hidden;" colspan="4">{{auth()->user()->jabatan}}<br><br><br><br><br></td>
+                    <td style="border-style: hidden;" colspan="4">{{$jabatan}}<br><br><br><br><br></td>
                 </tr>
                 <tr style="border-style: hidden;">
                     <td colspan="4"></td>
-                    <td style="border-style: hidden;" colspan="4">{{auth()->user()->name}}</td>
+                    <td style="border-style: hidden;" colspan="4">{{$nama}}</td>
                 </tr>
         </table>
     </div>

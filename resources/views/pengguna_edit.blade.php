@@ -79,7 +79,8 @@
                                         <option value="Wakil Rektor II" {{ $pengguna->jabatan == "Wakil Rektor II" ?'selected':'' }}>Wakil Rektor II</option>
                                         <option value="Kabid Keuangan" {{ $pengguna->jabatan == "Kabid Keuangan" ?'selected':'' }}>Kabid Keuangan</option>
                                         <option value="Kabid Perencanaan" {{ $pengguna->jabatan == "Kabid Perencanaan" ?'selected':'' }}>Kabid Perencanaan</option>
-                                        <option value="Dekan" {{ $pengguna->jabatan == "Dekan" ?'selected':'' }}>Dekan</option>  
+                                        <option value="Dekan" {{ $pengguna->jabatan == "Dekan" ?'selected':'' }}>Dekan</option>
+                                        <option value="Kaprodi" {{ $pengguna->jabatan == "Kaprodi" ?'selected':'' }}>Kaprodi</option>
                                         <option value="Bendahara Operasional"{{ $pengguna->jabatan == "Bendahara Operasional" ?'selected':'' }}>Bendahara Operasional</option>     
                                     </select>
                                 @error('jabatan')
