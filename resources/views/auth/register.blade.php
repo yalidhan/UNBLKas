@@ -105,7 +105,9 @@
                                         <option value="Kabid Perencanaan">Kabid Perencanaan</option>
                                         <option value="Dekan">Dekan</option>
                                         <option value="Kaprodi">Kaprodi</option>
-                                        <option value="Bendahara Operasional">Bendahara Operasional</option>     
+                                        <option value="Bendahara Operasional">Bendahara Operasional</option>
+                                        <option value="Admin Departemen">Admin Departemen</option>
+                                        <option value="SPI">SPI</option>     
                                     </select>
                                 @error('jabatan')
                                     <span class="invalid-feedback" role="alert">

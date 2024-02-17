@@ -23,6 +23,7 @@
                             OR auth()->user()->jabatan=='Super Admin'
                             OR auth()->user()->jabatan=='Kabid Keuangan'
                             OR auth()->user()->jabatan=='Kabid Perencanaan'
+                            OR auth()->user()->jabatan=='SPI'
                             )
 
                             <div class="col-md-3">
@@ -208,7 +209,10 @@
                                     <h4></h4>
                                     
                                     <div class="bootstrap-modal">
+                                        @if (auth()->user()->jabatan=="Admin Departemen")
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPerencanaan">Tambah Perencanaan</button>
+                                        @else
+                                        @endif
                                 </center>
                                         <div class="modal fade" id="addPerencanaan" tabindex="-1" role="dialog" aria-labelledby="addPerencanaanModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">

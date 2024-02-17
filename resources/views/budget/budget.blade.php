@@ -23,9 +23,11 @@
                                 <h4 class="card-title">Daftar Anggaran</h4>   
                                 
                                 <h4></h4>
-                                
+                                @if (auth()->user()->jabatan=="Bendahara Operasional")
                                 <div class="bootstrap-modal">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAnggaran">Tambah Anggaran</button>
+                                @else
+                                @endif   
                             </center>
                                     <div class="modal fade" id="addAnggaran" tabindex="-1" role="dialog" aria-labelledby="addAnggaranModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">

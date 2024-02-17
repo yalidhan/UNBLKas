@@ -35,6 +35,7 @@
                                             </div>
                                         </form>
                                     </div>
+                                    @if (auth()->user()->jabatan=="Bendahara Operasional")
                                     <div class="col-md-9 align-self-center">
                                             <!-- <button type="button" class="btn mb-1 btn-primary">pemasukan<span class="btn-icon-right"><i class="fa fa-money"></i></span></button> -->
                                             <!-- <div class="bootstrap-modal"> -->
@@ -225,6 +226,8 @@
                                                         </div>
                                             <!-- </div> -->                                    
                                     </div>
+                                    @else
+                                    @endif
                                 </div>
                                 @if($errors->first())
                                     <div class="alert alert-danger" role="alert">

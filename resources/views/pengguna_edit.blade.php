@@ -81,7 +81,9 @@
                                         <option value="Kabid Perencanaan" {{ $pengguna->jabatan == "Kabid Perencanaan" ?'selected':'' }}>Kabid Perencanaan</option>
                                         <option value="Dekan" {{ $pengguna->jabatan == "Dekan" ?'selected':'' }}>Dekan</option>
                                         <option value="Kaprodi" {{ $pengguna->jabatan == "Kaprodi" ?'selected':'' }}>Kaprodi</option>
-                                        <option value="Bendahara Operasional"{{ $pengguna->jabatan == "Bendahara Operasional" ?'selected':'' }}>Bendahara Operasional</option>     
+                                        <option value="Bendahara Operasional"{{ $pengguna->jabatan == "Bendahara Operasional" ?'selected':'' }}>Bendahara Operasional</option>
+                                        <option value="Admin Departemen"{{ $pengguna->jabatan == "Admin Departemen" ?'selected':'' }}>Admin Departemen</option>
+                                        <option value="SPI"{{ $pengguna->jabatan == "SPI" ?'selected':'' }}>SPI</option>         
                                     </select>
                                 @error('jabatan')
                                     <span class="invalid-feedback" role="alert">
