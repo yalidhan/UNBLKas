@@ -209,7 +209,9 @@
                                     <h4></h4>
                                     
                                     <div class="bootstrap-modal">
-                                        @if (auth()->user()->jabatan=="Admin Departemen")
+                                        @if (auth()->user()->jabatan=='Admin Departemen'
+                                            OR auth()->user()->jabatan=='Bendahara Operasional' 
+                                        )
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPerencanaan">Tambah Perencanaan</button>
                                         @else
                                         @endif
