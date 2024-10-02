@@ -161,8 +161,8 @@
                     }
                 @endphp
                 
-                <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
-                        <td></td>
+                <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total-$transaksiPengembalian[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
+                        <td>total transaksi{{$transaksi[0]->total}} da_value nominal {{$da_value->nominal}}</td>
                         <td>{{$da_value->nama}}</td>
                         <td style="white-space: nowrap;">Rp {{number_format($da_value->nominal,0,',','.')}}</td>
                         <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total-$transaksiPengembalian[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
