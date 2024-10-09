@@ -15,6 +15,8 @@
     <link href="/assets/icons/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- <link href="/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet"> -->
     @stack('rincian_budget-style')
+    <!-- Uji coba perencanaan table header fixed -->
+    @stack('fixed_header_perencanaan')
     <style>
     body{
             color:#000000;
@@ -225,6 +227,9 @@
     @stack('lpjPage-script')
     @stack('budget-script')
     @stack('detail_budget-script')
+    /* Percobaan */
+    @stack('child-row-datatables')
+    /* Percobaan */
 </body>
 
 </html>

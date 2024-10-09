@@ -1,7 +1,26 @@
 @extends('master')
 
 @section('content')
+@push('fixed_header_perencanaan')
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
+@endpush
 @push('rincian_planning-style')
+    .details-control {
+            cursor: pointer;
+            text-align: center;
+            width: 30px;
+        }
+    .hidden-row {
+            display: none;
+        }
+    .arrow-icon {
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+    .shown .arrow-icon {
+            transform: rotate(90deg); /* Rotate when expanded */
+        } 
+       
 @foreach ($showDetailPlanning as $value)
     #jumlah{{$value->id}}, #labelJumlah{{$value->id}}{
         display: none;
@@ -121,35 +140,37 @@
                     @endif
                 </div>
                 <div class="table-responsive"> 
-            <table id="r_plannings" class="table table-striped table-bordered zero-configuration" style="border:3px;">
+            <table id="r_plannings2" class="table table-striped table-bordered zero-configuration" style="width:100%;">
                 <thead>
                     <tr>
-                        <th scope="col">Jenis</th>
+                        <th  ></th>
+                        <th class="hidden-row"  >Jenis</th>
                         @if ($showPlanning[0]->departement_id==6)
-                        <th scope="col">Kelompok Rektorat</th>
+                        <th  >Kelompok Rektorat</th>
                         @else
                         @endif
-                        <th scope="col">Kegiatan</th>
-                        <th scope="col">Keterangan Anggaran Tahun Berjalan</th>
-                        <th scope="col">Penanggung Jawab Kegiatan</th>
-                        <th scope="col">Jumlah Anggaran</th>
-                        <th scope="col">Satuan Ukur Kinerja Kegiatan</th>
-                        <th scope="col">Target Kinerja(Target Output)</th>
-                        <th scope="col">Capaian Kinerja(Realisasi Output)</th>
-                        <th scope="col">Target Waktu Pelaksanaan</th>
-                        <th scope="col">Capaian Target Waktu Penyelesaian</th>
-                        <th scope="col">Jml. Anggaran Disetujui</th>
-                        <th scope="col">Disetujui WR II</th>
-                        <th scope="col">Catatan WR II</th>
-                        <th scope="col">Disetujui Rektor</th>
-                        <th scope="col">Catatan Rektor</th>
-                        <th scope="col">Aksi</th>
+                        <th  >Kegiatan</th>
+                        <th  >Keterangan Anggaran Tahun Berjalan</th>
+                        <th class="hidden-row"  >Penanggung Jawab Kegiatan</th>
+                        <th  >Jumlah Anggaran</th>
+                        <th class="hidden-row"  >Satuan Ukur Kinerja Kegiatan</th>
+                        <th class="hidden-row"  >Target Kinerja(Target Output)</th>
+                        <th class="hidden-row"  >Capaian Kinerja(Realisasi Output)</th>
+                        <th class="hidden-row"  >Target Waktu Pelaksanaan</th>
+                        <th class="hidden-row"  >Capaian Target Waktu Penyelesaian</th>
+                        <th  >Jml. Anggaran Disetujui</th>
+                        <th  >Disetujui WR II</th>
+                        <th class="hidden-row"  >Catatan WR II</th>
+                        <th  >Disetujui Rektor</th>
+                        <th class="hidden-row"  >Catatan Rektor</th>
+                        <th  >Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($showDetailPlanning as $value)
                     <tr>
-                        <td>RKA</td>
+                        <td class="details-control"><span class="arrow-icon">▶</span></td>
+                        <td class="hidden-row">RKA</td>
                         @if ($showPlanning[0]->departement_id==6)
                         <td>{{$value->group_rektorat}}</td>
                         @else
@@ -178,7 +199,7 @@
                             @endphp
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
-                            Lihat Keterangan 
+                            Keterangan 
                             </button>
 
                             <!-- Modal -->
@@ -202,7 +223,7 @@
                             </div>    
 
                         </td>
-                        <td>{{$value->pj}}</td>
+                        <td class="hidden-row">{{$value->pj}}</td>
                         <td style="white-space: nowrap;">Pengajuan <u>Rp {{number_format($value->nominal,0,',','.')}}</u>
                             <span>
                                 <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
@@ -210,7 +231,7 @@
                                     (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
                             </span>
                         </td>
-                        <td>
+                        <td class="hidden-row">
                             @if (!empty($value->satuan_ukur_kinerja))
                                 <p>Judul File : {{$value->judul_file}}</p>
                                 <button type="button" class="btn btn-primary"                            
@@ -223,10 +244,10 @@
                             @else
                             @endif
                         </td>
-                        <td>{{$value->target_kinerja}}</td>
-                        <td>{{$value->capaian_kinerja}}</td>
-                        <td>{{$value->waktu_pelaksanaan}}</td>
-                        <td>{{$value->capaian_target_waktu}}</td>
+                        <td class="hidden-row">{{$value->target_kinerja}}</td>
+                        <td class="hidden-row">{{$value->capaian_kinerja}}</td>
+                        <td class="hidden-row">{{$value->waktu_pelaksanaan}}</td>
+                        <td class="hidden-row">{{$value->capaian_target_waktu}}</td>
                         <td style="white-space: nowrap;"> Rp {{number_format($value->nominal_disetujui,0,',','.')}}</td>
                         <td>
                             @if($value->approved_by_wr2==0)
@@ -237,7 +258,7 @@
                                 <a href="#" class="badge badge-danger">Ditolak</a>   
                             @endif 
                         </td>
-                        <td>{{$value->note_wr2}}</td>
+                        <td class="hidden-row">{{$value->note_wr2}}</td>
                         <td>
                             @if($value->approved_by_rektor==0)
                                 <a href="#" class="badge badge-primary">Sedang Ditinjau</a>
@@ -247,7 +268,7 @@
                                 <a href="#" class="badge badge-danger">Ditolak</a>   
                             @endif 
                         </td>
-                        <td>{{$value->note_rektor}}</td>
+                        <td class="hidden-row">{{$value->note_rektor}}</td>
                         <td><span style="display: flex;">
                             
                             @if (auth()->user()->id==$showPlanning[0]->user_id )
@@ -678,11 +699,6 @@
 
 @push('detail_budget-script')
     <script>    
-        $('#r_plannings').dataTable( {
-        "pageLength": 25
-        } );
-    </script>
-    <script>    
         $(document).ready(function() {
             $('.akun_rincian').select2();
         });
@@ -758,4 +774,61 @@
         });
         });
     </script>
+@endpush
+
+@push('child-row-datatables')
+<script>
+$(document).ready(function() {
+    var table = $('#r_plannings2').DataTable();
+
+    // Add event listener for opening and closing details
+    $('#r_plannings2 tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+        var arrowIcon = $(this).find('.arrow-icon');
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            arrowIcon.text('▶'); // Change icon to point right
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+            arrowIcon.text('▼'); // Change icon to point down
+        }
+    });
+    @if ($showPlanning[0]->departement_id==6)
+    // Formatting function for row details
+    function format(data) {
+        return '<div><h3>Rincian Tabel</h3><table><tr><td>Jenis :</td><td>'+ data[1] +'</td></tr>'+
+        '<tr><td>Penanggungjawab Kegiatan:</td><td>'+ data[5] +'</td></tr>'+
+        '<tr><td>Satuan Ukur Kinerja Kegiatan:</td><td>'+ data[7] +'</td></tr>' +
+        '<tr><td>Target Kinerja(Target Output):</td><td>'+ data[8] +'</td></tr>'+
+        '<tr><td>Capaian Kinerja(Realisasi Output):</td><td>'+ data[9] +'</td></tr>'+
+        '<tr><td>Target Waktu Pelaksanaan:</td><td>'+ data[10] +'</td></tr>'+
+        '<tr><td>Capaian Target Waktu Penyelesaian:</td><td>'+ data[11] +'</td></tr>'+
+        '<tr><td>Catatan WR II:</td><td>'+ data[14] +'</td></tr>'+
+        '<tr><td>Catatan Rektor:</td><td>'+ data[16] +'</td></tr>'+
+        '</table></div>';
+    }                        
+    @else
+    // Formatting function for row details
+    function format(data) {
+        return '<div><h3>Rincian Tabel</h3><table><tr><td>Jenis :</td><td>'+ data[1] +'</td></tr>'+
+        '<tr><td>Penanggungjawab Kegiatan:</td><td>'+ data[4] +'</td></tr>'+
+        '<tr><td>Satuan Ukur Kinerja Kegiatan:</td><td>'+ data[6] +'</td></tr>' +
+        '<tr><td>Target Kinerja(Target Output):</td><td>'+ data[7] +'</td></tr>'+
+        '<tr><td>Capaian Kinerja(Realisasi Output):</td><td>'+ data[8] +'</td></tr>'+
+        '<tr><td>Target Waktu Pelaksanaan:</td><td>'+ data[9] +'</td></tr>'+
+        '<tr><td>Capaian Target Waktu Penyelesaian:</td><td>'+ data[10] +'</td></tr>'+
+        '<tr><td>Catatan WR II:</td><td>'+ data[13] +'</td></tr>'+
+        '<tr><td>Catatan Rektor:</td><td>'+ data[15] +'</td></tr>'+
+        '</table></div>';
+    }
+    @endif
+
+});
+</script>
 @endpush
