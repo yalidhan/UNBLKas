@@ -165,6 +165,12 @@
                         <ul aria-expanded="false">
                             <li><a href="{{route('realisasiPage')}}">Realisasi Anggaran</a></li>
                         </ul>
+                        @if (auth()->user()->departement_id==1)
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('posisikasPage')}}">Posisi Kas</a></li>
+                            </ul>
+                        @else
+                        @endif
                     </li>
                 </ul>
             </div>

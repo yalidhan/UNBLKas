@@ -25,8 +25,9 @@ class ReportController extends Controller
         // $departement_id=auth()->user()->departement_id;
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
-        }else{  
-            $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
+        }else{
+            $departement=Departement::where('status','=','1')->whereNotIn('id',[1,18,19,20,21])->get();  
+            // $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
         }
         // $account=Account::where('kelompok','!=','""')->groupby('kelompok')->get();
         \DB::statement("SET SQL_MODE=''");
@@ -59,7 +60,7 @@ class ReportController extends Controller
             $departement_id="departement_id=$d_id";
             $departement=Departement::find(auth()->user()->departement_id);
         }elseif($request->departement==0){
-            $departement_id="departement_id NOT IN (1,18)";
+            $departement_id="departement_id NOT IN (1,18,19,20,21)";//Ini Perlu ditambah jika ada departement di luar univ
             $departement=array(
                 "nama"=>"Universitas Borneo Lestari",
                 "id"=>"0"
@@ -113,7 +114,8 @@ class ReportController extends Controller
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
         }else{  
-            $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
+            $departement=Departement::where('status','=','1')->whereNotIn('id',[1,18,19,20,21])->get();
+            // $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
         }
         
         return view('laporan/pertanggungjawaban')->with('departement',$departement);
@@ -221,6 +223,27 @@ class ReportController extends Controller
                 ->with('departement_id',$departement_id)
                 ->with('p_id',$p_id)
                 ;
+    }
+    public function posisikasPage()
+    {   
+       return view('laporan/posisikas');
+    }
+
+    public function posisikasCetak(Request $request)
+    {
+        $tahun=Carbon::parse($request->periode)->format('Y');
+        $sd=Carbon::parse($request->periode)->format('F Y');
+        $sd2=$request->periode;
+        $lastdateperiode=carbon::create($sd2)->endOfMonth()->toDateString();
+
+        $departement=Departement::where('status','=','1')->get();      
+
+        return view('laporan/cetak-posisikas')
+        ->with('sd',$sd)
+        ->with('sd2',$sd2)
+        ->with('tahun',$tahun)
+        ->with('lastdateperiode',$lastdateperiode)
+        ->with('departements',$departement);
     }
 
 }

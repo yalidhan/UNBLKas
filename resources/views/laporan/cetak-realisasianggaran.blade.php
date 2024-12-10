@@ -38,7 +38,7 @@
             padding: 5px;
         }
     </style>
-    <title>Cetak Lembar Pertanggungjawaban</title>
+    <title>Cetak Laporan Realisasi Anggaran</title>
 </head>
 <body>
     <div class="form-group">

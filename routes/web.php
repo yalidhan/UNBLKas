@@ -70,4 +70,7 @@ Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->na
 Route::get('realisasianggaran', [ReportController::class,'realisasiPage'])->name('realisasiPage');
 Route::get('realisasianggaran/cetak', [ReportController::class,'realisasiCetak'])->name('realisasiCetak');
 
+Route::get('posisikas', [ReportController::class,'posisikasPage'])->name('posisikasPage');
+Route::get('posisikas/cetak', [ReportController::class,'posisikasCetak'])->name('posisikasCetak');
+
 Route::get('report-perencanaan/cetak', [ReportController::class,'perencanaanCetak'])->name('perencanaanCetak');
