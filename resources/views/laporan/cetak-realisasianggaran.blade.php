@@ -87,7 +87,7 @@
                             WHERE budget_id=$kelompokvalue->budget_id AND kelompok='$kelompokvalue->kelompok'
                             ORDER BY account_id ASC"
                             );}
-                    else{
+                    elseif ($departement['id']=='0'){
                         $detail_anggaran=DB::select(
                             "SELECT
                                 bd.budget_id,bd.id,bd.account_id,sum(bd.nominal) as nominal,
@@ -98,11 +98,28 @@
                                 ON bd.account_id = a.id
                             LEFT JOIN budgets b
                                 ON bd.budget_id = b.id
-                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id NOT IN (1,18)
+                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id NOT IN (1,18,19,20,21)
                             GROUP BY a.nama
                             ORDER BY account_id ASC"
                             );
                     }
+                    elseif ($departement['id']=='1'){
+                        $detail_anggaran=DB::select(
+                            "SELECT
+                                bd.budget_id,bd.id,bd.account_id,sum(bd.nominal) as nominal,
+                                b.tahun,b.departement_id,
+                                a.kelompok,a.nama,a.no
+                            FROM budget_details bd
+                            LEFT JOIN accounts a
+                                ON bd.account_id = a.id
+                            LEFT JOIN budgets b
+                                ON bd.budget_id = b.id
+                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id IN (1,18,19,20,21)
+                            GROUP BY a.nama
+                            ORDER BY account_id ASC"
+                            );
+                    }
+
                               
                 @endphp
                 @foreach ($detail_anggaran as $da_value)
@@ -112,6 +129,8 @@
                     else{    
                     $dp_id=$departement['id'];                
                     $departement_sql="t.departement_id!=$dp_id";}
+                    // dd($departement['id']);
+                    
                 ?>
                 @php
                 if (!empty($departement->id)){
@@ -136,7 +155,7 @@
                         WHERE $departement_sql AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
                         );                    
                     }
-                else{
+                elseif ($departement['id']=='0'){
                     $transaksi=DB::select(
                             "SELECT t.id,t.tanggal,t.departement_id, d.account_id,sum(d.nominal) AS total,
                                 a.id,a.no,a.kelompok 
@@ -145,7 +164,7 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE departement_id NOT IN (1,18) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
+                            WHERE departement_id NOT IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
                             );
                     
                     $transaksiPengembalian=DB::select(
@@ -156,7 +175,30 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE departement_id NOT IN (1,18) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
+                            WHERE departement_id NOT IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
+                            );
+                    }
+                    elseif ($departement['id']=='1'){
+                    $transaksi=DB::select(
+                            "SELECT t.id,t.tanggal,t.departement_id, d.account_id,sum(d.nominal) AS total,
+                                a.id,a.no,a.kelompok 
+                            FROM transactions t 
+                            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+                            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+                            WHERE departement_id IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
+                            );
+                    
+                    $transaksiPengembalian=DB::select(
+                            "SELECT t.id,t.tanggal,t.departement_id,d.dk, d.account_id,sum(d.nominal) AS total,
+                                a.id,a.no,a.kelompok 
+                            FROM transactions t 
+                            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+                            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+                            WHERE departement_id IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
                             );
                     }
                 @endphp

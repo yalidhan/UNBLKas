@@ -65,6 +65,12 @@ class ReportController extends Controller
                 "nama"=>"Universitas Borneo Lestari",
                 "id"=>"0"
             );
+        }elseif($request->departement==1){
+            $departement_id="departement_id IN (1,18,19,20,21)";//Ini Perlu ditambah jika ada tambahan yayasan
+            $departement=array(
+                "nama"=>"Yayasan Borneo Lestari",
+                "id"=>"1"
+            );
         }
         else{
             $departement_id="departement_id=$request->departement";
@@ -83,6 +89,7 @@ class ReportController extends Controller
         // dd($sd2,$sd);
         // dd($departement);
         \DB::statement("SET SQL_MODE=''");
+
         $kelompok=DB::select(
             "SELECT b.id, b.departement_id,b.tahun,
             dp.nama,
@@ -99,7 +106,7 @@ class ReportController extends Controller
             GROUP BY kelompok
             ORDER BY account_id ASC"
         );
-        // dd($departement);
+        // dd($kelompok);
 
         return view('laporan/cetak-realisasianggaran')
                     ->with('kelompok',$kelompok)
