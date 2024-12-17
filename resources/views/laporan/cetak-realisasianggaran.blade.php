@@ -114,7 +114,7 @@
                                 ON bd.account_id = a.id
                             LEFT JOIN budgets b
                                 ON bd.budget_id = b.id
-                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id IN (1,18,19,20,21)
+                            WHERE tahun=$tahun AND kelompok='$kelompokvalue->kelompok' AND b.departement_id IN (1,19,20,21)
                             GROUP BY a.nama
                             ORDER BY account_id ASC"
                             );
