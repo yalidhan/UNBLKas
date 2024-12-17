@@ -83,7 +83,7 @@ class TransactionController extends Controller
         $saldoLastMonth=$saldoDebit-$saldoKredit;
 
         $departement=Departement::where('status','=','1')->get();
-        $accountHarta=Account::where('nama','LIKE','Kas Kecil%')->where('status','=','1')->orderBy('no')->get();
+        $accountHarta=Account::where('nama','LIKE','Kas%')->where('status','=','1')->orderBy('no')->get();
         // $accountPendapatan=Account::where(function($q){$q->where('tipe','=','Pendapatan')->orWhere('nama','LIKE','Kas Bank%')->orWhere('tipe','=','Modal');})->where('status','=','1')->orderBy('no')->get();
         $accountPendapatan=Account::where('status','=','1')->orderBy('no')->get();
         // dd($accountPendapatan);
