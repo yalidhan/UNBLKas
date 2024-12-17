@@ -196,6 +196,26 @@
                                         WHERE departement_id=$departement_id AND tanggal BETWEEN '$year-01-01' and '$year-12-01' AND account_id=$account_id AND dk=2    
                                     "
                                 );
+                                $realisasiDebit=DB::select(
+                                    "   SELECT t.id,t.tanggal,d.dk, d.account_id,sum(d.nominal) AS total,
+                                            a.id,a.no,a.kelompok 
+                                        FROM transactions t 
+                                        LEFT JOIN transaction_details d 
+                                            ON t.id = d.transaction_id 
+                                        LEFT JOIN accounts a 
+                                            ON d.account_id = a.id 
+                                        WHERE departement_id=$departement_id AND tanggal BETWEEN '$year-01-01' and '$year-12-01' AND account_id=$account_id AND dk=1    
+                                    "
+                                );
+                                if (empty($realisasiDebit)) {
+                                    $realisasiDebit = 0;
+                                } else {
+                                    // Extract the total from the result
+                                    $realisasiDebit = $realisasiDebit[0]->total;
+                                }
+                                $realisasiReal=$realisasi[0]->total-$realisasiDebit;
+
+
                             @endphp
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keterangan{{$value->id}}">
@@ -227,8 +247,8 @@
                         <td style="white-space: nowrap;">Pengajuan <u>Rp {{number_format($value->nominal,0,',','.')}}</u>
                             <span>
                                 <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
-                                <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} 
-                                    (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
+                                <br>Realisasi Rp {{number_format($realisasiReal,0,',','.')}} 
+                                    (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasiReal/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
                             </span>
                         </td>
                         <td class="hidden-row">

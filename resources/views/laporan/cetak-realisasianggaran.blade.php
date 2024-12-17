@@ -187,7 +187,7 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE departement_id IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
+                            WHERE departement_id IN (1,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=2"
                             );
                     
                     $transaksiPengembalian=DB::select(
@@ -198,7 +198,7 @@
                                 ON t.id = d.transaction_id 
                             LEFT JOIN accounts a 
                                 ON d.account_id = a.id 
-                            WHERE departement_id IN (1,18,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
+                            WHERE departement_id IN (1,19,20,21) AND tanggal BETWEEN '$tahun-01-01' and '$sd2' AND account_id=$da_value->account_id AND dk=1"
                             );
                     }
                 @endphp

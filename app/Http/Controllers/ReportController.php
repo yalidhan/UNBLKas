@@ -66,7 +66,7 @@ class ReportController extends Controller
                 "id"=>"0"
             );
         }elseif($request->departement==1){
-            $departement_id="departement_id IN (1,18,19,20,21)";//Ini Perlu ditambah jika ada tambahan yayasan
+            $departement_id="departement_id IN (1,19,20,21)";//Ini Perlu ditambah jika ada tambahan yayasan
             $departement=array(
                 "nama"=>"Yayasan Borneo Lestari",
                 "id"=>"1"

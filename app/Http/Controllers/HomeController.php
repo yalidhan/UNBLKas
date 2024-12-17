@@ -127,31 +127,69 @@ class HomeController extends Controller
         $rencana_anggaran=DB::select(
         "SELECT b.id, b.departement_id,b.tahun,
             dp.nama,
-            bd.budget_id,sum(bd.nominal) as total
+            a.id,a.no,a.nama,a.kelompok,
+            bd.account_id,bd.budget_id,sum(bd.nominal) as total
             FROM budgets b
             LEFT JOIN departements dp
                 ON b.departement_id = dp.id
             LEFT JOIN budget_details bd
                 ON b.id = bd.budget_id
-            WHERE departement_id=$departement_id AND tahun=$year
+            LEFT JOIN accounts a 
+            ON bd.account_id = a.id 
+            WHERE departement_id=$departement_id AND tahun=$year AND a.kelompok NOT IN('','Transfer Antar Bank')
             GROUP BY b.id"
             );
         $realisasi_anggaran=DB::select(
         "SELECT t.id,t.departement_id,t.tanggal,
                 d.transaction_id, d.account_id,sum(d.nominal) as total, 
-                a.id,a.no,a.nama 
+                a.id,a.no,a.nama,a.kelompok 
         FROM transactions t 
         LEFT JOIN transaction_details d 
             ON t.id = d.transaction_id 
         LEFT JOIN accounts a 
             ON d.account_id = a.id 
-        WHERE t.departement_id=$departement_id AND YEAR(tanggal)=$year AND DK=2 AND a.no NOT LIKE '01.%'
+        WHERE t.departement_id=$departement_id 
+            AND YEAR(tanggal)=$year 
+            AND DK=2 
+            -- AND a.no Like '02.%'
+            AND a.no NOT Like '01.%' 
+            -- AND a.no NOT Like '01.%'
+            -- AND a.no NOT Like '02.%'   
+            -- AND a.no NOT Like '03.%'  
+            AND a.kelompok NOT IN('','Transfer Antar Bank')
         GROUP BY departement_id
         ");
+        $realisasi_anggaranDebit=DB::select(
+            "SELECT t.id,t.departement_id,t.tanggal,
+                    d.transaction_id,d.account_id,sum(d.nominal) as total, 
+                    a.id,a.no,a.nama,a.kelompok 
+            FROM transactions t 
+            LEFT JOIN transaction_details d 
+                ON t.id = d.transaction_id 
+            LEFT JOIN accounts a 
+                ON d.account_id = a.id 
+            WHERE t.departement_id=$departement_id AND YEAR(tanggal)=$year 
+                AND DK=1 
+                -- AND a.no Like '02.%'
+                -- AND a.no NOT Like '04.%'  
+                AND a.no NOT Like '01.%'  
+                -- AND a.no NOT Like '03.%'  
+                AND a.kelompok NOT IN('','Transfer Antar Bank')
+            GROUP BY departement_id
+            ");
+            // dd($realisasi_anggaran,$realisasi_anggaranDebit);
+            if(empty($realisasi_anggaranDebit)){
+                $realisasi_anggaranDebit=0;
+            }else{
+                $realisasi_anggaranDebit=$realisasi_anggaranDebit[0]->total;
+            }
+            if(empty($realisasi_anggaran)){
+                $realisasi_anggaran=0;
+            }else{
+                $realisasi_anggaran=$realisasi_anggaran[0]->total;
+            }
+        $realisasi_anggaranReal=$realisasi_anggaran-$realisasi_anggaranDebit;
         
-        if (empty($realisasi_anggaran) or $realisasi_anggaran[0]->total==0){
-            $realisasi_anggaran=0;
-        }
         if (empty($rencana_anggaran) or $rencana_anggaran[0]->total==0){
             $rencana_anggaran=0;
         }
@@ -159,9 +197,10 @@ class HomeController extends Controller
         if($realisasi_anggaran==0 or $rencana_anggaran==0){
             $persentaseRealisasi=0;
         }else{
-            $persentaseRealisasi=$realisasi_anggaran[0]->total/($rencana_anggaran[0]->total)*100;
+            $persentaseRealisasi=$realisasi_anggaranReal/($rencana_anggaran[0]->total)*100;
         }
-        // dd($persentaseRealisasi);
+        
+
         return view('home',
             ['transactionlist'=>$transaction])
                 ->with('saldoDebitList',$saldoDebit)
@@ -169,7 +208,7 @@ class HomeController extends Controller
                 ->with('saldoLastMonth',$saldoLastMonth)
                 ->with('persentasePengeluaran',$persentasePengeluaran)
                 ->with('rencana_anggaran',$rencana_anggaran)
-                ->with('realisasi_anggaran',$realisasi_anggaran)
+                ->with('realisasi_anggaran',$realisasi_anggaranReal)
                 ->with('persentaseRealisasi',$persentaseRealisasi)
                 ->with('persentaseSaldo',$persentaseSaldo);
     }

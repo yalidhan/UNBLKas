@@ -67,7 +67,7 @@
                                 <h3 class="card-title text-white">Realisasi Anggaran</h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">Rp @if ($realisasi_anggaran!=0)
-                                        {{number_format($realisasi_anggaran[0]->total,0,',','.')}}
+                                        {{number_format($realisasi_anggaran,0,',','.')}}
                                         @else
                                             0
                                         @endif
