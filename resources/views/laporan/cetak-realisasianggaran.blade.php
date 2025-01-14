@@ -205,7 +205,14 @@
                 
                 <tr <?php if(empty($transaksi[0]->total)){echo" ";} elseif ($transaksi[0]->total-$transaksiPengembalian[0]->total > $da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
                         <td></td>
-                        <td>{{$da_value->nama}}</td>
+                        <td>
+                        <?php if(!empty($departement->id)){
+                            echo"<a href='logtransaksi?thn=$tahun"."&sd=$sd2"."&akn=$da_value->account_id"."&dp=$departement->id' style='color:#000;text-decoration:none;'>$da_value->nama</a>";
+                        }else{
+                            echo $da_value->nama;
+                        }
+                    ?>
+                        </td>
                         <td style="white-space: nowrap;">Rp {{number_format($da_value->nominal,0,',','.')}}</td>
                         <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){$transaksi=0;} else {$transaksi=$transaksi[0]->total-$transaksiPengembalian[0]->total;}?>{{number_format($transaksi,0,',','.'),$total_transaksi=$total_transaksi+$transaksi}}</td>
                         <td align="center"style="white-space: nowrap;"><?php if($da_value->nominal!=0){echo number_format(($transaksi/$da_value->nominal)*100, 2, '.', ',');}else{echo"0";} ?> %</td>

@@ -25,6 +25,17 @@ class ReportController extends Controller
         // $departement_id=auth()->user()->departement_id;
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
+        }
+        elseif(auth()->user()->jabatan=="Dekan"){
+            $dp_id=auth()->user()->departement_id;
+            $pusat=Departement::where('id',$dp_id)->value('pusat');
+            // $departement=DB::select("
+            // SELECT * FROM departements WHERE status= 1 and pusat='$pusat'");
+            // dd($pusat);
+            $departement = Departement::where([
+                ['status', '1'],
+                ['pusat', $pusat],
+            ])->get();
         }else{
             $departement=Departement::where('status','=','1')->whereNotIn('id',[1,18,19,20,21])->get();  
             // $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
@@ -116,11 +127,51 @@ class ReportController extends Controller
                     ->with('departement',$departement);
     }
 
+    public function logTransaksi(Request $request)
+    {
+        $tahun=$request->thn;
+        $sd=$request->sd;
+        $account_id=$request->akn;
+        $departement_id=$request->dp;
+        $departement=Departement::find($request->dp);
+        // dd($departement->nama);
+        $logtransaksi=DB::select(
+            "SELECT t.keterangan,t.no_spb,t.id,t.tanggal,d.dk, d.account_id,d.nominal,
+                                a.id,a.no,a.nama,dp.nama as departemen 
+            FROM transactions t 
+            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+            LEFT JOIN departements dp
+                                ON t.departement_id=dp.id
+            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2            
+        ");
+        // dd($logtransaksi);
+        return view('laporan/logtransaksi')
+                    ->with('logtransaksi',$logtransaksi)
+                    ->with('sd',$sd)
+                    ->with('departement',$departement);
+    }
+
+
     public function lpjPage()
     {   
         if(auth()->user()->departement_id==1){
             $departement=Departement::where('status','=','1')->get();
-        }else{  
+        }
+        elseif(auth()->user()->jabatan=="Dekan"){
+            $dp_id=auth()->user()->departement_id;
+            $pusat=Departement::where('id',$dp_id)->value('pusat');
+            // $departement=DB::select("
+            // SELECT * FROM departements WHERE status= 1 and pusat='$pusat'");
+            // dd($pusat);
+            $departement = Departement::where([
+                ['status', '1'],
+                ['pusat', $pusat],
+            ])->get();
+        }
+        else{  
             $departement=Departement::where('status','=','1')->whereNotIn('id',[1,18,19,20,21])->get();
             // $departement=Departement::where('status','=','1')->where('id','!=','1')->where('id','!=','18')->get();
         }

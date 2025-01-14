@@ -35,6 +35,7 @@
                                                 OR auth()->user()->jabatan=="Kabid Keuangan"
                                                 OR auth()->user()->jabatan=="Kabid Perencanaan"
                                                 OR auth()->user()->jabatan=="SPI"
+                                                OR auth()->user()->jabatan=="Dekan"
                                             )
                                                 <div class="col">
                                                     <label for="departement">Departemen Tujuan:</label>

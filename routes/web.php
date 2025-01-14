@@ -69,6 +69,7 @@ Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->na
 
 Route::get('realisasianggaran', [ReportController::class,'realisasiPage'])->name('realisasiPage');
 Route::get('realisasianggaran/cetak', [ReportController::class,'realisasiCetak'])->name('realisasiCetak');
+Route::get('realisasianggaran/logtransaksi', [ReportController::class,'logTransaksi'])->name('logTransaksi');
 
 Route::get('posisikas', [ReportController::class,'posisikasPage'])->name('posisikasPage');
 Route::get('posisikas/cetak', [ReportController::class,'posisikasCetak'])->name('posisikasCetak');
