@@ -160,59 +160,21 @@
                             </div>
                             </div>                           
                         </td>
-                        <td><span style="display: flex;">
-                            @if (auth()->user()->id==$showBudget[0]->user_id)
-                                <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
-                                <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editRincianModalLabel{{$value->id}}">Edit Data Rincian</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{route('updateRincianA',$value->id)}}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                        <div class="form-group">
-                                                            <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
-                                                            <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
-                                                                @foreach($accountList as $accountvalue)
-                                                                    <option value="{{ $accountvalue->id }}"{{$value->account_id == $accountvalue->id  ? 'selected' : ''}}>({{$accountvalue->tipe}} || {{ $accountvalue->kelompok}}) {{ $accountvalue->nama}}</option>
-                                                                    <!-- <option value="{{ $accountvalue->id }}">{{$accountvalue->tipe}} || {{ $accountvalue->nama}}</option> -->
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="nominal_tambah_rincian_edit{{$value->id}}" class="col-form-label">Nominal :</label>
-                                                            <input style="padding:0px 0px 0px 5px;" required name="nominal_tambah_rincian_edit" value="{{$value->nominal}}" maxlength="14" type="text" class="form-control" id="nominal_tambah_rincian_edit{{$value->id}}" placeholder="Rp">
-                                                        </div>
-                                                        <div class="form-group summernote">
-                                                            <label for="summernote{{$value->id}}" class="col-form-label">Keterangan Rincian :</label>
-                                                            <textarea name="keterangan_rincian_edit"  class="form-control" id="summernote{{$value->id}}">{!!$value->keterangan!!}</textarea>
-                                                        </div>
-                                                            <input type="hidden" name="budget_id" value="{{$showBudget[0]->id}}">
-                                                            <input type="hidden" name="current_account" value="{{$value->account_id}}">
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>                                 
+                        <td>
+                            <span style="display: flex;">
+                            @if (auth()->user()->id==$showBudget[0]->user_id)     
+                                <!-- <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;                -->
+                                <a href="{{route('anggaran.edit',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;  
                                 <form method="POST" action="{{route('destroyRincianA',$value->id)}}"> 
                                     @csrf
                                     @method('DELETE')
                                     <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
                                 </form>   
                             @else
-                            @endif         
-                            </span>                         
+                            @endif   
+                            </span>                            
                         </td>
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -271,9 +233,6 @@
 @endsection
 @push('nominal-mask')
     $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
-    @foreach ($showDetailBudget as $valueMask)
-    $('#nominal_tambah_rincian_edit{{$valueMask->id}}').mask('#.##0', {reverse: true});
-    @endforeach
 @endpush
 
 @push('detail_budget-script')
@@ -298,27 +257,6 @@
             ],
         });
     </script>
-    @foreach ($showDetailBudget as $valueSummernote)
-    <script>
-            $('#summernote{{$valueSummernote->id}}').summernote({
-            shortcuts:false,
-            // tableClassName: 'table table-striped',
-            disableDragAndDrop: true,
-            placeholder: 'Buat detil dari total nominal anggaran di sini, bisa menggunakan tabel',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['view', ['fullscreen']],
-            ],
-        });
-    </script>
-    @endforeach
     <script>    
         $(document).ready(function() {
             $('.departement_edit').select2();
@@ -335,16 +273,6 @@
         dropdownParent: $('#tambah_rincian')
         });
     </script>
-    @foreach ($showDetailBudget as $valueDropdown)
-    <script>    
-        $(document).ready(function() {
-            $('.akun_rincian_edit{{$valueDropdown->id}}').select2();
-        });
-        $('#akun_rincian_edit{{$valueDropdown->id}}').select2({
-        dropdownParent: $('#editRincian{{$valueDropdown->id}}')
-            });
-    </script>
-    @endforeach  
     <script type="text/javascript">
         $(document).on('click', '#submitForm', function(e){
         e.preventDefault();

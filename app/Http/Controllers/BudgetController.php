@@ -108,6 +108,13 @@ class BudgetController extends Controller
     public function edit(string $id)
     {
         //
+        // dd($id);
+        $budget=Budget_detail::find($id);
+        $accountList=Account::where('status','=','1')->orderBy('no', 'ASC')->get();
+        // dd($accountList[0]->nama);
+        // dd($budget);
+        return view('budget/rincian_budget_edit',compact('budget','accountList'));
+    // ,compact('showBudget','showDetailBudget','accountList','departements')
     }
 
     /**
@@ -181,6 +188,7 @@ class BudgetController extends Controller
             'akun_rincian_edit' => 'required',
             'nominal_tambah_rincian_edit' => 'required'
         ]);
+        $budget_id=$request->budget_id;
         // dd($request->current_account,$request->akun_rincian_edit);
         $nominal_rincian_int=$request->nominal_tambah_rincian_edit;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
@@ -193,7 +201,7 @@ class BudgetController extends Controller
                 $updateRincian->nominal = $nominal_rincian_int;
                 $updateRincian->keterangan = $request->keterangan_rincian_edit;
                 $updateRincian->update();
-                return redirect::back()->with('message', 'Berhasil mengubah data rincian');
+                return redirect()->to('/anggaran/'.$budget_id)->with('message', 'Berhasil mengubah data rincian');
             }
             return redirect::back()->withErrors(['message' => 'Mata akun sudah terdaftar, silahkan cek ulang']);
         }
@@ -203,6 +211,6 @@ class BudgetController extends Controller
         $updateRincian->keterangan = $request->keterangan_rincian_edit;
         $updateRincian->update();
 
-        return redirect::back()->with('message', 'Berhasil mengubah data rincian');
+        return redirect()->to('/anggaran/'.$budget_id)->with('message', 'Berhasil mengubah data rincian');
     }
 }

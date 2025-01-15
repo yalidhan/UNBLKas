@@ -258,8 +258,15 @@
                             where jabatan='Dekan' AND d.pusat='$pusat'"
                         );
                         if($departement_id==6){
-                            $pejabat="Dr. Ir. Bambang Joko Priatmadi, M.P";
-                            $jabatan="Rektor";
+                            $pejabatQuery=DB::select(
+                                "SELECT u.name,u.jabatan,
+                                    d.pusat 
+                            FROM users u
+                            LEFT JOIN departements d ON u.departement_id=d.id
+                            where jabatan='Rektor'"
+                            );
+                            $pejabat=$pejabatQuery[0]->name;
+                            $jabatan=$pejabatQuery[0]->jabatan;
                             $departemen="Universitas Borneo Lestari";
                         }
                         elseif(empty($pejabatQuery)){
@@ -273,8 +280,15 @@
                             $departemen=$pejabatQuery[0]->pusat;
                         }
                     }else{
-                        $pejabat="Dr. Ir. Bambang Joko Priatmadi, M.P";
-                        $jabatan="Rektor";
+                        $pejabatQuery=DB::select(
+                            "SELECT u.name,u.jabatan,
+                                d.pusat 
+                        FROM users u
+                        LEFT JOIN departements d ON u.departement_id=d.id
+                        where jabatan='Rektor'"
+                        );
+                        $pejabat=$pejabatQuery[0]->name;
+                        $jabatan=$pejabatQuery[0]->jabatan;
                         $departemen="Universitas Borneo Lestari";
                     }
                 ?>
