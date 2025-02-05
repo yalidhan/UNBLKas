@@ -158,12 +158,14 @@
                         <th class="hidden-row"  >Capaian Kinerja(Realisasi Output)</th>
                         <th class="hidden-row"  >Target Waktu Pelaksanaan</th>
                         <th class="hidden-row"  >Capaian Target Waktu Penyelesaian</th>
-                        <th  >Jml. Anggaran Disetujui</th>
-                        <th  >Disetujui WR II</th>
+                        <th>Jml. Anggaran Disetujui</th>
+                        <th>Disetujui WR II</th>
                         <th class="hidden-row"  >Catatan WR II</th>
-                        <th  >Disetujui Rektor</th>
-                        <th class="hidden-row"  >Catatan Rektor</th>
-                        <th  >Aksi</th>
+                        <th>Disetujui Rektor</th>
+                        <th>Status Pembayaran</th>
+                        <th class="hidden-row">Catatan Rektor</th>
+                        <th class="hidden-row">Catatan Yayasan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -289,8 +291,83 @@
                             @endif 
                         </td>
                         <td class="hidden-row">{{$value->note_rektor}}</td>
+                        <td class="hidden-row">{{$value->note}}</td>
+                        <td>
+                        @if($value->status=="Pending")
+                                <a href="#" class="badge badge-primary">Pending
+                                    </a>
+                                    <br>Updated at
+                                    <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
+                            @elseif($value->status=="Paid")
+                                <a href="#" class="badge badge-success">Paid
+                                    </a>
+                                    <br>Updated at
+                                    <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
+                            @elseif($value->status=="Unpaid")
+                                <a href="#" class="badge badge-danger">Unpaid
+                                    </a>
+                                    <br>Updated at  
+                                    <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
+                            @endif 
                         <td><span style="display: flex;">
-                            
+                            @if (auth()->user()->departement_id==1)
+                            <div class="bootstrap-modal">
+                                        <button type="button" class="btn mb-1 btn-rounded btn-light" data-toggle="modal" data-target="#editStatus{{$value->id}}"><i class="fa fa-money fa-2x" style="color:green;" data-toggle="tooltip" data-placement="top" title="Ubah Status Pembayaran"></i></button>
+                                        <div class="modal fade" id="editStatus{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editStatusModalLabel{{$value->id}}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editStatusModalLabel{{$value->id}}">Ubah Status Pembayaran </h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('updateRincianP',$value->id)}}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <span>
+                                                                        Mata Anggaran <b>"{{$value->nama}}"</b>
+                                                                        <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
+                                                                        <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                        <br>Disetujui WRII&Rektor Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                            <label class="col-form-label">Status Pembayaran:</label><br>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input  type="radio" value="Pending" name="status" required {{$value->status == "Pending" ?'checked':''}}> Pending</label>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input  type="radio" value="Paid" name="status" {{$value->status == "Paid" ?'checked':''}}> Paid</label>
+                                                                    <input  type="radio" value="Unpaid" name="status" {{$value->status == "Unpaid" ?'checked':''}}> Unpaid</label>
+                                                                <!-- </div> -->
+                                                           <!-- <div class="form-group"> -->
+                                                                <br>
+                                                                <label class="col-form-label">Catatan Yayasan:</label>
+                                                                <input value="{{$value->note}}" name="note" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                            </div>                                                          
+                                                            <!-- <div class="form-group"> -->
+                                                            <!-- </div>  -->
+                                                    </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div> 
+
+                                <!-- <form method="POST" action="{{route('updateRincianP',$value->id)}}"> 
+                                    @csrf
+                                    @method('PUT')
+                                    <button  type="submit" style="background: none;color: green;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="status_bayar" data-toggle="tooltip" data-placement="top" title="Ubah Status Pembayaran"><i class="fa fa-money fa-2x"></i></button>
+                                </form> -->
+                            @endif
                             @if (auth()->user()->id==$showPlanning[0]->user_id )
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
                                 @if ($value->approved_by_wr2==0)
@@ -386,7 +463,7 @@
                             @else
                             @endif         
                             </span>
-                            @if (auth()->user()->jabatan=="Wakil Rektor II")
+                            @if (auth()->user()->jabatan=="Wakil Rektor II" AND $value->approved_by_rektor ==0)
                                 <div class="bootstrap-modal">
                                         <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanWRII{{$value->id}}">Persetujuan WR II</button>
                                         <div class="modal fade" id="editPersetujuanWRII{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanWRIIModalLabel{{$value->id}}" aria-hidden="true">
@@ -498,7 +575,7 @@
             </table>
         </div>
         <center>
-        @if (auth()->user()->jabatan=="Wakil Rektor II")
+        @if (auth()->user()->jabatan=="Wakil Rektor II" AND $value->approved_by_rektor ==0 AND $value->approved_by_wr2 ==0)
             <br>
             <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
             @csrf
@@ -507,7 +584,7 @@
                     <button type="submit" id="setujui_ditinjau" class="btn btn-primary">Setujui Semua "Sedang Ditinjau"</button>
             </form>
         @endif
-        @if (auth()->user()->jabatan=="Rektor")
+        @if (auth()->user()->jabatan=="Rektor" AND $value->approved_by_wr2 !=0 AND $value->approved_by_rektor ==0)
             <br>
             <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
             @csrf
@@ -776,6 +853,26 @@
     </script>
         </script>
         <script type="text/javascript">
+        $(document).on('click', '#status_bayar', function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+                title: "Konfirmasi",
+                text: "Ubah Status Pembayaran",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Setujui!"
+        }).then((result) => {
+            if (result.value) {
+                form.submit();
+            }
+        });
+        });
+    </script>
+        </script>
+        <script type="text/javascript">
         $(document).on('click', '#sesuai_wr2', function(e){
         e.preventDefault();
         var form = $(this).parents('form');
@@ -831,6 +928,7 @@ $(document).ready(function() {
         '<tr><td>Capaian Target Waktu Penyelesaian:</td><td>'+ data[11] +'</td></tr>'+
         '<tr><td>Catatan WR II:</td><td>'+ data[14] +'</td></tr>'+
         '<tr><td>Catatan Rektor:</td><td>'+ data[16] +'</td></tr>'+
+        '<tr><td>Catatan Yayasan:</td><td>'+ data[17] +'</td></tr>'+
         '</table></div>';
     }                        
     @else
@@ -845,6 +943,7 @@ $(document).ready(function() {
         '<tr><td>Capaian Target Waktu Penyelesaian:</td><td>'+ data[10] +'</td></tr>'+
         '<tr><td>Catatan WR II:</td><td>'+ data[13] +'</td></tr>'+
         '<tr><td>Catatan Rektor:</td><td>'+ data[15] +'</td></tr>'+
+        '<tr><td>Catatan Yayasan:</td><td>'+ data[16] +'</td></tr>'+
         '</table></div>';
     }
     @endif

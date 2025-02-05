@@ -24,6 +24,7 @@
                             OR auth()->user()->jabatan=='Kabid Keuangan'
                             OR auth()->user()->jabatan=='Kabid Perencanaan'
                             OR auth()->user()->jabatan=='SPI'
+                            OR auth()->user()->departement_id==1
                             )
 
                             <div class="col-md-3">
@@ -50,7 +51,7 @@
                                     <div class="tab-content br-n pn">
                                         <div id="navpills-1" class="tab-pane active">
                                             <div class="row align-items-center">
-                                                <table class="table table-striped table-bordered zero-configuration" id="plannings">
+                                                <table class="table-responsive table table-striped table-bordered zero-configuration" id="plannings">
                                                     <thead>
                                                         <tr>
                                                             <th>Untuk Bulan</th>
@@ -61,6 +62,7 @@
                                                             <th>Persetujuan WR 2</th>
                                                             <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
+                                                            <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </thead>
@@ -86,6 +88,11 @@
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                             </td>
+                                                            <td>
+                                                                <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
+                                                                <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
+                                                                <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                            </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
                                                                     @if (auth()->user()->id==$value->user_id)
@@ -117,6 +124,7 @@
                                                             <th>Persetujuan WR II</th>
                                                             <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
+                                                            <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -125,7 +133,7 @@
                                         </div>
                                         <div id="navpills-2" class="tab-pane">
                                             <div class="row align-items-center">
-                                                <table class="table table-striped table-bordered zero-configuration">
+                                                <table class="table-responsive table table-striped table-bordered zero-configuration">
                                                     <thead>
                                                         <tr>
                                                             <th>Untuk Bulan</th>
@@ -136,6 +144,7 @@
                                                             <th>Persetujuan WR II</th>
                                                             <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
+                                                            <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </thead>
@@ -161,6 +170,11 @@
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                             </td>
+                                                            <td>
+                                                                <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
+                                                                <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
+                                                                <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                            </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
                                                                     @if (auth()->user()->id==$value->user_id)
@@ -191,6 +205,8 @@
                                                             <th>Tahun Anggaran</th>
                                                             <th>Persetujuan WR II</th>
                                                             <th>Persetujuan Rektor</th>
+                                                            <th>Total</th>
+                                                            <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -210,7 +226,9 @@
                                     
                                     <div class="bootstrap-modal">
                                         @if (auth()->user()->jabatan=='Admin Departemen'
-                                            OR auth()->user()->jabatan=='Bendahara Operasional' 
+                                            OR auth()->user()->jabatan=='Bendahara Operasional'
+                                            OR auth()->user()->jabatan=='Dekan'
+                                            OR auth()->user()->jabatan=='Kaprodi'   
                                         )
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPerencanaan">Tambah Perencanaan</button>
                                         @else
@@ -256,11 +274,13 @@
                                                 <tr>
                                                     <th>Untuk Bulan</th>
                                                     <th>Diajukan Tanggal</th>
-                                                    <th>Departemen</th>
+                                                    <!-- <th>Departemen</th> -->
                                                     <th>Input Oleh</th>
                                                     <th>Tahun Anggaran</th>
                                                     <th>Disetujui WR II</th>
                                                     <th>Disetujui Rektor</th>
+                                                    <th>Total</th>
+                                                    <th>Status Pembayaran</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
@@ -269,7 +289,7 @@
                                                 <tr>
                                                     <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
                                                     <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
-                                                    <td>{{$value->nama}}</td>
+                                                    <!-- <td>{{$value->nama}}</td> -->
                                                     <td>{{$value->name}}</td>
                                                     <td>{{$value->tahun}}</td>
                                                     <td>
@@ -284,6 +304,11 @@
                                                     </td>
                                                     <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                         <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
+                                                        <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
+                                                        <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
                                                     </td>
                                                     <td><span style="display: flex;"> 
                                                             <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
@@ -322,11 +347,12 @@
                                                 <tr>
                                                     <th>Untuk Bulan</th>
                                                     <th>Diajukan Tanggal</th>
-                                                    <th>Departemen</th>
+                                                    <!-- <th>Departemen</th> -->
                                                     <th>Input Oleh</th>
                                                     <th>Tahun Anggaran</th>
                                                     <th>Disetujui WR II</th>
                                                     <th>Disetujui Rektor</th>
+                                                    <th>Status Pembayaran</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </tfoot>
@@ -365,7 +391,7 @@
         });
     });
 $('#plannings').dataTable( {
-  "pageLength": 25
+  "pageLength": 10
 } );
 </script>
 
