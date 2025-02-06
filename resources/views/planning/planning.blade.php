@@ -51,7 +51,7 @@
                                     <div class="tab-content br-n pn">
                                         <div id="navpills-1" class="tab-pane active">
                                             <div class="row align-items-center">
-                                                <table class="table-responsive table table-striped table-bordered zero-configuration" id="plannings">
+                                                <table class="display table-responsive table table-striped table-bordered" id="plannings">
                                                     <thead>
                                                         <tr>
                                                             <th>Untuk Bulan</th>
@@ -116,15 +116,15 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th>Untuk Bulan</th>
-                                                            <th>Diajukan Tanggal</th>
-                                                            <th>Departemen</th>
-                                                            <th>Input Oleh</th>
-                                                            <th>Tahun Anggaran</th>
-                                                            <th>Persetujuan WR II</th>
-                                                            <th>Persetujuan Rektor</th>
-                                                            <th>Total</th>
-                                                            <th>Status Pembayaran</th>
+                                                        <th><input type="text" placeholder="Search Untuk Bulan"></th>
+                                                            <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
+                                                            <th><input type="text" placeholder="Search Departemen"></th>
+                                                            <th><input type="text" placeholder="Search Input Oleh"></th>
+                                                            <th><input type="text" placeholder="Search Tahun Anggaran"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan WR II"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan Rektor"></th>
+                                                            <th><input type="text" placeholder="Search Total"></th>
+                                                            <th><input type="text" placeholder="Status Pembayaran"></th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -133,7 +133,7 @@
                                         </div>
                                         <div id="navpills-2" class="tab-pane">
                                             <div class="row align-items-center">
-                                                <table class="table-responsive table table-striped table-bordered zero-configuration">
+                                                <table class="table-responsive table table-striped table-bordered" id="plannings2">
                                                     <thead>
                                                         <tr>
                                                             <th>Untuk Bulan</th>
@@ -198,15 +198,15 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th>Untuk Bulan</th>
-                                                            <th>Diajukan Tanggal</th>
-                                                            <th>Departemen</th>
-                                                            <th>Input Oleh</th>
-                                                            <th>Tahun Anggaran</th>
-                                                            <th>Persetujuan WR II</th>
-                                                            <th>Persetujuan Rektor</th>
-                                                            <th>Total</th>
-                                                            <th>Status Pembayaran</th>
+                                                            <th><input type="text" placeholder="Search Untuk Bulan"></th>
+                                                            <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
+                                                            <th><input type="text" placeholder="Search Departemen"></th>
+                                                            <th><input type="text" placeholder="Search Input Oleh"></th>
+                                                            <th><input type="text" placeholder="Search Tahun Anggaran"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan WR II"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan Rektor"></th>
+                                                            <th><input type="text" placeholder="Search Total"></th>
+                                                            <th><input type="text" placeholder="Status Pembayaran"></th>
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </tfoot>
@@ -269,7 +269,7 @@
                                     @else
                                     @endif
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered zero-configuration" id="plannings">
+                                        <table class="display table table-striped table-bordered" style="width:100%" id="plannings">
                                             <thead>
                                                 <tr>
                                                     <th>Untuk Bulan</th>
@@ -345,15 +345,17 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th>Untuk Bulan</th>
-                                                    <th>Diajukan Tanggal</th>
-                                                    <!-- <th>Departemen</th> -->
-                                                    <th>Input Oleh</th>
-                                                    <th>Tahun Anggaran</th>
-                                                    <th>Disetujui WR II</th>
-                                                    <th>Disetujui Rektor</th>
-                                                    <th>Status Pembayaran</th>
-                                                    <th>Aksi</th>
+                                                <th>
+                                                            <input type="text" placeholder="Search Untuk Bulan"></th>
+                                                            <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
+                                                            <!-- <th><input type="text" placeholder="Search Departemen"></th> -->
+                                                            <th><input type="text" placeholder="Search Input Oleh"></th>
+                                                            <th><input type="text" placeholder="Search Tahun Anggaran"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan WR II"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan Rektor"></th>
+                                                            <th><input type="text" placeholder="Search Total"></th>
+                                                            <th><input type="text" placeholder="Status Pembayaran"></th>
+                                                            <th>Aksi</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -390,9 +392,40 @@
             }
         });
     });
-$('#plannings').dataTable( {
-  "pageLength": 10
-} );
+// $('#plannings').dataTable( {
+//   "pageLength": 10
+// } );
 </script>
-
+<script>
+$(document).ready(function () {
+    // Initialize DataTable
+    var table = $('#plannings').DataTable({
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                $('input', this.footer()).on('keyup change', function () {
+                    if (column.search() !== this.value) {
+                        column.search(this.value).draw();
+                    }
+                });
+            });
+        }
+    });
+});
+$(document).ready(function () {
+    // Initialize DataTable
+    var table = $('#plannings2').DataTable({
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                $('input', this.footer()).on('keyup change', function () {
+                    if (column.search() !== this.value) {
+                        column.search(this.value).draw();
+                    }
+                });
+            });
+        }
+    });
+});
+</script>
 @endpush
