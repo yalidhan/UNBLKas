@@ -84,6 +84,11 @@
                                                 <td>&nbsp;:</td>
                                                 <td style="white-space: nowrap;">&nbsp;Rp {{number_format($showPlanning[0]->total_disetujui,0,',','.')}}</td>
                                             </tr>
+                                            <tr>
+                                                <td style="white-space: nowrap;">Total Setuju Bayar</td>
+                                                <td>&nbsp;:</td>
+                                                <td style="white-space: nowrap;">&nbsp;Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                         </div>

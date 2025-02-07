@@ -59,7 +59,6 @@ class PlanningController extends Controller
                     GROUP by p.id 
                     ORDER BY p.for_bulan DESC, p.created_at ASC;"
             );
-            // dd($plannings);
         }else{
             $departement_id=auth()->user()->departement_id;
             \DB::statement("SET SQL_MODE=''");
@@ -91,6 +90,7 @@ class PlanningController extends Controller
                     GROUP by p.id 
                     ORDER BY p.for_bulan DESC, p.created_at ASC;"
             );
+
         }
         // dd($plannings);
 
@@ -156,11 +156,14 @@ class PlanningController extends Controller
             ON p.departement_id = dp.id
             WHERE p.id=$id"
         );
+        $setujuBayar=DB::select("
+        SELECT sum(nominal_disetujui) AS total_setujubayar
+        FROM planning_details
+        WHERE planning_id=$id and status='Paid'");
         $departement=$showPlanning[0]->departement_id;
         $date=explode('-',$showPlanning[0]->for_bulan);
         // $month=$date[1];
         $tahun_anggaran=$date[0];
-
         $showDetailPlanning=DB::select(
             "SELECT a.id as account_id,a.nama,
                 pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
@@ -189,7 +192,7 @@ class PlanningController extends Controller
         );
         // dd($accountList);
 
-        return view('planning/rincian_planning',compact('showPlanning','showDetailPlanning','accountList'));
+        return view('planning/rincian_planning',compact('setujuBayar','showPlanning','showDetailPlanning','accountList'));
     }
 
     /**

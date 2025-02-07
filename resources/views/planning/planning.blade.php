@@ -87,6 +87,13 @@
                                                             </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                                @php
+                                                                    $setujuBayar=DB::select("
+                                                                        SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                        FROM planning_details
+                                                                        WHERE planning_id=$value->id and status='Paid'");
+                                                                @endphp
+                                                                <br>Dibayar Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}
                                                             </td>
                                                             <td>
                                                                 <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
@@ -150,7 +157,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                            @if($value->WR_0==0 AND $value->REKTOR_0==0)
+                                                                @if($value->WR_0==0 AND $value->REKTOR_0==0)
                                                         <tr>
                                                             <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
@@ -169,6 +176,14 @@
                                                             </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                                @php
+                                                                    $setujuBayar=DB::select("
+                                                                        SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                        FROM planning_details
+                                                                        WHERE planning_id=$value->id and status='Paid'");
+                                                                @endphp
+                                                                <br>Dibayar Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}
+                                                                
                                                             </td>
                                                             <td>
                                                                 <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
@@ -304,6 +319,13 @@
                                                     </td>
                                                     <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                         <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                            @php
+                                                                $setujuBayar=DB::select("
+                                                                    SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                    FROM planning_details
+                                                                    WHERE planning_id=$value->id and status='Paid'");
+                                                            @endphp
+                                                        <br>Dibayar Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}
                                                     </td>
                                                     <td>
                                                         <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
