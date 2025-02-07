@@ -352,7 +352,7 @@
                                                            <!-- <div class="form-group"> -->
                                                                 <br>
                                                                 <label class="col-form-label">Catatan Yayasan:</label>
-                                                                <input value="{{$value->note}}" name="note" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                                <input value="{{$value->note}}" name="note" type="text" maxlength="255" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                             </div>                                                          
                                                             <!-- <div class="form-group"> -->
                                                             <!-- </div>  -->
@@ -420,31 +420,31 @@
                                                         @endif
                                                         <div class="form-group">
                                                             <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
-                                                            <input style="padding:0px 0px 0px 5px;" required name="pj" type="text" value="{{$value->pj}}" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
+                                                            <input style="padding:0px 0px 0px 5px;" required name="pj" type="text" value="{{$value->pj}}" maxlength="255" class="form-control" id="pj" placeholder="Penanggungjawab">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
-                                                            <textarea style="padding:0px 0px 0px 5px;" name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive">{{$value->satuan_ukur_kinerja}}</textarea>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive">{{$value->satuan_ukur_kinerja}}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="judul_file" class="col-form-label">Judul File :</label>
-                                                            <input style="padding:0px 0px 0px 5px;" name="judul_file" type="text" value="{{$value->judul_file}}" maxlength="35" class="form-control" id="pj" placeholder="Judul File">
+                                                            <input style="padding:0px 0px 0px 5px;" name="judul_file" type="text" value="{{$value->judul_file}}" maxlength="255" class="form-control" id="pj" placeholder="Judul File">
                                                         </div>   
                                                         <div class="form-group">
                                                             <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
-                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="target_kinerja" placeholder="Target Output">{{$value->target_kinerja}}</textarea>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="target_kinerja" placeholder="Target Output">{{$value->target_kinerja}}</textarea>
                                                         </div>             
                                                         <div class="form-group">
                                                             <label for="capaian_kinerja" class="col-form-label">Capaian Kinerja(Realisasi Output) :</label>
-                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output">{{$value->capaian_kinerja}}</textarea>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output">{{$value->capaian_kinerja}}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="target_waktu_pelaksanaan" class="col-form-label">Target Waktu Pelaksanaan:</label>
-                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="25" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan">{{$value->waktu_pelaksanaan}}</textarea>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="255" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan">{{$value->waktu_pelaksanaan}}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="capaian_target_waktu_penyelesaian" class="col-form-label">Capaian Target Waktu Penyelesaian:</label>
-                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="25" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian">{{$value->capaian_target_waktu}}</textarea>
+                                                            <textarea style="padding:0px 0px 0px 5px;" name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian">{{$value->capaian_target_waktu}}</textarea>
                                                         </div>    
                                                         <input type="hidden" name="planning_id" value="{{$showPlanning[0]->id}}">                                    
                                                         <input type="hidden" name="current_account" value="{{$value->account_id}}">
@@ -505,7 +505,7 @@
                                                                 <label id="labelJumlah{{$value->id}}" class="col-form-label">Jumlah Disetujui:</label>
                                                                 <input required value="{{$value->nominal}}" id="jumlah{{$value->id}}" maxlength="14" name="jumlah" type="text" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                                 <label class="col-form-label">Catatan WR II:</label>
-                                                                <input value="" name="catatan_wrii" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                                <input value="" name="catatan_wrii" type="text" maxlength="255" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                             </div>                                                            
                                                             <!-- <div class="form-group"> -->
                                                             <!-- </div>  -->
@@ -556,7 +556,7 @@
                                                            <!-- <div class="form-group"> -->
                                                                 <br>
                                                                 <label class="col-form-label">Catatan Rektor:</label>
-                                                                <input value="" name="catatan_rektor" type="text" maxlength="25" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                                <input value="" name="catatan_rektor" type="text" maxlength="255" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                             </div>      
                                                             <input type="hidden" value="{{$value->nominal_disetujui}}" name="jumlah">
                                                             <input type="hidden" value="{{$value->nominal}}" name="jumlah_awal">                                                       
@@ -655,29 +655,29 @@
                                             @endif
                                             <div class="form-group">
                                                 <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
-                                                <input  required name="pj" type="text" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
+                                                <input  required name="pj" type="text" maxlength="255" class="form-control" id="pj" placeholder="Penanggungjawab">
                                             </div>
                                             <div class="form-group">
                                                 <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
-                                                <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
+                                                <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
                                                 <label for="judul_file" class="col-form-label">Judul File Satuan Ukur Kinerja :</label>
-                                                <input name="judul_file" type="text" maxlength="35" class="form-control" id="judul_file" placeholder="Judul File">                                                
+                                                <input name="judul_file" type="text" maxlength="255" class="form-control" id="judul_file" placeholder="Judul File">                                                
                                             </div>
                                             <div class="form-group">
                                                 <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
-                                                <textarea name="target_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="target_kinerja" placeholder="Target Output"></textarea>
+                                                <textarea name="target_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="target_kinerja" placeholder="Target Output"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="capaian_kinerja" class="col-form-label">Capaian Kinerja(Realisasi Output) :</label>
-                                                <textarea name="capaian_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output"></textarea>
+                                                <textarea name="capaian_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="target_waktu_pelaksanaan" class="col-form-label">Target Waktu Pelaksanaan:</label>
-                                                <textarea name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="25" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan"></textarea>
+                                                <textarea name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="255" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="capaian_target_waktu_penyelesaian" class="col-form-label">Capaian Target Waktu Penyelesaian:</label>
-                                                <textarea name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="25" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian"></textarea>
+                                                <textarea name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian"></textarea>
                                             </div>
 
 
@@ -747,29 +747,29 @@
                                                 @endif
                                                 <div class="form-group">
                                                     <label for="pj" class="col-form-label">Penanggungjawab Kegiatan :</label>
-                                                    <input  required name="pj" type="text" maxlength="25" class="form-control" id="pj" placeholder="Penanggungjawab">
+                                                    <input  required name="pj" type="text" maxlength="255" class="form-control" id="pj" placeholder="Penanggungjawab">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="satuan_ukur_kinerja" class="col-form-label">Satuan Ukur Kinerja :</label>
-                                                    <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="250" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
+                                                    <textarea name="satuan_ukur_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="satuan_ukur_kinerja" placeholder="Link Google Drive"></textarea>
                                                     <label for="judul_file" class="col-form-label">Judul File Satuan Ukur Kinerja :</label>
-                                                    <input name="judul_file" type="text" maxlength="35" class="form-control" id="judul_file" placeholder="Judul File">                                                
+                                                    <input name="judul_file" type="text" maxlength="255" class="form-control" id="judul_file" placeholder="Judul File">                                                
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="target_kinerja" class="col-form-label">Target Kinerja(Target Output) :</label>
-                                                    <textarea name="target_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="target_kinerja" placeholder="Target Output"></textarea>
+                                                    <textarea name="target_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="target_kinerja" placeholder="Target Output"></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="capaian_kinerja" class="col-form-label">Capaian Kinerja(Realisasi Output) :</label>
-                                                    <textarea name="capaian_kinerja" rows="2" cols="50" maxlength="100" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output"></textarea>
+                                                    <textarea name="capaian_kinerja" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_kinerja" placeholder="Realisasi Output"></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="target_waktu_pelaksanaan" class="col-form-label">Target Waktu Pelaksanaan:</label>
-                                                    <textarea name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="25" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan"></textarea>
+                                                    <textarea name="target_waktu_pelaksanaan" rows="2" cols="50" maxlength="255" class="form-control" id="target_waktu_pelaksanaan" placeholder="Waktu Pelaksanaan"></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="capaian_target_waktu_penyelesaian" class="col-form-label">Capaian Target Waktu Penyelesaian:</label>
-                                                    <textarea name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="25" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian"></textarea>
+                                                    <textarea name="capaian_target_waktu_penyelesaian" rows="2" cols="50" maxlength="255" class="form-control" id="capaian_target_waktu_penyelesaian" placeholder="Target Waktu Penyelesaian"></textarea>
                                                 </div>
 
 
