@@ -41,7 +41,10 @@
                                                     <label for="departement">Departemen Tujuan:</label>
                                                         <select id="departement" data-width="100%" name="departement" class="form-control">
                                                             <option value="" selected disabled hidden>Pilih Departemen Tujuan</option>
+                                                            @if (auth()->user()->jabatan=="Dekan")
+                                                            @else
                                                             <option value="0">Seluruh Departemen</option>
+                                                            @endif
                                                             @foreach($departement as $departementvalue)
                                                                 <option value="{{ $departementvalue->id }}">{{ $departementvalue->nama}}</option>
                                                             @endforeach
