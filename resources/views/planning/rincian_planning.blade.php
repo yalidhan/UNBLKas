@@ -119,7 +119,7 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="form-group">
-                                                            <label for="for_bulan_edit" class="col-form-label">Untuk Bulan:</label>
+                                                            <label for="for_bulan_edit" class="col-form-label">Untuk Minggu:</label>
                                                             <input value="{{$showPlanning[0]->for_bulan}}" required value="{{ old('for_bulan_edit')}}" name="for_bulan_edit" type="week" class="form-control" id="for_bulan_edit">
                                                 </div>
                                             </div>    

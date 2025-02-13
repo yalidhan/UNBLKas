@@ -245,7 +245,7 @@ class PlanningController extends Controller
             $user_id=auth()->user()->id;
 
             $budget = Planning::find($id);
-            $budget->for_bulan = $request->for_bulan_edit.'-1';
+            $budget->for_bulan = $request->for_bulan_edit;
             $budget->update();
             return redirect::back()->with('message', 'Berhasil Mengubah Data Perencanaan');
         }
