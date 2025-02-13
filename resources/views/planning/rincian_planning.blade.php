@@ -70,9 +70,9 @@
                                                 <td style="white-space: nowrap;">&nbsp;{{\Carbon\Carbon::parse($showPlanning[0]->created_at)->format('d-F-Y h:i:s')}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Untuk Bulan</td>
+                                                <td>Untuk Minggu</td>
                                                 <td>&nbsp;:</td>
-                                                <td style="white-space: nowrap;">&nbsp;{{\Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('F-Y')}}</td>
+                                                <td style="white-space: nowrap;">&nbsp;{{$showPlanning[0]->for_bulan}}</td>
                                             </tr>
                                             <tr>
                                                 <td style="white-space: nowrap;">Total Perencanaan</td>
@@ -120,7 +120,7 @@
                                                 @method('PUT')
                                                 <div class="form-group">
                                                             <label for="for_bulan_edit" class="col-form-label">Untuk Bulan:</label>
-                                                            <input value="{{\Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('Y-m')}}" required value="{{ old('for_bulan_edit')}}" name="for_bulan_edit" type="month" class="form-control" id="for_bulan_edit">
+                                                            <input value="{{$showPlanning[0]->for_bulan}}" required value="{{ old('for_bulan_edit')}}" name="for_bulan_edit" type="week" class="form-control" id="for_bulan_edit">
                                                 </div>
                                             </div>    
                                                     <div class="modal-footer">
@@ -188,7 +188,7 @@
                             $budget_id=$showPlanning[0]->budget_id;
                             $account_id=$value->account_id;
                             $departement_id=$showPlanning[0]->departement_id;
-                            $year=Carbon\Carbon::parse($showPlanning[0]->for_bulan)->format('Y');
+                            $year=Str::substr($showPlanning[0]->for_bulan,0,4);
                                 $keterangan=DB::select(
                                     "SELECT * FROM budget_details WHERE budget_id=$budget_id and account_id=$account_id"
                                 );
@@ -283,6 +283,8 @@
                                 <a href="#" class="badge badge-success">Disetujui</a>
                             @elseif($value->approved_by_wr2==2)
                                 <a href="#" class="badge badge-danger">Ditolak</a>   
+                            @elseif($value->approved_by_wr2==3)
+                                <a href="#" class="badge badge-warning">Revisi</a>                                  
                             @endif 
                         </td>
                         <td class="hidden-row">{{$value->note_wr2}}</td>
@@ -292,7 +294,9 @@
                             @elseif($value->approved_by_rektor==1)
                                 <a href="#" class="badge badge-success">Disetujui</a>
                             @elseif($value->approved_by_rektor==2)
-                                <a href="#" class="badge badge-danger">Ditolak</a>   
+                                <a href="#" class="badge badge-danger">Ditolak</a>
+                            @elseif($value->approved_by_rektor==3)
+                                <a href="#" class="badge badge-warning">Revisi</a>      
                             @endif 
                         </td>
                         <td class="hidden-row">{{$value->note_rektor}}</td>
@@ -375,7 +379,7 @@
                             @endif
                             @if (auth()->user()->id==$showPlanning[0]->user_id )
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
-                                @if ($value->approved_by_wr2==0)
+                                @if ($value->approved_by_wr2==0 ||$value->approved_by_wr2==3 ||$value->approved_by_rektor==3)
                                 <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
                                         <div class="modal-dialog modal-lg" role="document">
@@ -468,7 +472,59 @@
                             @else
                             @endif         
                             </span>
-                            @if (auth()->user()->jabatan=="Wakil Rektor II" AND $value->approved_by_rektor ==0)
+                            @if (auth()->user()->jabatan=="Wakil Rektor II" && $value->approved_by_rektor==0)
+                            <div class="bootstrap-modal">
+                                        <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanWRII{{$value->id}}">Persetujuan WR II</button>
+                                        <div class="modal fade" id="editPersetujuanWRII{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanWRIIModalLabel{{$value->id}}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editPersetujuanWRIIModalLabel{{$value->id}}">Persetujuan Wakil Rektor II</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('updateRincianP',$value->id)}}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <span>
+                                                                        Mata Anggaran <b>"{{$value->nama}}"</b>
+                                                                        <br>Anggaran {{$year}} Rp {{number_format($keterangan[0]->nominal,0,',','.')}}
+                                                                        <br>Realisasi Rp {{number_format($realisasi[0]->total,0,',','.')}} (<?php if($keterangan[0]->nominal!=0){echo number_format(($realisasi[0]->total/$keterangan[0]->nominal)*100, 2, '.', ',');}else{echo"0";}?> %)
+                                                                        <br>Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                            <label class="col-form-label">Persetujuan:</label><br>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input id="setuju{{$value->id}}" type="radio" value="1" name="persetujuan" required> Setuju</label>
+                                                                <!-- <label class="radio-inline mr-3"> -->
+                                                                    <input id="tidak" type="radio" value="2" name="persetujuan"> Tidak Setuju</label>
+                                                                    <input type="radio" value="3" name="persetujuan"> Revisi</label>
+                                                                <!-- </div> -->
+                                                           <!-- <div class="form-group"> -->
+                                                                <br>
+                                                                <label id="labelJumlah{{$value->id}}" class="col-form-label">Jumlah Disetujui:</label>
+                                                                <input required value="{{$value->nominal}}" id="jumlah{{$value->id}}" maxlength="14" name="jumlah" type="text" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                                <label class="col-form-label">Catatan WR II:</label>
+                                                                <input value="" name="catatan_wrii" type="text" maxlength="255" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
+                                                            </div>                                                            
+                                                            <!-- <div class="form-group"> -->
+                                                            <!-- </div>  -->
+                                                    </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div> 
+                            @elseif (auth()->user()->jabatan=="Wakil Rektor II" && $value->approved_by_rektor==3)
                                 <div class="bootstrap-modal">
                                         <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanWRII{{$value->id}}">Persetujuan WR II</button>
                                         <div class="modal fade" id="editPersetujuanWRII{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanWRIIModalLabel{{$value->id}}" aria-hidden="true">
@@ -499,6 +555,7 @@
                                                                     <input id="setuju{{$value->id}}" type="radio" value="1" name="persetujuan" required> Setuju</label>
                                                                 <!-- <label class="radio-inline mr-3"> -->
                                                                     <input id="tidak" type="radio" value="2" name="persetujuan"> Tidak Setuju</label>
+                                                                    <input type="radio" value="3" name="persetujuan"> Revisi</label>
                                                                 <!-- </div> -->
                                                            <!-- <div class="form-group"> -->
                                                                 <br>
@@ -520,7 +577,7 @@
                                         </div>
                                 </div> 
                             @endif
-                            @if (auth()->user()->jabatan=="Rektor" AND $value->approved_by_wr2 !=0)
+                            @if (auth()->user()->jabatan=="Rektor" AND $value->approved_by_wr2 !=0 AND $value->approved_by_wr2 !=3)
                                 <div class="bootstrap-modal">
                                         <button type="button" class="btn mb-1 btn-rounded btn-warning" data-toggle="modal" data-target="#editPersetujuanRektor{{$value->id}}">Persetujuan Rektor</button>
                                         <div class="modal fade" id="editPersetujuanRektor{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editPersetujuanRektorModalLabel{{$value->id}}" aria-hidden="true">
@@ -552,6 +609,7 @@
                                                                     <input  type="radio" value="1" name="persetujuan_rektor" required> Setuju</label>
                                                                 <!-- <label class="radio-inline mr-3"> -->
                                                                     <input  type="radio" value="2" name="persetujuan_rektor"> Tidak Setuju</label>
+                                                                    <input  type="radio" value="3" name="persetujuan_rektor"> Revisi</label>
                                                                 <!-- </div> -->
                                                            <!-- <div class="form-group"> -->
                                                                 <br>
@@ -580,7 +638,21 @@
             </table>
         </div>
         <center>
-        @if (auth()->user()->jabatan=="Wakil Rektor II" AND $value->approved_by_rektor ==0 AND $value->approved_by_wr2 ==0)
+        <?php
+        $planning_id=$showPlanning[0]->id;
+            $acc_count=DB::select(
+                "SELECT count(case when pd.approved_by_wr2=0 THEN 0 END) AS WR_0,
+                        count(case when pd.approved_by_wr2=1 THEN 1 END) AS WR_1,
+                        count(case when pd.approved_by_wr2=2 THEN 2 END) AS WR_2,
+                        count(case when pd.approved_by_wr2=3 THEN 3 END) AS WR_3,
+                        count(case when pd.approved_by_rektor=0 THEN 0 END) AS R_0,
+                        count(case when pd.approved_by_rektor=1 THEN 1 END) AS R_1,
+                        count(case when pd.approved_by_rektor=2 THEN 2 END) AS R_2,
+                        count(case when pd.approved_by_rektor=3 THEN 3 END) AS R_3
+                FROM planning_details pd
+                WHERE planning_id = $planning_id");
+        ?>
+        @if (auth()->user()->jabatan=="Wakil Rektor II" && $acc_count[0]->R_1==0 && $acc_count[0]->R_2==0 && $acc_count[0]->R_3==0 )
             <br>
             <form action="{{route('perencanaan.update',$showPlanning[0]->id)}}" method="POST">
             @csrf
@@ -600,15 +672,7 @@
         @endif
         <br>
         <a href="{{ route('perencanaan.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
-        <?php
-        $planning_id=$showPlanning[0]->id;
-            $acc_count=DB::select(
-                "SELECT count(case when pd.approved_by_wr2=0 THEN 0 END) AS WR_0,
-                        count(case when pd.approved_by_wr2=1 THEN 1 END) AS WR_1,
-                        count(case when pd.approved_by_wr2=2 THEN 2 END) AS WR_2
-                FROM planning_details pd
-                WHERE planning_id = $planning_id");
-        ?>
+
         @if (auth()->user()->id==$showPlanning[0]->user_id)
         @if ($acc_count[0]->WR_0>0)
         <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
@@ -701,7 +765,7 @@
 
         @endif
 
-        @if ($acc_count[0]->WR_0==0 && $acc_count[0]->WR_1==0 && $acc_count[0]->WR_2==0)
+        <!-- @if ($acc_count[0]->WR_0==0 && $acc_count[0]->WR_1==0 && $acc_count[0]->WR_2==0 && $acc_count[0]->WR_3>0)
             <center>
             <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
             </center>
@@ -786,7 +850,7 @@
                         </div>      
             </div>       
         @else
-        @endif
+        @endif -->
             
 </div>
 </div>

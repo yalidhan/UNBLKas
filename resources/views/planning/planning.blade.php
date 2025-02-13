@@ -30,9 +30,9 @@
                             <div class="col-md-3">
                                 <form action="report-perencanaan/cetak" method="get">                                                        
                                     <div class="form-group">
-                                        <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan:<br>Untuk Bulan</label>
+                                        <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan:<br>Untuk Minggu</label>
                                             <div class="input-group">
-                                                <input id="periode" type="month" name="periode" required class="form-control">
+                                                <input id="periode" type="week" name="periode" required class="form-control">
                                             </div>   
                                         </br><button type="submit" class="btn mb-1 btn-success">Cetak<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
                                     </button>
@@ -54,7 +54,7 @@
                                                 <table class="display table-responsive table table-striped table-bordered" id="plannings">
                                                     <thead>
                                                         <tr>
-                                                            <th>Untuk Bulan</th>
+                                                            <th>Untuk Minggu</th>
                                                             <th>Diajukan Tanggal</th>
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
@@ -70,7 +70,7 @@
                                                         @foreach ($plannings as $value) 
                                                             @if($value->WR_0>0 OR $value->REKTOR_0>0)
                                                         <tr>
-                                                            <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
+                                                            <td>{{$value->for_bulan}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
                                                             <td>{{$value->nama}}</td>
                                                             <td>{{$value->name}}</td>
@@ -123,7 +123,7 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                        <th><input type="text" placeholder="Search Untuk Bulan"></th>
+                                                        <th><input type="text" placeholder="Search Untuk Minggu"></th>
                                                             <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
                                                             <th><input type="text" placeholder="Search Departemen"></th>
                                                             <th><input type="text" placeholder="Search Input Oleh"></th>
@@ -143,7 +143,7 @@
                                                 <table class="table-responsive table table-striped table-bordered" id="plannings2">
                                                     <thead>
                                                         <tr>
-                                                            <th>Untuk Bulan</th>
+                                                            <th>Untuk Minggu</th>
                                                             <th>Diajukan Tanggal</th>
                                                             <th>Departemen</th>
                                                             <th>Input Oleh</th>
@@ -159,7 +159,7 @@
                                                         @foreach ($plannings as $value) 
                                                                 @if($value->WR_0==0 AND $value->REKTOR_0==0)
                                                         <tr>
-                                                            <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
+                                                            <td>{{$value->for_bulan}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
                                                             <td>{{$value->nama}}</td>
                                                             <td>{{$value->name}}</td>
@@ -213,7 +213,7 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th><input type="text" placeholder="Search Untuk Bulan"></th>
+                                                            <th><input type="text" placeholder="Search Untuk Minggu"></th>
                                                             <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
                                                             <th><input type="text" placeholder="Search Departemen"></th>
                                                             <th><input type="text" placeholder="Search Input Oleh"></th>
@@ -261,9 +261,9 @@
                                                         <form action="/perencanaan" method="POST">
                                                         @csrf
                                                             <div class="form-group">
-                                                                <label for="for_bulan" class="col-form-label">Untuk Bulan:</label>
+                                                                <label for="for_bulan" class="col-form-label">Untuk Minggu:</label>
                                                                     <div class="input-group">
-                                                                        <input id="for_bulan" required type="month" name="for_bulan" class="form-control">
+                                                                        <input id="for_bulan" required type="week" name="for_bulan" class="form-control">
                                                                     </div>   
                                                             </div>
 
@@ -287,7 +287,7 @@
                                         <table class="display table table-striped table-bordered" style="width:100%" id="plannings">
                                             <thead>
                                                 <tr>
-                                                    <th>Untuk Bulan</th>
+                                                    <th>Untuk Minggu</th>
                                                     <th>Diajukan Tanggal</th>
                                                     <!-- <th>Departemen</th> -->
                                                     <th>Input Oleh</th>
@@ -302,7 +302,7 @@
                                             <tbody>
                                                 @foreach ($plannings as $value)
                                                 <tr>
-                                                    <td>{{\Carbon\Carbon::parse($value->for_bulan)->format('F-Y')}}</td>
+                                                    <td>{{$value->for_bulan}}</td>
                                                     <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
                                                     <!-- <td>{{$value->nama}}</td> -->
                                                     <td>{{$value->name}}</td>
@@ -341,7 +341,7 @@
                                                                             method="POST"> 
                                                                             @csrf
                                                                             @method('DELETE')
-                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger">1</i></button>
                                                                         </form>
                                                                 @else
 
@@ -353,7 +353,7 @@
                                                                         method="POST"> 
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                                        <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger">2</i></button>
                                                                     </form>
                                                                 @else
                                                                 @endif
@@ -368,7 +368,7 @@
                                             <tfoot>
                                                 <tr>
                                                 <th>
-                                                            <input type="text" placeholder="Search Untuk Bulan"></th>
+                                                            <input type="text" placeholder="Search Untuk Minggu"></th>
                                                             <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
                                                             <!-- <th><input type="text" placeholder="Search Departemen"></th> -->
                                                             <th><input type="text" placeholder="Search Input Oleh"></th>

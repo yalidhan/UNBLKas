@@ -117,8 +117,8 @@ class PlanningController extends Controller
         $date=explode('-',$request->for_bulan);
         $month=$date[1];
         $year=$date[0];
-        $monthYear=$year.'-'.$month.'-01';
-        // dd($monthYear);
+        // $monthYear=$year.'-'.$month.'-01';
+        // dd($month);
         // dd($request->for_bulan,$monthYear);
         $user_id=auth()->user()->id;
         $departement_id=auth()->user()->departement_id;
@@ -128,7 +128,7 @@ class PlanningController extends Controller
         }
         // dd($budget_id->tahun);
         $planningQuery=Planning::create([
-            'for_bulan'=>$monthYear,
+            'for_bulan'=>$request->for_bulan,
             'departement_id'=>$departement_id,
             'user_id'=>$user_id,
             'budget_id'=>$budget_id->id,
@@ -164,6 +164,7 @@ class PlanningController extends Controller
         $date=explode('-',$showPlanning[0]->for_bulan);
         // $month=$date[1];
         $tahun_anggaran=$date[0];
+        // dd($tahun_anggaran);
         $showDetailPlanning=DB::select(
             "SELECT a.id as account_id,a.nama,
                 pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
@@ -313,6 +314,9 @@ class PlanningController extends Controller
         $nominal_rincian_int=$request->jumlah;
         $nominal_rincian_int=str_replace('.','',$nominal_rincian_int);
             if($request->persetujuan==2){
+                $nominal_rincian_int=0;      
+            }
+            if($request->persetujuan==3){
                 $nominal_rincian_int=0;      
             }
         $updateRincian = Planning_detail::find($id);

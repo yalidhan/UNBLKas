@@ -257,6 +257,7 @@ class ReportController extends Controller
         $year=$date[0];
         $departement_id=$request->departement;
         $p_id=$request->p_id;
+        // dd($date,$month,$year);
         if (!empty($request->departement)){
             $d_query="AND departement_id=$departement_id" ;
         }
@@ -271,7 +272,7 @@ class ReportController extends Controller
             FROM plannings p
             LEFT JOIN departements d
                 ON p.departement_id = d.id
-            WHERE p.for_bulan='$year-$month-01' $d_query 
+            WHERE p.for_bulan='$year-$month' $d_query 
             GROUP BY d.pusat"
         );
         return view('laporan/cetak-perencanaan')

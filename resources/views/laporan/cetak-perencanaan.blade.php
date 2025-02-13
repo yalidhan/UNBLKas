@@ -63,9 +63,9 @@
         <h2 align="center" style="line-height: 0.1em;">Perencanaan Kegiatan Anggaran RKA</h2>
         <table style="font-size: 20px;font-weight:bold;border-collapse: collapse;border-spacing:0;" cellspacing="0">
             <tr>
-                <td>Untuk Bulan</td>
+                <td>Untuk Minggu</td>
                 <td>:</td>
-                <td>{{\Carbon\Carbon::parse(''.$year.'-'.$month.'-01')->format('F')}}</td>
+                <td>{{$year.'-'.$month}}</td>
             </tr>
             <tr>
                 <td>Unit Kerja</td>
@@ -84,7 +84,7 @@
             <tr>
                 <td>Tahun Anggaran</td>
                 <td>:</td>
-                <td>{{\Carbon\Carbon::parse(''.$year.'-01-01')->format('Y')}}</td>
+                <td>{{$year}}</td>
             </tr>
         </table>
 
@@ -139,7 +139,7 @@
                                 FROM plannings p 
                                 LEFT JOIN departements d ON p.departement_id = d.id 
                                 LEFT JOIN planning_details dp ON p.id = dp.planning_id 
-                                WHERE p.for_bulan='$year-$month-01' AND d.pusat='Rektorat' $q");
+                                WHERE p.for_bulan='$year-$month' AND d.pusat='Rektorat' $q");
                         }else{        
                             if(!empty($p_id)){
                                 $q="AND p.id=$p_id"; 
@@ -152,7 +152,7 @@
                                 FROM plannings p
                                 LEFT JOIN departements d
                                     ON p.departement_id = d.id
-                                WHERE p.for_bulan='$year-$month-01' AND d.pusat='$value->pusat' $q
+                                WHERE p.for_bulan='$year-$month' AND d.pusat='$value->pusat' $q
                                 GROUP BY d.nama");
                         }
                     @endphp
@@ -178,7 +178,7 @@
                                     FROM planning_details pd
                                     LEFT JOIN accounts a ON pd.account_id = a.id
                                     LEFT JOIN plannings p ON pd.planning_id = p.id
-                                    WHERE group_rektorat='$d_value->nama' AND for_bulan='$year-$month-01' $per_unit
+                                    WHERE group_rektorat='$d_value->nama' AND for_bulan='$year-$month' $per_unit
                                     GROUP BY a.nama"
                                     );
                         }else{
@@ -198,7 +198,7 @@
                                     FROM planning_details pd
                                     LEFT JOIN accounts a ON pd.account_id = a.id
                                     LEFT JOIN plannings p ON pd.planning_id = p.id
-                                    WHERE departement_id=$d_value->departement_id AND for_bulan='$year-$month-01' $per_unit 
+                                    WHERE departement_id=$d_value->departement_id AND for_bulan='$year-$month' $per_unit 
                                     GROUP BY a.nama"
                                     );
                             }
