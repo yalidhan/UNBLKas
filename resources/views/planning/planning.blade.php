@@ -68,7 +68,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                            @if($value->WR_0>0 OR $value->REKTOR_0>0)
+                                                            @if($value->WR_0>0 OR $value->REKTOR_0>0 OR $value->REKTOR_3>0)
                                                         <tr>
                                                             <td>{{$value->for_bulan}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
@@ -79,11 +79,13 @@
                                                                 <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                             </td>
                                                             <td>
                                                                 <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
                                                             </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
@@ -157,7 +159,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                                @if($value->WR_0==0 AND $value->REKTOR_0==0)
+                                                                @if($value->WR_0==0 AND $value->REKTOR_0==0 AND $value->REKTOR_3==0)
                                                         <tr>
                                                             <td>{{$value->for_bulan}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
@@ -168,11 +170,13 @@
                                                                 <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                             </td>
                                                             <td>
                                                             <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
                                                             </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
@@ -311,11 +315,13 @@
                                                         <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
                                                         <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
                                                         <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
+                                                        <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                     </td>
                                                     <td>
                                                         <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                         <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                         <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                        <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
                                                     </td>
                                                     <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                         <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
@@ -341,7 +347,7 @@
                                                                             method="POST"> 
                                                                             @csrf
                                                                             @method('DELETE')
-                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger">1</i></button>
+                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
                                                                         </form>
                                                                 @else
 
@@ -353,7 +359,7 @@
                                                                         method="POST"> 
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger">2</i></button>
+                                                                        <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
                                                                     </form>
                                                                 @else
                                                                 @endif
