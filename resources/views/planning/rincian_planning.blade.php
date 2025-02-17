@@ -674,7 +674,7 @@
         <a href="{{ route('perencanaan.index') }}"><button type="button" class="btn mb-1 btn-success">Kembali<span class="btn-icon-right"><i class="fa fa-chevron-circle-left"></i></button></a>
 
         @if (auth()->user()->id==$showPlanning[0]->user_id)
-        @if ($acc_count[0]->WR_0==0 && $acc_count[0]->WR_1==0 && $acc_count[0]->WR_2==0)
+        @if ($acc_count[0]->WR_0>0 && $acc_count[0]->WR_1==0 && $acc_count[0]->WR_2==0)
         <button type="button" class="btn mb-1 btn-primary" data-toggle="modal" data-target="#tambah_rincian">Tambah Rincian<span class="btn-icon-right"><i class="fa fa-cart-plus"></i></button>
         </center>
         <div class="modal fade bd-example-modal-lg" id="tambah_rincian" tabindex="-1" role="dialog" aria-labelledby="tambah_rincianModalLabel" aria-hidden="true">
