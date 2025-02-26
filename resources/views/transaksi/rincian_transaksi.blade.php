@@ -84,7 +84,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Keterangan</span>
                                                     </div>
-                                                    <textarea required name="keterangan_edit" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
+                                                    <textarea required name="keterangan_edit" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
                                                 </div>
                                             </div>
                                                     <div class="modal-footer">

@@ -78,7 +78,7 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea name="keterangan_pemasukan" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_pemasukan" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="nominal_pemasukan" class="col-form-label">Nominal Pemasukan:</label>
@@ -126,7 +126,7 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea required name="keterangan_pengeluaran" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea required name="keterangan_pengeluaran" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                 </div>
                                                                         <div class="modal-footer">
@@ -204,7 +204,7 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text">Keterangan</span>
                                                                         </div>
-                                                                        <textarea name="keterangan_transfer" rows="2" cols="30" maxlength="100" class="form-control" aria-label="With textarea"></textarea>
+                                                                        <textarea name="keterangan_transfer" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea"></textarea>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
