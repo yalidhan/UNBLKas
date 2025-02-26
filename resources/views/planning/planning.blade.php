@@ -428,6 +428,7 @@
 $(document).ready(function () {
     // Initialize DataTable
     var table = $('#plannings').DataTable({
+        "order": [],
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
@@ -443,6 +444,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     // Initialize DataTable
     var table = $('#plannings2').DataTable({
+        "order": [],
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
