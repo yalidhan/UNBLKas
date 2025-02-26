@@ -327,7 +327,7 @@ class TransactionController extends Controller
             );
     
             // dd($showTransaction);
-            return view('laporan/cetak-spb',compact('showTransaction'));
+            return view('laporan/cetak-SPB',compact('showTransaction'));
         }
         elseif($request->kode=="edit"){
         $request->validate([
@@ -465,7 +465,7 @@ class TransactionController extends Controller
             );
     
             // dd($showTransaction);
-            return view('laporan/cetak-spb',compact('showTransaction'));
+            return view('laporan/cetak-SPB',compact('showTransaction'));
         }
     
         $request->validate([
