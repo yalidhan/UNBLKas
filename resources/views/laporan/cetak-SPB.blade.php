@@ -133,7 +133,7 @@
                         @php
                             $no++
                         @endphp
-                        {{$no}}. {{$transactionList->nama}} (Rp {{number_format($transactionList->nominal,0,',','.')}})</br>
+                        {{$no}}. [{{$transactionList->no}} | {{$transactionList->tipe}}] {{$transactionList->nama}} (Rp {{number_format($transactionList->nominal,0,',','.')}})</br>
                         @endforeach                   
                     @else
                         @php 
@@ -154,7 +154,7 @@
                         @php
                             $no++
                         @endphp
-                        {{$no}}. {{$transactionList->nama}} (Rp {{number_format($transactionList->nominal,0,',','.')}})</br>
+                        {{$no}}. [{{$transactionList->no}} | {{$transactionList->tipe}}] {{$transactionList->nama}} (Rp {{number_format($transactionList->nominal,0,',','.')}})</br>
                         @endforeach
                     @endif
                 </td>
@@ -164,7 +164,7 @@
                     Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br> 
                     Kepala Bagian Keuangan dan Pajak Yayasan</br></br></br></br>
                     Rinto Widyanto, S.Ak., M.M</br>
-                    NIK. 
+                    NIK. 010313053
                 </td>
             </tr>        
             <tr>
@@ -173,7 +173,7 @@
                     Telah Dibayar Oleh</br>
                     Bendahara Yayasan</br></br></br></br>
                     Nafila, M.Si</br>
-                    NIK. 
+                    &nbsp;
                 </td>
                 <td colspan="2" style="text-align:center;border-top:3px Solid;">
                     STATUS PENERIMAAN </br> 
