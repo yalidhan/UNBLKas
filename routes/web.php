@@ -64,6 +64,7 @@ Route::delete('transaksi/rincian{id}',[TransactionController::class,'destroyRinc
 Route::put('transaksi/rincian{id}',[TransactionController::class,'updateRincian'])->name('updateRincian');
 Route::resource('transaksi',TransactionController::class);
 
+
 Route::get('pertanggungjawaban', [ReportController::class,'lpjPage'])->name('lpjPage');
 Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->name('lpjCetak');
 

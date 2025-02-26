@@ -304,5 +304,4 @@ class ReportController extends Controller
         ->with('lastdateperiode',$lastdateperiode)
         ->with('departements',$departement);
     }
-
-}
+}   

@@ -15,6 +15,9 @@ class Transaction extends Model
         'tanggal',
         'no_spb',
         'keterangan',
+        'kepada',
+        'ctt_pajak',
+        'ctt_bendahara',
         'departement_id',
         'user_id',    
     ];

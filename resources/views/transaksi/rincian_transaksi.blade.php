@@ -69,6 +69,7 @@
                                                 <form action="{{route('transaksi.update',$showTransaction[0]->id)}}" method="POST">
                                                 @csrf
                                                 @method('PUT')
+                                                <input type="hidden" name="kode" value="edit">
                                                 <div class="form-group">
                                                         <label for="tgl_edit" class="col-form-label">Tanggal:</label>
                                                         <div class="input-group">
@@ -95,8 +96,51 @@
                                     </div>
                                 </div>   
                                 @else
-                                    @endif                         
-                        </div>
+                                @endif                         
+                            @if (auth()->user()->departement_id==1)
+                            <button type="button" class="btn mb-1 btn-rounded btn-primary" data-toggle="modal" data-target="#cetakSPB"><span class="btn-icon-left" style="background:rgb(82, 83, 85);"><i class="fa fa-print"></i></span>Cetak SPB</button>
+                                <div class="modal fade" id="cetakSPB" tabindex="-2" role="dialog" aria-labelledby="cetakSPBModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Cetak SPB</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{route('transaksi.update',$showTransaction[0]->id)}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="kode" value="spb">
+                                        <div class="form-group">
+                                            <label for="kepada" class="col-form-label">Kepada :</label>
+                                            <input name="kepada" value="{{$showTransaction[0]->kepada}}" maxlength="255" type="text" class="form-control" id="kepada" placeholder="Penerima Dana">
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Catatan Perpajakan &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            </div>
+                                            <textarea name="ctt_pajak" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea">{{$showTransaction[0]->ctt_pajak}}</textarea>
+                                        </div>
+                                        </br>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Catatan Perbendaharaan</span>
+                                            </div>
+                                            <textarea name="ctt_bendahara" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea">{{$showTransaction[0]->ctt_bendahara}}</textarea>
+                                        </div>
+                                    </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-primary">Simpan&Cetak</button>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>   
+                                @else
+                                @endif   
+                                </div>
                     </div>
                 </div>
                 <div class="table-responsive"> 

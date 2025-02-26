@@ -232,7 +232,7 @@ class TransactionController extends Controller
         //
         \DB::statement("SET SQL_MODE=''");
         $showTransaction=DB::select(
-            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,t.user_id,
+            "SELECT t.id, t.no_spb,t.tanggal, t.keterangan,t.user_id,t.kepada,t.ctt_pajak,t.ctt_bendahara,
                 dp.id AS departement_id, dp.nama AS departement,sum(d.nominal) AS total
             FROM transactions t
             LEFT JOIN transaction_details d
@@ -297,7 +297,39 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request->kode);
+        if ($request->kode=="spb"){
+            $transaction = Transaction::find($id);
+            $transaction->kepada = $request->kepada;
+            $transaction->ctt_pajak = $request->ctt_pajak;
+            $transaction->ctt_bendahara = $request->ctt_bendahara;
+            $transaction->update();
+            // $showTransaction=Transaction::where('id','=',$id)->get();
+            \DB::statement("SET SQL_MODE=''");
+            $showTransaction=DB::select(
+                "SELECT t.no_trf,t.id,t.departement_id, t.no_spb,t.tanggal, 
+                    t.keterangan, t.no_trf, t.user_id,t.kepada,t.ctt_pajak,t.ctt_bendahara,sum(d.nominal) AS total,d.nominal,
+                    a.nama as akun,
+                    dp.nama, 
+                    d.nominal,
+                    u.name
+                FROM transactions t
+                LEFT JOIN transaction_details d
+                ON t.id = d.transaction_id
+                LEFT JOIN accounts a
+                ON d.account_id = a.id
+                LEFT JOIN users u
+                ON t.user_id = u.id
+                LEFT JOIN departements dp
+                ON t.departement_id = dp.id
+                WHERE t.id=$id
+                GROUP BY d.transaction_id, t.id"
+            );
+    
+            // dd($showTransaction);
+            return view('laporan/cetak-spb',compact('showTransaction'));
+        }
+        elseif($request->kode=="edit"){
         $request->validate([
             'tgl_edit' => 'required',
             'no_spb_edit' => 'required',
@@ -309,7 +341,8 @@ class TransactionController extends Controller
         $transaction->keterangan = $request->keterangan_edit;
         $transaction->update();
 
-        return redirect::back()->with('message', 'Berhasil Mengubah Data Transaksi');
+        return redirect()->back()->with('message', 'Berhasil Mengubah Data Transaksi');
+        }
     }
 
     /**
@@ -397,6 +430,44 @@ class TransactionController extends Controller
 
     public function updateTransfer(Request $request, $id)
     {
+        // dd($request->id);
+        if ($request->kode=="spb"){
+            $transaction = Transaction::find($request->id_1);
+            $transaction->kepada = $request->kepada;
+            $transaction->ctt_pajak = $request->ctt_pajak;
+            $transaction->ctt_bendahara = $request->ctt_bendahara;
+            $transaction->update();
+            $transaction = Transaction::find($request->id_2);
+            $transaction->kepada = $request->kepada;
+            $transaction->ctt_pajak = $request->ctt_pajak;
+            $transaction->ctt_bendahara = $request->ctt_bendahara;
+            $transaction->update();
+            // $showTransaction=Transaction::where('id','=',$id)->get();
+            \DB::statement("SET SQL_MODE=''");
+            $showTransaction=DB::select(
+                "SELECT t.no_trf,t.id,t.departement_id, t.no_spb,t.tanggal, 
+                    t.keterangan, t.no_trf, t.user_id,t.kepada,t.ctt_pajak,t.ctt_bendahara,sum(d.nominal) AS total,d.nominal,
+                    a.nama as akun,
+                    dp.nama, 
+                    d.nominal,
+                    u.name
+                FROM transactions t
+                LEFT JOIN transaction_details d
+                ON t.id = d.transaction_id
+                LEFT JOIN accounts a
+                ON d.account_id = a.id
+                LEFT JOIN users u
+                ON t.user_id = u.id
+                LEFT JOIN departements dp
+                ON t.departement_id = dp.id
+                WHERE t.id=$request->id_1
+                GROUP BY d.transaction_id, t.id"
+            );
+    
+            // dd($showTransaction);
+            return view('laporan/cetak-spb',compact('showTransaction'));
+        }
+    
         $request->validate([
             'departement_tujuan'=>'required',
             'tgl_transfer'=>'required',

@@ -74,7 +74,7 @@
                 @foreach ($transactionList as $transaction)     
                 @php
                     $detailTransaction=DB::select(
-                                "SELECT t.id, t.keterangan,d.account_id,d.nominal, a.nama,a.no,a.tipe 
+                                "SELECT t.no_trf,t.id, t.keterangan,d.account_id,d.dk,d.nominal, a.nama,a.no,a.tipe 
                                 FROM transactions t 
                                 LEFT JOIN transaction_details d 
                                     ON t.id = d.transaction_id 
@@ -109,9 +109,30 @@
                     @foreach ($detailTransaction as $value)
                     <tr>
                         <td style="white-space: nowrap;">{{$value->no}} || {{$value->tipe}}</td>
+                        @if ($value->no_trf !==null && $value->dk==2 ){
+                            @php
+                            \DB::statement("SET SQL_MODE=''");
+                            $no_trf=$value->no_trf;
+                            $droppingValue=DB::select(
+                                "SELECT t.no_trf,t.id, t.keterangan,d.account_id,d.dk,d.nominal, a.nama,a.no,a.tipe 
+                                FROM transactions t 
+                                LEFT JOIN transaction_details d 
+                                    ON t.id = d.transaction_id 
+                                LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+                                WHERE t.no_trf='$no_trf'
+                                ORDER BY t.id DESC limit 1;"
+                            );  
+                            @endphp       
+                        <td>{{$droppingValue[0]->nama}}
+                            <br>(Rp {{number_format($droppingValue[0]->nominal,0,',','.')}})
+                        </td>                   
+                        }
+                        @else
                         <td>{{$value->nama}}
                             <br>(Rp {{number_format($value->nominal,0,',','.')}})
                         </td>
+                        @endif
                     </tr>
                     @endforeach                    
                 @endforeach
