@@ -164,12 +164,15 @@
                         if ($d_value->pusat=="Rektorat"){
                             if(!empty($p_id)){
                                 $per_unit="AND pd.planning_id=$p_id";
-                            }else{
+                            }elseif(!empty($kode)){
+                                $per_unit="AND pd.status='Paid'";
+                            }
+                            else{
                                 $per_unit="AND approved_by_rektor=1";
                             }
                             $detail_perencanaan=DB::select(
                                     "SELECT 
-                                        pd.planning_id,pd.id,pd.group_rektorat,pd.account_id,sum(pd.nominal) as nominal,
+                                        pd.status,pd.planning_id,pd.id,pd.group_rektorat,pd.account_id,sum(pd.nominal) as nominal,
                                         sum(pd.nominal_disetujui) as nominal_disetujui,
                                         pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
                                         pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
@@ -184,12 +187,15 @@
                         }else{
                             if(!empty($p_id)){
                                 $per_unit="AND pd.planning_id=$p_id";
-                            }else{
+                            }elseif(!empty($kode)){
+                                $per_unit="AND pd.status='Paid'";
+                            }
+                            else{
                                 $per_unit="AND approved_by_rektor=1";
                             }
                             $detail_perencanaan=DB::select(
                                     "SELECT 
-                                        pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
+                                        pd.status,pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
                                         sum(pd.nominal_disetujui) as nominal_disetujui,
                                         pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
                                         pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,

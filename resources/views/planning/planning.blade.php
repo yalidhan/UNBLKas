@@ -15,32 +15,49 @@
 
             <!-- row -->
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        @if(auth()->user()->jabatan=='Bendahara Yayasan' 
-                            OR auth()->user()->jabatan=='Wakil Rektor II' 
-                            OR auth()->user()->jabatan=='Rektor'
-                            OR auth()->user()->jabatan=='Super Admin'
-                            OR auth()->user()->jabatan=='Kabid Keuangan'
-                            OR auth()->user()->jabatan=='Kabid Perencanaan'
-                            OR auth()->user()->jabatan=='SPI'
-                            OR auth()->user()->departement_id==1
-                            )
-
-                            <div class="col-md-3">
-                                <form action="report-perencanaan/cetak" method="get">                                                        
-                                    <div class="form-group">
-                                        <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan:<br>Untuk Minggu</label>
-                                            <div class="input-group">
-                                                <input id="periode" type="week" name="periode" required class="form-control">
-                                            </div>   
-                                        </br><button type="submit" class="btn mb-1 btn-success">Cetak<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
-                                    </button>
-                                    </div>
-                                </form>
-                            </div>
                             <div class="card">
                                 <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @if(auth()->user()->jabatan=='Bendahara Yayasan' 
+                                            OR auth()->user()->jabatan=='Wakil Rektor II' 
+                                            OR auth()->user()->jabatan=='Rektor'
+                                            OR auth()->user()->jabatan=='Super Admin'
+                                            OR auth()->user()->jabatan=='Kabid Keuangan'
+                                            OR auth()->user()->jabatan=='Kabid Perencanaan'
+                                            OR auth()->user()->jabatan=='SPI'
+                                            OR auth()->user()->departement_id==1
+                                            )
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <form action="report-perencanaan/cetak" method="get">                                                        
+                                                        <div class="form-group">
+                                                            <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan Terkonfirmasi Rektor:<br>Untuk Minggu</label>
+                                                                <div class="input-group">
+                                                                    <input id="periode" type="week" name="periode" required class="form-control">
+                                                                </div>   
+                                                            </br><button type="submit" class="btn mb-1 btn-success">Cetak<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                                        </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                @if (auth()->user()->departement_id==1)
+                                                <div class="col-md-6">
+                                                    <form action="report-perencanaan/cetak" method="get">                                                        
+                                                        <div class="form-group">
+                                                            <label for="periode" class="col-form-label">Laporan Rekapitulasi Perencanaan Terkonfirmasi Yayasan:<br>Untuk Minggu</label>
+                                                                <div class="input-group">
+                                                                    <input id="periode" type="week" name="periode" required class="form-control">
+                                                                    <input type="hidden" name="kode" value="paid">
+                                                                </div>   
+                                                            </br><button type="submit" class="btn mb-1 btn-success">Cetak<span class="btn-icon-right"><i class="fa fa-filter"></i></span>
+                                                        </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                @endif
+                                            </div>
+
                                     <h4 class="card-title">Perencanaan Seluruh Departemen</h4>
                                     <ul class="nav nav-pills mb-3">
                                         <li class="nav-item"><a href="#navpills-1" class="nav-link active" data-toggle="tab" aria-expanded="false">Sedang Ditinjau</a>

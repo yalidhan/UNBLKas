@@ -252,6 +252,8 @@ class ReportController extends Controller
 
     public function perencanaanCetak(Request $request)
     {
+        $kode=$request->kode;
+        // dd($kode);
         $date=explode('-',$request->periode);
         $month=$date[1];
         $year=$date[0];
@@ -280,6 +282,7 @@ class ReportController extends Controller
                 ->with('year',$year)
                 ->with('pusat',$pusat)
                 ->with('departement_id',$departement_id)
+                ->with('kode',$kode)
                 ->with('p_id',$p_id)
                 ;
     }
