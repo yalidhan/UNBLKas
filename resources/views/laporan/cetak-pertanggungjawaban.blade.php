@@ -109,7 +109,7 @@
                     @foreach ($detailTransaction as $value)
                     <tr>
                         <td style="white-space: nowrap;">{{$value->no}} || {{$value->tipe}}</td>
-                        @if ($value->no_trf !==null && $value->dk==2 ){
+                        @if ($value->no_trf !==null && $value->dk==2 )
                             @php
                             \DB::statement("SET SQL_MODE=''");
                             $no_trf=$value->no_trf;
@@ -127,7 +127,6 @@
                         <td>{{$droppingValue[0]->nama}}
                             <br>(Rp {{number_format($droppingValue[0]->nominal,0,',','.')}})
                         </td>                   
-                        }
                         @else
                         <td>{{$value->nama}}
                             <br>(Rp {{number_format($value->nominal,0,',','.')}})
