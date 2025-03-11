@@ -78,7 +78,7 @@
                                                     </div>
                                                 <div class="form-group">
                                                     <label for="no_spb_edit" class="col-form-label">No.SPB:</label>
-                                                    <input required name="no_spb_edit" value="{{$showTransaction[0]->no_spb}}" maxlength="25"type="text" class="form-control" id="no_spb_edit" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                    <input required name="no_spb_edit" value="{{$showTransaction[0]->no_spb}}" maxlength="35"type="text" class="form-control" id="no_spb_edit" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                 </div>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">

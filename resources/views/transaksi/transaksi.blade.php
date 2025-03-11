@@ -120,7 +120,7 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="no_spb_pengeluaran" class="col-form-label">No.SPB:</label>
-                                                                        <input required name="no_spb_pengeluaran" maxlength="25" type="text" class="form-control" id="no_spb_pengeluaran" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                                        <input required name="no_spb_pengeluaran" maxlength="35" type="text" class="form-control" id="no_spb_pengeluaran" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
@@ -198,7 +198,7 @@
                                                                         </div>
                                                                     <div class="form-group">
                                                                         <label for="no_spb_transfer" class="col-form-label">No.SPB:</label>
-                                                                        <input required name="no_spb_transfer" maxlength="25" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                                                                        <input required name="no_spb_transfer" maxlength="35" type="text" class="form-control" id="no_spb_transfer" placeholder="No.Urut/Departemen/UNBL/Tahun">
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">

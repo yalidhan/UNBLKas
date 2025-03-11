@@ -60,7 +60,7 @@
                         </div>
                     <div class="form-group">
                         <label for="no_spb_transfer" class="col-form-label">No.SPB:</label>
-                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="no_spb_transfer" value="{{$showTransaction[0]->no_spb}}" type="text" class="form-control" id="no_spb_transfer" maxlength="25" placeholder="No.Urut/Departemen/UNBL/Tahun">
+                        <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="no_spb_transfer" value="{{$showTransaction[0]->no_spb}}" type="text" class="form-control" id="no_spb_transfer" maxlength="35" placeholder="No.Urut/Departemen/UNBL/Tahun">
                     </div>
                     <div class="input-group">
                         <div class="input-group-prepend">
