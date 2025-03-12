@@ -430,8 +430,9 @@ class TransactionController extends Controller
 
     public function updateTransfer(Request $request, $id)
     {
-        // dd($request->id);
+        // dd($request->kepada);
         if ($request->kode=="spb"){
+            // dd($request->id_1);
             $transaction = Transaction::find($request->id_1);
             $transaction->kepada = $request->kepada;
             $transaction->ctt_pajak = $request->ctt_pajak;
@@ -467,7 +468,6 @@ class TransactionController extends Controller
             // dd($showTransaction);
             return view('laporan/cetak-SPB',compact('showTransaction'));
         }
-    
         $request->validate([
             'departement_tujuan'=>'required',
             'tgl_transfer'=>'required',

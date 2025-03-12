@@ -21,6 +21,7 @@
                     <form id="formTF" method="POST" action="{{route('updateTransfer',$showTransaction[0]->no_trf)}}">
                         @csrf
                         @method ('put')
+                        <input type="hidden" name="kode" value="edit">
                         <div class="form-group">
                             <label for="no_spb_transfer" class="col-form-label">Departement Awal</label>
                             <input value="{{$showTransaction[0]->departement->nama}}" readonly type="text" class="form-control" id="departement_awal" placeholder="No.Urut/Departemen/UNBL/Tahun">
@@ -77,7 +78,10 @@
                     <input type="text" hidden value="{{$showTransaction[1]->id}}" name="id_2">
                     <div class="modal-footer">
                                 <a href="{{ route('transaksi.index') }}"><button type="button" class="btn btn-secondary">Kembali</button></a>
-                                @if (auth()->user()->id==$showTransaction[0]->user_id)<button disabled type="submit" class="btn btn-primary" id="submitForm">Simpan</button> @else  @endif                              
+                                @if (auth()->user()->id==$showTransaction[0]->user_id)<button disabled type="submit" class="btn btn-primary" id="submitForm">Simpan
+                                </button>
+                    </form>
+                                 @else  @endif                              
                                 @if (auth()->user()->departement_id==1)
                                 <button type="button" class="btn mb-1 btn-rounded btn-primary" data-toggle="modal" data-target="#cetakSPB"><span class="btn-icon-left" style="background:rgb(82, 83, 85);"><i class="fa fa-print"></i></span>Cetak SPB</button>
                                 <div class="modal fade" id="cetakSPB" tabindex="-2" role="dialog" aria-labelledby="cetakSPBModalLabel" aria-hidden="true">
@@ -92,6 +96,8 @@
                                         <form action="{{route('updateTransfer',$showTransaction[0]->id)}}" method="POST">
                                         @csrf
                                         @method('PUT')
+                                        <input type="text" hidden value="{{$showTransaction[0]->id}}" name="id_1">
+                                        <input type="text" hidden value="{{$showTransaction[1]->id}}" name="id_2">
                                         <input type="hidden" name="kode" value="spb">
                                         <div class="form-group">
                                             <label for="kepada" class="col-form-label">Kepada :</label>
