@@ -66,7 +66,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Keterangan</span>
                         </div>
-                        <textarea @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif name="keterangan_transfer" rows="2" cols="30" maxlength="75" class="form-control" maxlength="100" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
+                        <textarea @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif name="keterangan_transfer" rows="2" cols="30" maxlength="255" class="form-control" maxlength="100" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
