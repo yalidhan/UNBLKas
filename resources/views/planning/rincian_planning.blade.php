@@ -177,7 +177,7 @@
                     @foreach ($showDetailPlanning as $value)
                     <tr>
                         <td class="details-control"><span class="arrow-icon">▶</span></td>
-                        <td class="hidden-row">RKA</td>
+                        <td class="hidden-row">{{$value->jenis}}</td>
                         @if ($showPlanning[0]->departement_id==6)
                         <td>{{$value->group_rektorat}}</td>
                         @else
@@ -393,6 +393,14 @@
                                                     <form action="{{route('updateRincianP',$value->id)}}" method="POST">
                                                     @csrf
                                                     @method('PUT')
+                                                        <div class="form-group">
+                                                            <label for="jenis" class="col-form-label">Jenis Perencanaan :</label>
+                                                            <select id="jenis" data-width="100%" name="jenis" class="form-control" required>
+                                                                <option value="" selected disabled hidden>Pilih Jenis Perencanaan</option>
+                                                                <option value="RKA" {{$value->jenis == "RKA"  ? 'selected' : ''}}>RKA</option>
+                                                                <option value="Non RKA" {{$value->jenis == "Non RKA"  ? 'selected' : ''}}>Non RKA</option>
+                                                            </select>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
                                                             <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
@@ -689,6 +697,14 @@
                                         <form action="{{route('storeRincianP')}}" method="POST" id="forms">
                                             @csrf
                                             <div class="form-group">
+                                                <label for="jenis" class="col-form-label">Jenis Perencanaan :</label>
+                                                <select id="jenis" data-width="100%" name="jenis" class="form-control" required>
+                                                    <option value="" selected disabled hidden>Pilih Jenis Perencanaan</option>
+                                                    <option value="RKA">RKA</option>
+                                                    <option value="Non RKA">Non RKA</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="akun_rincian" class="col-form-label">Akun :</label>
                                                 <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>
                                                     <option value="" selected disabled hidden>Pilih Akun</option>
@@ -778,6 +794,14 @@
                                         <div class="modal-body">
                                             <form action="{{route('storeRincianP')}}" method="POST" id="forms">
                                                 @csrf
+                                                <div class="form-group">
+                                                    <label for="jenis" class="col-form-label">Jenis Perencanaan :</label>
+                                                    <select id="jenis" data-width="100%" name="jenis" class="form-control" required>
+                                                        <option value="" selected disabled hidden>Pilih Jenis Perencanaan</option>
+                                                        <option value="RKA">RKA</option>
+                                                        <option value="Non RKA">Non RKA</option>
+                                                    </select>
+                                              </div>                                                
                                                 <div class="form-group">
                                                     <label for="akun_rincian" class="col-form-label">Akun :</label>
                                                     <select id="akun_rincian" data-width="100%" name="akun_rincian" class="form-control" required>

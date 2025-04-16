@@ -172,7 +172,7 @@
                             }
                             $detail_perencanaan=DB::select(
                                     "SELECT 
-                                        pd.status,pd.planning_id,pd.id,pd.group_rektorat,pd.account_id,sum(pd.nominal) as nominal,
+                                        pd.jenis,pd.status,pd.planning_id,pd.id,pd.group_rektorat,pd.account_id,sum(pd.nominal) as nominal,
                                         sum(pd.nominal_disetujui) as nominal_disetujui,
                                         pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
                                         pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
@@ -195,7 +195,7 @@
                             }
                             $detail_perencanaan=DB::select(
                                     "SELECT 
-                                        pd.status,pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
+                                        pd.jenis,pd.status,pd.planning_id,pd.id,pd.account_id,sum(pd.nominal) as nominal,
                                         sum(pd.nominal_disetujui) as nominal_disetujui,
                                         pd.pj,pd.judul_file,pd.target_kinerja,pd.capaian_kinerja,
                                         pd.waktu_pelaksanaan,pd.capaian_target_waktu,pd.approved_by_wr2,
@@ -213,7 +213,7 @@
                         @foreach ($detail_perencanaan as $dp_value)
                             <tr>
                                 <td>{{$no++}}</td>
-                                <td>RKA</td>
+                                <td>{{$dp_value->jenis}}</td>
                                 <td>{{$dp_value->nama}}</td>
                                 <td>{{$dp_value->pj}}</td>
                                 @if(!empty($p_id))

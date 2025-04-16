@@ -171,7 +171,7 @@ class PlanningController extends Controller
         // dd($tahun_anggaran);
         $showDetailPlanning=DB::select(
             "SELECT a.id as account_id,a.nama,
-                pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
+                pd.jenis,pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
                 pd.target_kinerja,pd.capaian_kinerja,pd.waktu_pelaksanaan,pd.approved_by_wr2,pd.note_wr2,pd.note,pd.status,
                 pd.approved_by_rektor,pd.note_rektor,pd.capaian_target_waktu,pd.updated_at
             FROM planning_details pd
@@ -266,6 +266,7 @@ class PlanningController extends Controller
     public function storeRincianP(Request $request)
     {
         $request->validate([
+            'jenis'=>'required',
             'akun_rincian'=>'required',
             'jumlah_anggaran_tambah_rincian'=>'required',
             'pj'=>'required',
@@ -288,6 +289,7 @@ class PlanningController extends Controller
         Planning_detail::create([
             'planning_id'=>$request->planning_id,
             'account_id'=>$request->akun_rincian,
+            'jenis'=>$request->jenis,
             'nominal'=>$nominal_rincian_int,
             'group_rektorat'=>$request->group_rektorat,
             'pj'=>$request->pj,
@@ -365,6 +367,7 @@ class PlanningController extends Controller
                 'capaian_kinerja'=>'required',
                 'target_waktu_pelaksanaan'=>'required',
                 'capaian_target_waktu_penyelesaian'=>'required',
+                'jenis'=>'required',
             ]);
             // dd($request->current_account,$request->akun_rincian_edit);
             $nominal_rincian_int=$request->jumlah_anggaran_tambah_rincian_edit;
@@ -376,6 +379,7 @@ class PlanningController extends Controller
                 if($request->current_account==$request->akun_rincian_edit){
                     $updateRincian = Planning_detail::find($id);
                     $updateRincian->account_id = $request->akun_rincian_edit;
+                    $updateRincian->jenis = $request->jenis;
                     $updateRincian->nominal = $nominal_rincian_int;
                     $updateRincian->group_rektorat = $request->group_rektorat;
                     $updateRincian->pj = $request->pj;
@@ -392,6 +396,7 @@ class PlanningController extends Controller
             }
             $updateRincian = Planning_detail::find($id);
             $updateRincian->account_id = $request->akun_rincian_edit;
+            $updateRincian->jenis = $request->jenis;
             $updateRincian->nominal = $nominal_rincian_int;
             $updateRincian->group_rektorat = $request->group_rektorat;
             $updateRincian->pj = $request->pj;

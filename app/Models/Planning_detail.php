@@ -13,6 +13,7 @@ class Planning_detail extends Model
     protected $fillable = [
         'planning_id',
         'account_id',
+        'jenis',
         'nominal',
         'nominal_disetujui', 
         'group_rektorat', 
