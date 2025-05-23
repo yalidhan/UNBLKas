@@ -208,6 +208,8 @@
                         <td>
                         <?php if(!empty($departement->id)){
                             echo"<a href='logtransaksi?thn=$tahun"."&sd=$sd2"."&akn=$da_value->account_id"."&dp=$departement->id' style='color:#000;text-decoration:none;'>$da_value->nama</a>";
+                        }else if($departement['id']=='1'){
+                            echo"<a href='logtransaksi?thn=$tahun"."&sd=$sd2"."&akn=$da_value->account_id"."&dp=1' style='color:#000;text-decoration:none;'>$da_value->nama</a>";
                         }else{
                             echo $da_value->nama;
                         }
