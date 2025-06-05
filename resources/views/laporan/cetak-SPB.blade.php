@@ -40,14 +40,20 @@
             padding: 5px;
         }
     </style>
-    <title>Cetak Laporan Posisi Kas</title>
+    <title>Cetak SPB Transaksi</title>
 </head>
 <body>
     <div class="container">
         <center>
+        @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
         <h3>SURAT PERINTAH BAYAR(SPB)<br>
             YAYASAN BORNEO LESTARI
         </h3>
+        @else
+        <h3>SURAT PERINTAH BAYAR(SPB)<br>
+            UNIVERSITAS BORNEO LESTARI
+        </h3>
+        @endif
         
 
         <table style="border:3px solid;width=100%;border-collapse: collapse;">
@@ -73,13 +79,27 @@
                 <td colspan="4" style="text-align:center;border:3px solid">
                     Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br> 
                     Dokumen Penagihan Disahkan Oleh,</br>
-                    Ketua Yayasan</br></br></br></br>
-                    Drs. Akhmad Yanie, M.Si., Apt
+                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Ketua Yayasan</br></br></br></br>
+                        Drs. Akhmad Yanie, M.Si., Apt
+                    @else
+                        Rektor Universitas Borneo Lestari</br></br></br></br>
+
+                        @php
+                            $rektor=\App\Models\User::where('jabatan','Rektor')->get();
+                        @endphp
+                    {{$rektor[0]->name}}</br>
+                    NIK. 231224196
+                    @endif
                 </td>
             </tr>
             <tr style="text-align:left;">
                 <td colspan="4">
-                    Bendahara Yayasan Borneo Lestari diminta membayar uang
+                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Bendahara Yayasan Borneo Lestari diminta membayar uang
+                    @else 
+                       Wakil Rektor II Universitas Borneo Lestari diminta membayar uang
+                    @endif 
                 </td>
             </tr>
             </tr>
@@ -162,17 +182,29 @@
             <tr>
                 <td colspan="4" style="text-align:center;">
                     Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br> 
-                    Kepala Bagian Keuangan dan Pajak Yayasan</br></br></br></br>
-                    Rinto Widyanto, S.Ak., M.M</br>
-                    NIK. 010313053
+                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Kepala Bagian Keuangan dan Pajak Yayasan</br></br></br></br>
+                        Rinto Widyanto, S.Ak., M.M</br>
+                        NIK. 010313053
+                    @else 
+                        Kepala Bidang Keuangan dan Aset</br></br></br></br>
+                        Rizka Aulia Hasanah, S.K.M</br>
+                        NIK. 100216081
+                    @endif 
                 </td>
             </tr>        
             <tr>
                 <td colspan="1" style="text-align:center;border:3px Solid;border-right:none;">
                     STATUS PEMBAYARAN</br>
                     Telah Dibayar Oleh</br>
-                    Bendahara Yayasan</br></br></br></br>
-                    Nafila, M.Si</br>
+                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Bendahara Yayasan</br></br></br></br>
+                        Nafila, M.Si</br>
+                    @else 
+                        Wakil Rektor II</br></br></br></br>
+                        Azmi Yunarti, S.Pi, M.Pd</br>
+                        Nik. 010408001
+                    @endif 
                     &nbsp;
                 </td>
                 <td colspan="2" style="text-align:center;border-top:3px Solid;">
@@ -186,8 +218,14 @@
                     STATUS AKUNTANSI </br>
                     Telah Dibukukan Oleh</br>
                     Bagian Akuntansi (Kas Keluar)</br></br></br></br>
-                    Nurulita Rahmadayanti, S.Ak</br>
-                    NIK. 
+                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Nurulita Rahmadayanti, S.Ak</br>
+                        NIK. 
+                    @else 
+                    &nbsp;</br>
+                    (...................................................)</br>
+                    &nbsp;
+                    @endif 
                 </td>
             </tr>
             <tr>
