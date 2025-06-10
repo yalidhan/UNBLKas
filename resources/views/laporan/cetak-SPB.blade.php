@@ -209,7 +209,7 @@
             @else 
             Wakil Rektor II</br></br></br></br>
             Azmi Yunarti, S.Pi, M.Pd</br>
-            Nik. 010408001
+            NIK. 010408001
             @endif 
             
             </td>
