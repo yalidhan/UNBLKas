@@ -11,7 +11,10 @@
         /* Tooltip container */
 
         body{
-            font-size:14px;
+        font-family: "Courier New", "Lucida Console", Consolas, monospace;
+        font-size: 12pt;
+        line-height: 1.1;
+
         }
         /* Tooltip text */
         .tooltip .tooltiptext {
@@ -37,7 +40,7 @@
             -webkit-print-color-adjust: exact; 
         }
         table td{
-            padding: 5px;
+            padding: 3px;
         }
     </style>
     <title>Cetak SPB Transaksi</title>
@@ -115,7 +118,7 @@
                 <td style="vertical-align: top;text-align: left;">
                     Terbilang
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     :&nbsp;<i>{{terbilang($showTransaction[0]->total)}} Rupiah</i>
                 </td>
             </tr>    
@@ -123,7 +126,7 @@
                 <td style="vertical-align: top;text-align: left;">
                     Kepada
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     :&nbsp;{{$showTransaction[0]->kepada}} 
                 </td>
             </tr>               
@@ -131,7 +134,7 @@
                 <td style="vertical-align: top;text-align: left;">
                     Untuk Pembayaran
                 </td>
-                <td colspan="2">:
+                <td colspan="3">:
                     </br>
                     @if($showTransaction[0]->no_trf !==null)
                      @php 
@@ -180,7 +183,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="4" style="text-align:center;">
+                <td colspan="4" style="text-align:center;"></br>
                     Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br> 
                     @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
                         Kepala Bagian Keuangan dan Pajak Yayasan</br></br></br></br>
@@ -192,55 +195,55 @@
                         NIK. 100216081
                     @endif 
                 </td>
-            </tr>        
-            <tr>
-                <td colspan="1" style="text-align:center;border:3px Solid;border-right:none;">
-                    STATUS PEMBAYARAN</br>
-                    Telah Dibayar Oleh</br>
-                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
-                        Bendahara Yayasan</br></br></br></br>
-                        Nafila, M.Si</br>
-                    @else 
-                        Wakil Rektor II</br></br></br></br>
-                        Azmi Yunarti, S.Pi, M.Pd</br>
-                        Nik. 010408001
-                    @endif 
-                    &nbsp;
-                </td>
-                <td colspan="2" style="text-align:center;border-top:3px Solid;">
-                    STATUS PENERIMAAN </br> 
-                    Telah Diterima Oleh</br></br></br></br>
-                    &nbsp;</br>
-                    (................................)</br>
-                    &nbsp;
-                </td>
-                <td colspan="1" style="text-align:center;border:3px Solid;border-left:none;">
-                    STATUS AKUNTANSI </br>
-                    Telah Dibukukan Oleh</br>
-                    Bagian Akuntansi (Kas Keluar)</br></br></br></br>
-                    @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
-                        Nurulita Rahmadayanti, S.Ak</br>
-                        NIK. 
-                    @else 
-                    &nbsp;</br>
-                    (...................................................)</br>
-                    &nbsp;
-                    @endif 
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:left;border:3px solid">
-                    CATATAN PERPAJAKAN : </br>
-                    <p>{{$showTransaction[0]->ctt_pajak}}</p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:left;border:3px solid">
-                    CATATAN PERBENDAHARAAN : </br>
-                    <p>{{$showTransaction[0]->ctt_bendahara}}</p>
-                </td>
-            </tr>         
-        </table>
+            </tr>     
+        </table>  
+    </table> 
+        <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="width: 45%; text-align: center;border-left: 3px solid;">
+            STATUS PEMBAYARAN<br>
+            Telah Dibayar Oleh<br>
+            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+            Bendahara Yayasan</br></br></br></br>
+            Nafila, M.Si</br>
+            @else 
+            Wakil Rektor II</br></br></br></br>
+            Azmi Yunarti, S.Pi, M.Pd</br>
+            Nik. 010408001
+            @endif 
+            
+            </td>
+            <td style="width: 10%; text-align: center;">
+            STATUS PENERIMAAN<br>
+            Telah Diterima Oleh<br><br><br><br>
+            (................)
+            </td>
+            <td style="width: 45%; text-align: center;border-right: 3px solid;">
+            STATUS AKUNTANSI<br>
+            Telah Dibukukan Oleh<br>
+            Bagian Akuntansi</br>(Kas Keluar)<br><br><br><br>
+            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+            Nurulita Rahmadayanti, S.Ak</br>
+            NIK. 
+            @else 
+            (.................)</br>
+            &nbsp;
+            @endif 
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align:left;border:3px solid">
+                CATATAN PERPAJAKAN : </br>
+                <p>{{$showTransaction[0]->ctt_pajak}}</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align:left;border:3px solid">
+                CATATAN PERBENDAHARAAN : </br>
+                <p>{{$showTransaction[0]->ctt_bendahara}}</p>
+            </td>
+        </tr>     
+        
         </center>
     </div>
 </body>
