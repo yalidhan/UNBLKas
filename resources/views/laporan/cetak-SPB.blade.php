@@ -191,7 +191,7 @@
                         NIK. 010313053
                     @else 
                         Kepala Bidang Keuangan dan Aset</br></br></br></br>
-                        Rizka Aulia Hasanah, S.K.M</br>
+                        Rizeka Aulia Hasanah, S.K.M</br>
                         NIK. 100216081
                     @endif 
                 </td>
