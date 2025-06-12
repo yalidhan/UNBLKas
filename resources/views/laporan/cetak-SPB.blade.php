@@ -226,7 +226,7 @@
             Nurulita Rahmadayanti, S.Ak</br>
             NIK. 
             @else 
-            (.................)</br>
+            {{(auth()->user()->name)}}</br>
             &nbsp;
             @endif 
             </td>
