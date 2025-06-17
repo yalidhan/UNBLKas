@@ -220,15 +220,14 @@
                                 <td>{{$dp_value->jenis}}</td>
                                 <td>{{$dp_value->nama}}</td>
                                 <td>{{$dp_value->pj}}</td>
-                                @if(!empty($p_id)){
+                                @if(!empty($p_id))
                                     <td style="white-space: nowrap;" align="left">Rp {{number_format($dp_value->nominal,0,',','.'),$total_all=$total_all+$dp_value->nominal,$gt_pusat=$gt_pusat+$dp_value->nominal,$sub_total_dp=$sub_total_dp+$dp_value->nominal}}</td>
-                                }
-                                @elseif(empty($p_id)&&empty($kode)){
+                                @elseif(empty($p_id)&&empty($kode))
                                     <td style="white-space: nowrap;" align="left">Rp {{number_format($dp_value->nominal_disetujui,0,',','.'),$total_all=$total_all+$dp_value->nominal_disetujui,$gt_pusat=$gt_pusat+$dp_value->nominal_disetujui,$sub_total_dp=$sub_total_dp+$dp_value->nominal_disetujui}}</td>
-                                }
-                                @elseif(empty($p_id)&&!empty($kode)){
+                                
+                                @elseif(empty($p_id)&&!empty($kode))
                                     <td style="white-space: nowrap;" align="left">Rp {{number_format($dp_value->nominal_dibayar,0,',','.'),$total_all=$total_all+$dp_value->nominal_dibayar,$gt_pusat=$gt_pusat+$dp_value->nominal_dibayar,$sub_total_dp=$sub_total_dp+$dp_value->nominal_dibayar}}</td>
-                                }
+                                
                                 @endif
                                 <td>{{$dp_value->judul_file}}</td>
                                 <td>{{$dp_value->target_kinerja}}</td>
