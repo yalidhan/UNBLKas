@@ -310,10 +310,16 @@
                             @elseif($value->status=="Paid")
                                 <a href="#" class="badge badge-success">Paid
                                     </a>
+                                    <br>Sejumlah </br>Rp {{number_format($value->nominal_dibayar,0,',','.')}}</br>
                                     <br>Updated at
                                     <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
                             @elseif($value->status=="Unpaid")
                                 <a href="#" class="badge badge-danger">Unpaid
+                                    </a>
+                                    <br>Updated at  
+                                    <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
+                            @elseif($value->status=="Revisi")
+                                <a href="#" class="badge badge-warning">Revisi
                                     </a>
                                     <br>Updated at  
                                     <br>{{\Carbon\Carbon::parse($value->updated_at)->format('d-M-Y H:i:s')}}
@@ -350,11 +356,14 @@
                                                                 <!-- <label class="radio-inline mr-3"> -->
                                                                     <input  type="radio" value="Pending" name="status" required {{$value->status == "Pending" ?'checked':''}}> Pending</label>
                                                                 <!-- <label class="radio-inline mr-3"> -->
-                                                                    <input  type="radio" value="Paid" name="status" {{$value->status == "Paid" ?'checked':''}}> Paid</label>
+                                                                    <input id="setuju{{$value->id}}" type="radio" value="Paid" name="status" {{$value->status == "Paid" ?'checked':''}}> Paid</label>
                                                                     <input  type="radio" value="Unpaid" name="status" {{$value->status == "Unpaid" ?'checked':''}}> Unpaid</label>
+                                                                    <input  type="radio" value="Revisi" name="status" {{$value->status == "Revisi" ?'checked':''}}> Revisi</label>
                                                                 <!-- </div> -->
                                                            <!-- <div class="form-group"> -->
                                                                 <br>
+                                                                <label id="labelJumlah{{$value->id}}" class="col-form-label">Jumlah Disetujui:</label>
+                                                                <input required value="{{$value->nominal_disetujui}}" id="jumlah{{$value->id}}" maxlength="14" name="bayar" type="text" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                                 <label class="col-form-label">Catatan Yayasan:</label>
                                                                 <input value="{{$value->note}}" name="note" type="text" maxlength="255" class="form-control" style="padding:0.35px 0.35px 0.35px 5px !important" >
                                                             </div>                                                          
@@ -379,7 +388,7 @@
                             @endif
                             @if (auth()->user()->id==$showPlanning[0]->user_id )
                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i></a>&nbsp;&nbsp;&nbsp;&nbsp; -->
-                                @if ($value->approved_by_wr2==0 ||$value->approved_by_wr2==3 ||$value->approved_by_rektor==3)
+                                @if ($value->approved_by_wr2==0 ||$value->approved_by_wr2==3 ||$value->approved_by_rektor==3 || $value->status=="Revisi")
                                 <button type="button" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" data-toggle="modal" data-target="#editRincian{{$value->id}}"><i class="fa fa-pencil color-muted m-r-5" data-toggle="tooltip" data-placement="top" title="Edit Rincian"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="modal fade bd-example-modal-lg" id="editRincian{{$value->id}}" tabindex="-1" role="dialog" aria-labelledby="editRincianModalLabel{{$value->id}}" aria-hidden="true">
                                         <div class="modal-dialog modal-lg" role="document">
@@ -473,7 +482,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
-                                </form>                               
+                                    </form>                               
                                 @else
                                 @endif   
 

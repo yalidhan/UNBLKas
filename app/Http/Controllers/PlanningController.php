@@ -45,7 +45,8 @@ class PlanningController extends Controller
                     count(case when pd.approved_by_rektor=3 THEN 3 END) AS REKTOR_3,
                     count(case when pd.status='Paid' THEN 1 END) AS STATUS_1, 
                     count(case when pd.status='Unpaid' THEN 2 END) AS STATUS_2, 
-                    count(case when pd.status='Pending' THEN 0 END) AS STATUS_0,    
+                    count(case when pd.status='Pending' THEN 0 END) AS STATUS_0,   
+                    count(case when pd.status='Revisi' THEN 3 END) AS STATUS_3,  
                     sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui,
                     d.nama,
                     b.tahun, 
@@ -76,7 +77,8 @@ class PlanningController extends Controller
                     count(case when pd.approved_by_rektor=3 THEN 3 END) AS REKTOR_3,
                     count(case when pd.status='Paid' THEN 1 END) AS STATUS_1, 
                     count(case when pd.status='Unpaid' THEN 2 END) AS STATUS_2, 
-                    count(case when pd.status='Pending' THEN 0 END) AS STATUS_0,                    
+                    count(case when pd.status='Pending' THEN 0 END) AS STATUS_0,          
+                    count(case when pd.status='Revisi' THEN 3 END) AS STATUS_3,            
                     sum(pd.nominal) AS nominal, sum(pd.nominal_disetujui) AS nominal_disetujui, 
                     count(pd.account_id) AS accounts,
                     d.nama,
@@ -161,7 +163,7 @@ class PlanningController extends Controller
             WHERE p.id=$id"
         );
         $setujuBayar=DB::select("
-        SELECT sum(nominal_disetujui) AS total_setujubayar
+        SELECT sum(nominal_dibayar) AS total_setujubayar
         FROM planning_details
         WHERE planning_id=$id and status='Paid'");
         $departement=$showPlanning[0]->departement_id;
@@ -173,7 +175,7 @@ class PlanningController extends Controller
             "SELECT a.id as account_id,a.nama,
                 pd.jenis,pd.id,pd.group_rektorat,pd.pj,pd.nominal,pd.nominal_disetujui,pd.satuan_ukur_kinerja,pd.judul_file,
                 pd.target_kinerja,pd.capaian_kinerja,pd.waktu_pelaksanaan,pd.approved_by_wr2,pd.note_wr2,pd.note,pd.status,
-                pd.approved_by_rektor,pd.note_rektor,pd.capaian_target_waktu,pd.updated_at
+                pd.approved_by_rektor,pd.note_rektor,pd.capaian_target_waktu,pd.updated_at,pd.nominal_dibayar
             FROM planning_details pd
             LEFT JOIN accounts a
             ON pd.account_id = a.id
@@ -353,9 +355,14 @@ class PlanningController extends Controller
         }elseif (!empty($request->status)){
             $request->validate([
                 'status'=>'required',
+                'bayar'=>'required',
             ]);
+            $nominal_dibayar_int=$request->bayar;
+            $nominal_dibayar_int=str_replace('.','',$nominal_dibayar_int);
+
             $updateRincian = Planning_detail::find($id);
             $updateRincian->status = $request->status;
+            $updateRincian->nominal_dibayar = $nominal_dibayar_int;
             $updateRincian->note = $request->note;
             $updateRincian->update();           
         }else{

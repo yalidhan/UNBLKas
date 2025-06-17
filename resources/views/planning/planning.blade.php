@@ -60,7 +60,9 @@
 
                                     <h4 class="card-title">Perencanaan Seluruh Departemen</h4>
                                     <ul class="nav nav-pills mb-3">
-                                        <li class="nav-item"><a href="#navpills-1" class="nav-link active" data-toggle="tab" aria-expanded="false">Sedang Ditinjau</a>
+                                        <li class="nav-item"><a href="#navpills-1" class="nav-link active" data-toggle="tab" aria-expanded="false">Sedang Ditinjau Rektorat</a>
+                                        </li>
+                                        <li class="nav-item"><a href="#navpills-3" class="nav-link" data-toggle="tab" aria-expanded="false">Sedang Ditinjau Yayasan</a>
                                         </li>
                                         <li class="nav-item"><a href="#navpills-2" class="nav-link" data-toggle="tab" aria-expanded="false">Selesai</a>
                                         </li>
@@ -79,7 +81,7 @@
                                                             <th>Persetujuan WR 2</th>
                                                             <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
-                                                            <th>Status Pembayaran</th>
+                                                            <!-- <th>Status Pembayaran</th> -->
                                                             <th>Aksi</th>
                                                         </tr>
                                                     </thead>
@@ -108,7 +110,100 @@
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                 @php
                                                                     $setujuBayar=DB::select("
-                                                                        SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                        SELECT sum(nominal_dibayar) AS total_setujubayar
+                                                                        FROM planning_details
+                                                                        WHERE planning_id=$value->id and status='Paid'");
+                                                                @endphp
+                                                                <br>Dibayar Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}
+                                                            </td>
+                                                            <!-- <td>
+                                                                <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
+                                                                <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
+                                                                <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->STATUS_3}}</span>
+                                                            </td> -->
+                                                            <td><span style="display: flex;"> 
+                                                                    <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
+                                                                    @if (auth()->user()->id==$value->user_id)
+                                                                        <form
+                                                                            action="{{route('perencanaan.destroy',$value->id)}}"
+                                                                            method="POST"> 
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button  type="submit" style="background: none;color: inherit;border: none;padding: 0;font: inherit;cursor: pointer;outline: inherit;" id="submitForm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-close color-danger"></i></button>
+                                                                        </form>   
+                                                                    @else
+
+                                                                    @endif         
+                                                                </span>                         
+                                                            </td>
+                                                        </tr>
+                                                        @else
+
+                                                        @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                        <th><input type="text" placeholder="Search Untuk Minggu"></th>
+                                                            <th><input type="text" placeholder="Search Diajukan Tanggal"></th>
+                                                            <th><input type="text" placeholder="Search Departemen"></th>
+                                                            <th><input type="text" placeholder="Search Input Oleh"></th>
+                                                            <th><input type="text" placeholder="Search Tahun Anggaran"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan WR II"></th>
+                                                            <th><input type="text" placeholder="Search Persetujuan Rektor"></th>
+                                                            <th><input type="text" placeholder="Search Total"></th>
+                                                            <!-- <th><input type="text" placeholder="Status Pembayaran"></th> -->
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div id="navpills-3" class="tab-pane">
+                                            <div class="row align-items-center">
+                                                <table class="display table-responsive table table-striped table-bordered" id="plannings3">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Untuk Minggu</th>
+                                                            <th>Diajukan Tanggal</th>
+                                                            <th>Departemen</th>
+                                                            <th>Input Oleh</th>
+                                                            <th>Tahun Anggaran</th>
+                                                            <th>Persetujuan WR 2</th>
+                                                            <th>Persetujuan Rektor</th>
+                                                            <th>Total</th>
+                                                            <th>Status Pembayaran</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach ($plannings as $value)
+                                                            @if(($value->STATUS_0>0 OR $value->STATUS_3>0) AND $value->REKTOR_0==0 AND $value->REKTOR_3==0)
+                                                        <tr>
+                                                            <td>{{$value->for_bulan}}</td>
+                                                            <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
+                                                            <td>{{$value->nama}}</td>
+                                                            <td>{{$value->name}}</td>
+                                                            <td>{{$value->tahun}}</td>
+                                                            <td>
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->WR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->WR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                                <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
+                                                                <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
+                                                            </td>
+                                                            <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
+                                                                <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
+                                                                @php
+                                                                    $setujuBayar=DB::select("
+                                                                        SELECT sum(nominal_dibayar) AS total_setujubayar
                                                                         FROM planning_details
                                                                         WHERE planning_id=$value->id and status='Paid'");
                                                                 @endphp
@@ -118,6 +213,7 @@
                                                                 <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
                                                                 <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
                                                                 <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->STATUS_3}}</span>
                                                             </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
@@ -176,7 +272,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($plannings as $value) 
-                                                                @if($value->WR_0==0 AND $value->REKTOR_0==0 AND $value->REKTOR_3==0)
+                                                                @if($value->WR_0==0 AND $value->REKTOR_0==0 AND $value->REKTOR_3==0 AND $value->STATUS_3==0 AND $value->STATUS_0==0)
                                                         <tr>
                                                             <td>{{$value->for_bulan}}</td>
                                                             <td>{{\Carbon\Carbon::parse($value->created_at)->format('d-F-Y h:i:s')}}</td>
@@ -199,10 +295,11 @@
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                 @php
                                                                     $setujuBayar=DB::select("
-                                                                        SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                        SELECT sum(nominal_dibayar) AS total_setujubayar
                                                                         FROM planning_details
                                                                         WHERE planning_id=$value->id and status='Paid'");
                                                                 @endphp
+                                                                <!-- Atas Ini Perlu Diganti dengan kolom Dibayar yayasan -->
                                                                 <br>Dibayar Rp {{number_format($setujuBayar[0]->total_setujubayar,0,',','.')}}
                                                                 
                                                             </td>
@@ -210,6 +307,7 @@
                                                                 <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
                                                                 <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
                                                                 <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                                <span class="badge badge-warning">Revisi {{$value->STATUS_3}}</span>
                                                             </td>
                                                             <td><span style="display: flex;"> 
                                                                     <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
@@ -344,7 +442,7 @@
                                                         <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                             @php
                                                                 $setujuBayar=DB::select("
-                                                                    SELECT sum(nominal_disetujui) AS total_setujubayar
+                                                                    SELECT sum(nominal_dibayar) AS total_setujubayar
                                                                     FROM planning_details
                                                                     WHERE planning_id=$value->id and status='Paid'");
                                                             @endphp
@@ -354,6 +452,7 @@
                                                         <span class="badge badge-primary">Pending {{$value->STATUS_0}}</span>
                                                         <span class="badge badge-success">Paid {{$value->STATUS_1}}</span>
                                                         <span class="badge badge-danger">Unpaid {{$value->STATUS_2}}</span>
+                                                        <span class="badge badge-warning">Revisi {{$value->STATUS_3}}</span>
                                                     </td>
                                                     <td><span style="display: flex;"> 
                                                             <a href="{{route('perencanaan.show',$value->id)}}" data-toggle="tooltip" data-placement="top" title="Rincian"><i class="fa fa-eye color-danger"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;                                          
