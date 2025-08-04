@@ -101,7 +101,7 @@
                     @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
                         Bendahara Yayasan Borneo Lestari diminta membayar uang
                     @else 
-                       Kepala Bidang Keuangan Universitas Borneo Lestari diminta membayar uang
+                       {{(auth()->user()->jabatan)}} {{auth()->user()->departement->nama}} UNBL diminta membayar uang
                     @endif 
                 </td>
             </tr>
