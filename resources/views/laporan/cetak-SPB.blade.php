@@ -101,7 +101,7 @@
                     @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
                         Bendahara Yayasan Borneo Lestari diminta membayar uang
                     @else 
-                       Wakil Rektor II Universitas Borneo Lestari diminta membayar uang
+                       Kepala Bidang Keuangan Universitas Borneo Lestari diminta membayar uang
                     @endif 
                 </td>
             </tr>
@@ -207,7 +207,7 @@
             Bendahara Yayasan</br></br></br></br>
             Nafila, M.Si</br>
             @else 
-            Kepala Bidang Keuangan dan Aset</br></br></br></br>
+            Kepala Bidang Keuangan</br></br></br></br>
             Rizeka Aulia Hasanah, S.K.M</br>
             NIK. 100216081
             @endif 
