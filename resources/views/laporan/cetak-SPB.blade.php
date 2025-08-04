@@ -190,9 +190,9 @@
                         Rinto Widyanto, S.Ak., M.M</br>
                         NIK. 010313053
                     @else 
-                        Kepala Bidang Keuangan dan Aset</br></br></br></br>
-                        Rizeka Aulia Hasanah, S.K.M</br>
-                        NIK. 100216081
+                        Wakil Rektor II</br></br></br></br>
+                        Azmi Yunarti, S.Pi, M.Pd</br>
+                        NIK. 010408001
                     @endif 
                 </td>
             </tr>     
@@ -207,9 +207,9 @@
             Bendahara Yayasan</br></br></br></br>
             Nafila, M.Si</br>
             @else 
-            Wakil Rektor II</br></br></br></br>
-            Azmi Yunarti, S.Pi, M.Pd</br>
-            NIK. 010408001
+            Kepala Bidang Keuangan dan Aset</br></br></br></br>
+            Rizeka Aulia Hasanah, S.K.M</br>
+            NIK. 100216081
             @endif 
             
             </td>
