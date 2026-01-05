@@ -86,13 +86,13 @@
                         Ketua Yayasan</br></br></br></br>
                         Drs. Akhmad Yanie, M.Si., Apt
                     @else
-                        Rektor Universitas Borneo Lestari</br></br></br></br>
+                        Kepala Bidang Keuangan Universitas Borneo Lestari</br></br></br></br>
 
                         @php
-                            $rektor=\App\Models\User::where('jabatan','Rektor')->get();
+                            $kabidKeu=\App\Models\User::where('jabatan','Kabid Keuangan')->get();
                         @endphp
-                    {{$rektor[0]->name}}</br>
-                    NIK. 231224196
+                    {{$kabidKeu[0]->name}}</br>
+                    NIK. {{$kabidKeu[0]->nik}}
                     @endif
                 </td>
             </tr>
@@ -183,16 +183,16 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="4" style="text-align:center;"></br>
-                    Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br> 
+                <td colspan="4" style="text-align:center;"></br> 
                     @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
+                        Banjarbaru, {{\Carbon\Carbon::parse($showTransaction[0]->tanggal)->format('d F Y')}} </br>
                         Kepala Bagian Keuangan dan Pajak Yayasan</br></br></br></br>
                         Rinto Widyanto, S.Ak., M.M</br>
                         NIK. 010313053
-                    @else 
+                    {{--@else 
                         Wakil Rektor II</br></br></br></br>
                         Azmi Yunarti, S.Pi, M.Pd</br>
-                        NIK. 010408001
+                        NIK. 010408001 --}}
                     @endif 
                 </td>
             </tr>     
@@ -207,26 +207,30 @@
             Bendahara Yayasan</br></br></br></br>
             Nafila, M.Si</br>
             @else 
-            Kepala Bidang Keuangan</br></br></br></br>
-            Rizeka Aulia Hasanah, S.K.M</br>
-            NIK. 100216081
+            Bendahara</br></br></br></br>
+            {{$showTransaction[0]->name}}</br>
+            NIK. {{$showTransaction[0]->nik}}
             @endif 
             
             </td>
             <td style="width: 10%; text-align: center;">
             STATUS PENERIMAAN<br>
             Telah Diterima Oleh<br><br><br><br>
-            (................)
+            ..................
             </td>
             <td style="width: 45%; text-align: center;border-right: 3px solid;">
+            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
             STATUS AKUNTANSI<br>
             Telah Dibukukan Oleh<br>
             Bagian Akuntansi</br>(Kas Keluar)<br><br><br><br>
-            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
             Nurulita Rahmadayanti, S.Ak</br>
             NIK. 
             @else 
-            {{(auth()->user()->name)}}</br>
+            STATUS AKUNTANSI<br>
+            Telah Dibukukan Oleh<br>
+            Bagian SPI<br><br><br><br>
+            .....................</br>
+            NIK. ......... 
             &nbsp;
             @endif 
             </td>

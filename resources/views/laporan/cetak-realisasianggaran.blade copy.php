@@ -203,78 +203,46 @@
                     }
                 @endphp
                 
-                <tr 
-                <?php
-                    $debit  = !empty($transaksi[0]->total) ? (int)$transaksi[0]->total : 0;
-                    $kredit = !empty($transaksiPengembalian[0]->total) ? (int)$transaksiPengembalian[0]->total : 0;
-
-                    // realisasi
-                    $transaksiValue = $debit - $kredit;
-
-                    // background warning if melebihi anggaran
-                    if($transaksiValue > (int)$da_value->nominal){
-                        echo "style='background-color:#ff0000;color:#ffffff;'";
-                    }
-                ?>
-                >
-                    <td></td>
-
-                    <td>
-                        <?php 
-                            if(!empty($departement->id)){
-                                echo"<a href='logtransaksi?thn=$tahun&sd=$sd2&akn=$da_value->account_id&dp=$departement->id' style=\"color:#000;text-decoration:none;\">$da_value->nama</a>";
-                            }elseif($departement['id']=='1'){
-                                echo"<a href='logtransaksi?thn=$tahun&sd=$sd2&akn=$da_value->account_id&dp=1' style=\"color:#000;text-decoration:none;\">$da_value->nama</a>";
-                            }else{
-                                echo $da_value->nama;
-                            }
-                        ?>
-                    </td>
-
-                    {{-- Budget --}}
-                    <td style="white-space: nowrap;">
-                        Rp {{ number_format((int)$da_value->nominal,0,',','.') }}
-                    </td>
-
-                    {{-- Realisasi --}}
-                    <td style="white-space: nowrap; {{ $transaksiValue < 0 ? 'background:rgb(255, 172, 9);color:#fff;' : '' }}">
-
-                        Rp {{ number_format($transaksiValue,0,',','.') }}
-                        @php
-                            $total_transaksi = (int)$total_transaksi + (int)$transaksiValue;
-                        @endphp
-                    </td>
-
-                    {{-- Persentase Realisasi --}}
-                    <td align="center" style="white-space: nowrap;">
-                        @php 
-                            $persen = 0;
-                            if((int)$da_value->nominal > 0){
-                                $persen = ($transaksiValue / (int)$da_value->nominal) * 100;
-                            }
-                        @endphp
-                        {{ number_format($persen, 2, '.', ',') }} %
-                    </td>
-
-                    {{-- Sisa Anggaran --}}
-                    <td style="white-space: nowrap;">
-                        Rp {{ number_format((int)$da_value->nominal - $transaksiValue,0,',','.') }}
-                    </td>
-
-                    {{-- Persentase Sisa --}}
-                    @php
-                        $persentase = 0;
-                        if((int)$da_value->nominal > 0){
-                            $persentase = 100 - $persen;
+                <tr <?php if(empty((int)$transaksi[0]->total)){echo" ";} elseif ((int)$transaksi[0]->total-(int)$transaksiPengembalian[0]->total > (int)$da_value->nominal){echo "style='background-color:#ff0000;color:#ffffff;'";}?>>
+                        <td></td>
+                        <td>
+                        <?php if(!empty($departement->id)){
+                            echo"<a href='logtransaksi?thn=$tahun"."&sd=$sd2"."&akn=$da_value->account_id"."&dp=$departement->id' style='color:#000;text-decoration:none;'>$da_value->nama</a>";
+                        }else if($departement['id']=='1'){
+                            echo"<a href='logtransaksi?thn=$tahun"."&sd=$sd2"."&akn=$da_value->account_id"."&dp=1' style='color:#000;text-decoration:none;'>$da_value->nama</a>";
+                        }else{
+                            echo $da_value->nama;
                         }
-                    @endphp
-                    <td style="white-space: nowrap;">
-                        {{ number_format($persentase, 2, '.', ',') }} %
-                    </td>
-
-                </tr>
+                    ?>
+                        </td>
+                        <td style="white-space: nowrap;">Rp {{number_format((int)$da_value->nominal,0,',','.')}}</td>
+                        <td style="white-space: nowrap;">Rp <?php if(empty($transaksi[0]->total)){(int)$transaksi=0;} else {(int)$transaksi=(int)$transaksi[0]->total-(int)$transaksiPengembalian[0]->total;}?>{{number_format((int)$transaksi,0,',','.'),(int)$total_transaksi=(int)$total_transaksi+(int)$transaksi}}</td>
+                        <td align="center"style="white-space: nowrap;"><?php if((int)$da_value->nominal!=0){echo number_format(((int)$transaksi/(int)$da_value->nominal)*100, 2, '.', ',');}else{echo"0";} ?> %</td>
+                        <td style="white-space: nowrap;">Rp {{number_format(((int)$da_value->nominal-(int)$transaksi),0,',','.')}}</td>
+                        @php
+                            $persentase=0;
+                            if ((int)$da_value->nominal!=0){
+                                $persentase=100-(((int)$transaksi/(int)$da_value->nominal)*100);
+                            }
+                        @endphp
+                        <td style="white-space: nowrap;">{{ number_format($persentase, 2, '.', ',') }} %</td>
+                    </tr>
 
                 @endforeach
+                    <!-- <tr>
+                        <td></td>
+                        <td style="background-color:#ff0000;color:#ffffff;">Biaya Perjalanan Dinas</td>
+                        <td style="background-color:#ff0000;color:#ffffff;">Rp 100.000.000</td>
+                        <td style="background-color:#ff0000;color:#ffffff;">Rp 110.000.000</td>
+                        <td align="center" style="background-color:#ff0000;color:#ffffff;">110%</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Penyediaan Barang Cetak dan Pengadaan</td>
+                        <td>Rp 300.000.000</td>
+                        <td>Rp 150.000.000</td>
+                        <td align="center">50%</td>
+                    </tr> -->
                 <tr style="color:#000080;">
                     <td colspan="2" align="left"><b>Total {{$kelompokvalue->kelompok,(int)$total_anggaran=(int)$total_anggaran+(int)$kelompokvalue->total,(int)$gt_anggaran=(int)$gt_anggaran+(int)$total_anggaran,(int)$gt_transaksi=(int)$gt_transaksi+(int)$total_transaksi}}</b></td>
                     <td style="border-top:1pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$kelompokvalue->total,0,',','.')}}</b></td>
@@ -291,136 +259,53 @@
                 </tr>
                 @endforeach
                 <tr style="color:#ff6347;">
-                    <td colspan="2" style="font-size:18px;" align="left"><b>TOTAL RKA</b></td>
-                    @php
-                        $k = collect($kelompok);
-
-                        $gt_anggaran_rka = $k->where('kelompok','!=','Non RKA')->sum('total');
-                        $gt_anggaran_non = $k->where('kelompok','Non RKA')->sum('total');
-
-                        // =============================
-                        // STRICT TRANSAKSI (Only if in Budget)
-                        // =============================
-                        $deptFilter = "";
-
-                        if (!empty($departement->id)) {
-                            $deptFilter = " AND b.departement_id = {$departement->id}";
-                        } elseif ($departement['id'] == '0') {
-                            $deptFilter = " AND b.departement_id NOT IN (1,18,19,20,21)";
-                        } elseif ($departement['id'] == '1') {
-                            $deptFilter = " AND b.departement_id IN (1,19,20,21)";
-                        }
-
-                        $transaksiKelompok = collect(DB::select("
-                            SELECT 
-                                a.kelompok,
-
-                                -- REALISASI = Debit - Kredit
-                                SUM(
-                                    CASE 
-                                        WHEN d.dk = 2 THEN d.nominal 
-                                        WHEN d.dk = 1 THEN -d.nominal
-                                        ELSE 0 
-                                    END
-                                ) AS total
-
-                            FROM transactions t
-                            JOIN transaction_details d 
-                                ON t.id = d.transaction_id
-                            JOIN accounts a 
-                                ON d.account_id = a.id
-                            JOIN budgets b 
-                                ON b.departement_id = t.departement_id
-                                AND b.tahun = $tahun
-
-                            -- ensure ONLY accounts that exist in budget_details are counted
-                            WHERE EXISTS (
-                                SELECT 1 
-                                FROM budget_details bd 
-                                WHERE bd.account_id = a.id 
-                                AND bd.budget_id = b.id
-                            )
-                            $deptFilter
-                            AND t.tanggal BETWEEN '$tahun-01-01' AND '$sd2'
-
-                            GROUP BY a.kelompok
-                        "));
-                        $debug = DB::select("
-                            SELECT 
-                                t.id AS transaksi_id,
-                                t.tanggal,
-                                a.kelompok,
-                                a.nama AS akun,
-                                d.dk,
-                                d.nominal
-                            FROM transactions t
-                            JOIN transaction_details d 
-                                ON t.id = d.transaction_id
-                            JOIN accounts a 
-                                ON d.account_id = a.id
-                            JOIN budgets b 
-                                ON b.departement_id = t.departement_id 
-                                AND b.tahun = $tahun
-                            WHERE a.kelompok = 'Non RKA'
-                            AND EXISTS (
-                                SELECT 1 FROM budget_details bd 
-                                WHERE bd.account_id = a.id 
-                                AND bd.budget_id = b.id
-                            )
-                            AND b.departement_id=1
-                            AND t.tanggal BETWEEN '$tahun-01-01' AND '$sd2'
-                            ORDER BY t.tanggal ASC;
-                        ");
-
-                        $gt_transaksi_rka = $transaksiKelompok->where('kelompok','!=','Non RKA')->sum('total');
-                        $gt_transaksi_non = $transaksiKelompok->where('kelompok','Non RKA')->sum('total');
-                    @endphp
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_anggaran_rka,0,',','.')}}</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_transaksi_rka,0,',','.')}}</b></td>
+                    <td colspan="2" style="font-size:18px;" align="left"><b>Total RKA</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_anggaran,0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_transaksi,0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;" align="center"><b>
-                        @if((int)$gt_anggaran_rka==0)
+                        @if((int)$gt_anggaran==0)
                             0
                         @else
-                        {{number_format(((int)$gt_transaksi_rka/(int)$gt_anggaran_rka)*100, 2, '.', ',')}}
+                        {{number_format(((int)$gt_transaksi/(int)$gt_anggaran)*100, 2, '.', ',')}}
                         
                         @endif
                         %</b>
                     </td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format(((int)$gt_anggaran_rka-(int)$gt_transaksi_rka),0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format(((int)$gt_anggaran-(int)$gt_transaksi),0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>
-                        @if((int)$gt_anggaran_rka==0)
+                        @if((int)$gt_anggaran==0)
                                 0
                         @else   
-                            {{100-number_format(((int)$gt_transaksi_rka/(int)$gt_anggaran_rka)*100, 2, '.', ',')}}                         
+                            {{100-number_format(((int)$gt_transaksi/(int)$gt_anggaran)*100, 2, '.', ',')}}                         
                         @endif
                         %</b>
                     </td>
                 </tr>
                 <tr style="color:#ff6347;">
-                    <td colspan="2" style="font-size:18px;" align="left"><b>TOTAL NON RKA</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_anggaran_non,0,',','.')}}</b></td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_transaksi_non,0,',','.')}}</b></td>
+                    <td colspan="2" style="font-size:18px;" align="left"><b>Total NON RKA</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_anggaran,0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_transaksi,0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;" align="center"><b>
-                        @if((int)$gt_anggaran_non==0)
+                        @if((int)$gt_anggaran==0)
                             0
                         @else
-                        {{number_format(((int)$gt_transaksi_non/(int)$gt_anggaran_non)*100, 2, '.', ',')}}
+                        {{number_format(((int)$gt_transaksi/(int)$gt_anggaran)*100, 2, '.', ',')}}
                         
                         @endif
                         %</b>
                     </td>
-                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format(((int)$gt_anggaran_non-(int)$gt_transaksi_non),0,',','.')}}</b></td>
+                    <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format(((int)$gt_anggaran-(int)$gt_transaksi),0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>
-                        @if((int)$gt_anggaran_non==0)
+                        @if((int)$gt_anggaran==0)
                                 0
                         @else   
-                            {{100-number_format(((int)$gt_transaksi_non/(int)$gt_anggaran_non)*100, 2, '.', ',')}}                         
+                            {{100-number_format(((int)$gt_transaksi/(int)$gt_anggaran)*100, 2, '.', ',')}}                         
                         @endif
                         %</b>
                     </td>
                 </tr>
                 <tr style="color:rgb(255, 172, 9);">
-                    <td colspan="2" style="font-size:24px;" align="left"><b>TOTAL KESELURUHAN</b></td>
+                    <td colspan="2" style="font-size:24px;" align="left"><b>Total Keseluruhan</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_anggaran,0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;"><b>Rp {{number_format((int)$gt_transaksi,0,',','.')}}</b></td>
                     <td style="border-top:2pt solid black;border-bottom:3pt solid black;white-space: nowrap;" align="center"><b>

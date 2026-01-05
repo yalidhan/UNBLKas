@@ -312,7 +312,7 @@ class TransactionController extends Controller
                     a.nama as akun,
                     dp.nama, 
                     d.nominal,
-                    u.name
+                    u.name,u.nik
                 FROM transactions t
                 LEFT JOIN transaction_details d
                 ON t.id = d.transaction_id

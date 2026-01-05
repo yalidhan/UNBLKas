@@ -145,11 +145,37 @@ class ReportController extends Controller
                                 ON d.account_id = a.id 
             LEFT JOIN departements dp
                                 ON t.departement_id=dp.id
-            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2            
+            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id            
         ");
+        
+        $totalLogTransaksiPengeluaran=DB::select(
+            "SELECT SUM(d.nominal) as total_pengeluaran
+            FROM transactions t 
+            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+            LEFT JOIN departements dp
+                                ON t.departement_id=dp.id
+            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2");
+        
+        $totalLogTransaksPengembalian=DB::select(
+            "SELECT SUM(d.nominal) as total_pengembalian
+            FROM transactions t 
+            LEFT JOIN transaction_details d 
+                                ON t.id = d.transaction_id 
+            LEFT JOIN accounts a 
+                                ON d.account_id = a.id 
+            LEFT JOIN departements dp
+                                ON t.departement_id=dp.id
+            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=1");
+        // WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2   
         // dd($logtransaksi);
+        // dd($totalLogTransaksiPengeluaran[0]);
         return view('laporan/logtransaksi')
                     ->with('logtransaksi',$logtransaksi)
+                    ->with('totalPengembalian',$totalLogTransaksPengembalian)
+                    ->with('totalPengeluaran',$totalLogTransaksiPengeluaran)
                     ->with('sd',$sd)
                     ->with('departement',$departement);
     }

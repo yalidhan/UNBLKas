@@ -23,16 +23,31 @@ class BudgetController extends Controller
     public function index()
     {
         //
-        if (auth()->user()->departement_id==1 ){
-            $budgets=Budget::all();
-        }elseif(auth()->user()->departement_id==6){
-            $budgets=Budget::where('departement_id','!=','18')->where('departement_id','!=','1')->get();
-        }
-        else{
-            $budgets=Budget::where('departement_id','=',auth()->user()->departement_id)->get();
-        }
+        // if (auth()->user()->departement_id==1 ){
+        //     $budgets=Budget::all();
+        // }elseif(auth()->user()->departement_id==6){
+        //     $budgets=Budget::where('departement_id','!=','18')->where('departement_id','!=','1')->get();
+        // }
+        // else{
+        //     $budgets=Budget::where('departement_id','=',auth()->user()->departement_id)->get();
+        // }
         
-        $departements=Departement::where('status','=','1')->get();
+        // $departements=Departement::where('status','=','1')->get();
+        if (auth()->user()->departement_id == 1) {
+        $budgets = Budget::orderBy('tahun', 'desc')->get();
+
+        } elseif (auth()->user()->departement_id == 6) {
+            $budgets = Budget::where('departement_id', '!=', '18')
+                ->where('departement_id', '!=', '1')
+                ->orderBy('tahun', 'desc')
+                ->get();
+
+        } else {
+            $budgets = Budget::where('departement_id', auth()->user()->departement_id)
+                ->orderBy('tahun', 'desc')
+                ->get();
+        }
+        $departements = Departement::where('status', '1')->get();
         return view('budget/budget',compact('budgets','departements'));
     }
 

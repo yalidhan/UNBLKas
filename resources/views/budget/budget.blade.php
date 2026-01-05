@@ -73,7 +73,7 @@
                                 @else
                                 @endif
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration">
+                                    <table id="anggaran" class="table table-striped table-bordered zero-configuration">
                                         <thead>
                                             <tr>
                                                 <th>Tahun Anggaran</th>
@@ -173,5 +173,10 @@ function validate(evt) {
     $('#departement').select2({
     dropdownParent: $('#addAnggaran')
     });
+</script>
+<script>
+    $('#anggaran').DataTable({
+    order: [[0, 'desc']]
+});
 </script>
 @endpush
