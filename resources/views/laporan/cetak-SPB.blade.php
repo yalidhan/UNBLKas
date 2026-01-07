@@ -201,12 +201,14 @@
         <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="width: 45%; text-align: center;border-left: 3px solid;">
+            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
             STATUS PEMBAYARAN<br>
             Telah Dibayar Oleh<br>
-            @if (in_array($showTransaction[0]->departement_id,[1,19,20,21]))
             Bendahara Yayasan</br></br></br></br>
             Nafila, M.Si</br>
             @else 
+            STATUS PEMBAYARAN<br>
+            Telah Dibayar dan Dibukukan<br>
             Bendahara</br></br></br></br>
             {{$showTransaction[0]->name}}</br>
             NIK. {{$showTransaction[0]->nik}}
@@ -227,8 +229,8 @@
             NIK. 
             @else 
             STATUS AKUNTANSI<br>
-            Telah Dibukukan Oleh<br>
-            Bagian SPI<br><br><br><br>
+            Diinput Sistem Akuntansi<br>
+            Yayasan<br><br><br><br>
             .....................</br>
             NIK. ......... 
             &nbsp;
