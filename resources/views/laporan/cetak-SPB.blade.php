@@ -211,7 +211,7 @@
             Telah Dibayar dan Dibukukan<br>
             Bendahara</br></br></br></br>
             {{auth()->user()->name}}</br>
-            NIK. {{$showTransaction[0]->nik}}
+            NIK. {{auth()->user()->nik}}
             @endif 
             
             </td>
