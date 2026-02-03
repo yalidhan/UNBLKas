@@ -210,7 +210,7 @@
             STATUS PEMBAYARAN<br>
             Telah Dibayar dan Dibukukan<br>
             Bendahara</br></br></br></br>
-            {{$showTransaction[0]->name}}</br>
+            {{auth()->user()->name}}</br>
             NIK. {{$showTransaction[0]->nik}}
             @endif 
             

@@ -21,7 +21,9 @@
     body{
             color:#000000;
         }
-    @stack('rincian_planning-style')    
+    @stack('rincian_planning-style')
+    @stack('audit-style')  
+    @stack ('transaksi-style')
     </style>
 </head>
 
@@ -152,6 +154,9 @@
                         <ul aria-expanded="false">
                             <li><a href="/transaksi">Buku Kas</a></li>
                             <li><a href="{{route('perencanaan.index')}}">Perencanaan</a></li>
+                            @if (auth()->user()->jabatan=="Super Admin" || auth()->user()->jabatan=="SPI")
+                            <li><a href="{{route('transaction_audits.index')}}">Audit Transaksi</a></li>
+                            @endif
                         </ul>
                     </li>
                     <li class="nav-label">Laporan</li>
@@ -233,7 +238,7 @@
     @stack('lpjPage-script')
     @stack('budget-script')
     @stack('detail_budget-script')
-
+    @stack('audit-script')
     @stack('child-row-datatables')
 
 </body>

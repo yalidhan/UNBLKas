@@ -1,6 +1,84 @@
 @extends('master')
 @section('content')
 @php use Carbon\Carbon; @endphp
+@push('transaksi-style')
+    /* Original header stays in layout */
+    .ledger-table thead {
+        background: #f8f9fa;
+    }
+
+    /* Sticky cloned header */
+    .sticky-header {
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        background: #f8f9fa;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        display: none;
+    }
+
+    .sticky-header th {
+        box-sizing: border-box;
+    }
+    .ledger-table thead th {
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .ledger-table thead.is-sticky {
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .ledger-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .ledger-table th,
+    .ledger-table td {
+        padding: 0.45rem 0.65rem;
+        font-size: 0.95rem;
+        vertical-align: middle;
+    }
+    /* Saldo column */
+    .ledger-table th:nth-child(7),
+    .ledger-table td:nth-child(7) {
+        font-weight: 700;
+        background: linear-gradient(
+            to left,
+            rgba(45,206,137,0.10),
+            rgba(45,206,137,0.03)
+        );
+    }
+    /* Numbers right-aligned */
+    .ledger-table th:nth-child(5),
+    .ledger-table th:nth-child(6),
+    .ledger-table th:nth-child(7),
+    .ledger-table td:nth-child(5),
+    .ledger-table td:nth-child(6),
+    .ledger-table td:nth-child(7) {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    /* Description left aligned */
+    .ledger-table th:nth-child(4),
+    .ledger-table td:nth-child(4) {
+        text-align: left;
+    }
+    .ledger-table tbody tr:hover {
+    background-color: #f4f6f8;
+    }
+    @media print {
+    .ledger-wrapper {
+        overflow: visible !important;
+    }
+    }
+@endpush
         <!--**********************************
             Content body start
         ***********************************-->
@@ -237,8 +315,8 @@
                                 @endif
                             </br>
                                 <center><h4>Kas {{auth()->user()->departement->nama}} Periode {{\Carbon\Carbon::parse('01-'.$month.'-'.$year.'')->format('F Y')}} </h4></center>
-                                <div class="table-responsive"> 
-                                    <table class="table table-bordered table-striped verticle-middle" style="color: #222222;font-size: 1rem;">
+                                <div class="table-responsive ledger-wrapper"> 
+                                    <table class="table table-bordered table-striped verticle-middle ledger-table" style="color: #222222;font-size: 1rem;">
                                         <thead>
                                             <tr>
                                                 <th scope="col">No</th>
@@ -370,5 +448,42 @@
         dropdownParent: $('#transfer')
     });
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.querySelector('.ledger-table');
+        const originalThead = table.querySelector('thead');
+
+        const stickyThead = originalThead.cloneNode(true);
+        stickyThead.classList.add('sticky-header');
+        document.body.appendChild(stickyThead);
+
+        function syncWidths() {
+            const originalThs = originalThead.querySelectorAll('th');
+            const stickyThs = stickyThead.querySelectorAll('th');
+
+            stickyThead.style.width = table.offsetWidth + 'px';
+
+            originalThs.forEach((th, i) => {
+                const width = th.getBoundingClientRect().width;
+                stickyThs[i].style.width = width + 'px';
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const rect = table.getBoundingClientRect();
+            const theadHeight = originalThead.offsetHeight;
+
+            if (rect.top <= 0 && rect.bottom > theadHeight) {
+                stickyThead.style.display = 'table';
+                stickyThead.style.left = rect.left + 'px';
+                syncWidths();
+            } else {
+                stickyThead.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('resize', syncWidths);
+    });
+</script>
 @endpush
 

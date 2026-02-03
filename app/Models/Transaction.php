@@ -36,4 +36,9 @@ class Transaction extends Model
     {
         return $this->hasMany(Transaction_detail::class);
     }    
+
+    public function audit()
+    {
+        return $this->hasOne(TransactionAudit::class);
+    }
 }

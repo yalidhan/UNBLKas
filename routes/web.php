@@ -11,6 +11,8 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\PlanningController;
+use App\Http\Controllers\TransactionAuditController;
+use App\Http\Controllers\AuditNoteController;
 
  
 
@@ -76,3 +78,5 @@ Route::get('posisikas', [ReportController::class,'posisikasPage'])->name('posisi
 Route::get('posisikas/cetak', [ReportController::class,'posisikasCetak'])->name('posisikasCetak');
 
 Route::get('report-perencanaan/cetak', [ReportController::class,'perencanaanCetak'])->name('perencanaanCetak');
+
+Route::resource('transaction_audits', TransactionAuditController::class);

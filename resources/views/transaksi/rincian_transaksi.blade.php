@@ -97,7 +97,7 @@
                                 </div>   
                                 @else
                                 @endif                         
-                            @if (auth()->user()->id==$showTransaction[0]->user_id)
+                            @if (auth()->user()->jabatan=="Bendahara Operasional")
                             <button type="button" class="btn mb-1 btn-rounded btn-primary" data-toggle="modal" data-target="#cetakSPB"><span class="btn-icon-left" style="background:rgb(82, 83, 85);"><i class="fa fa-print"></i></span>Cetak SPB</button>
                                 <div class="modal fade" id="cetakSPB" tabindex="-2" role="dialog" aria-labelledby="cetakSPBModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
