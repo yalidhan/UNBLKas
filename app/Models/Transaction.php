@@ -20,6 +20,9 @@ class Transaction extends Model
         'ctt_bendahara',
         'departement_id',
         'user_id',    
+        'status_transaksi',
+        'bukti_file_name',
+        'bukti_file_path',
     ];
 
     public function departement()

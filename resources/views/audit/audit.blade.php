@@ -138,6 +138,7 @@
             font-size: 0.75rem;
         }
     }
+
 @endpush
         <!--**********************************
             Content body start
@@ -158,7 +159,7 @@
                         <div class="card">
                             <div class="card-body">
                             <center>
-                                <h3 class="card-title">Audit Transaksi</h3>   
+                                <h1 class="card-title">Audit Transaksi</h1>   
                             </center>
                             <!-- Card Filter -->
                             <div class="col-md-12 mb-3">
@@ -181,7 +182,7 @@
                                                 <!-- Departemen -->
                                                 <div class="col-md-4">
                                                     <label class="form-label fw-semibold small" style="color:#fff;">Departemen</label>
-                                                    <select id="filter_departemen" name="departement" class="form-select form-select-sm">
+                                                    <select id="filter_departemen" name="departement" class="form-control form-control-sm">
                                                         <option value="">Pilih Departement</option>
                                                         @foreach($departement as $dept)
                                                             <option value="{{ $dept->id }}">{{ $dept->nama }}</option>
@@ -316,9 +317,16 @@
                                                             <div>Tanggal : <strong id="modalTanggal"></strong></div>
                                                             <div>Jumlah : <strong id="modalJumlah"></strong></div>
                                                             <i class="fa fa-paperclip mr-1"></i> Lampiran
-                                                                <button class="btn btn-outline-success btn-sm btn-block mt-2" style="color:#fff;">
-                                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lampiran (Pembayaran Gaji Pokok.pdf)
-                                                                </button>
+
+                                                            <button type="button"
+                                                                    class="btn btn-outline-success btn-sm btn-block mt-2 btn-preview-pdf"
+                                                                    data-toggle="modal"
+                                                                    data-target="#pdfPreviewModal"
+                                                                    data-url="{{ route('transactions.bukti.preview', $transaction->id) }}"
+                                                                    style="color:#fff;">
+                                                                <i class="fa fa-file-pdf-o"></i>
+                                                                Lampiran ({{ $transaction->bukti_file_name }})
+                                                            </button>
                                                             <input type="hidden" id="modalTransactionId">
                                                         </div>
                                                         <div class="col-md-6 col-sm-12">
@@ -424,6 +432,55 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="modal fade" id="pdfPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+
+                                            <!-- Header -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    <i class="fa fa-file-pdf-o text-danger"></i> Preview Lampiran
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Body -->
+                                            <div class="modal-body p-0 position-relative" style="height:80vh;">
+
+                                                <!-- Loading -->
+                                                <div id="pdfLoading"
+                                                    class="d-flex justify-content-center align-items-center"
+                                                    style="height:100%;">
+                                                    <div class="text-center">
+                                                        <div class="spinner-border text-success mb-2"></div>
+                                                        <div>Memuat dokumen...</div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Iframe -->
+                                                <iframe id="pdfIframe"
+                                                        src=""
+                                                        frameborder="0"
+                                                        style="width:100%; height:100%; display:none;">
+                                                </iframe>
+                                            </div>
+
+                                            <!-- Footer -->
+                                            <div class="modal-footer">
+                                                <a href="#" target="_blank" id="openNewTab" class="btn btn-secondary btn-sm">
+                                                    <i class="fa fa-external-link"></i> Buka Tab Baru
+                                                </a>
+                                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">
+                                                    Tutup
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -485,8 +542,8 @@ $(document).ready(function () {
 <script>
     $(document).ready(function () {
         $('#filter_departemen').select2({
-            theme: 'bootstrap-5',
-            placeholder: 'Pilih Departemen',
+            theme: 'bootstrap4',
+            placeholder: 'Pilih Departemen 🔽',
             allowClear: true,
             width: '100%'
         });
@@ -541,4 +598,25 @@ $(document).ready(function () {
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
   type="module"
 ></script>
+<script>
+    $(document).on('click', '.btn-preview-pdf', function () {
+        let pdfUrl = $(this).data('url');
+
+        $('#pdfLoading').show();
+        $('#pdfIframe').hide().attr('src', pdfUrl);
+        $('#openNewTab').attr('href', pdfUrl);
+    });
+
+    // Saat iframe selesai load
+    $('#pdfIframe').on('load', function () {
+        $('#pdfLoading').hide();
+        $(this).show();
+    });
+
+    // Reset saat modal ditutup (IMPORTANT)
+    $('#pdfPreviewModal').on('hidden.bs.modal', function () {
+        $('#pdfIframe').attr('src', '');
+        $('#pdfLoading').show();
+    });
+</script>
 @endpush
