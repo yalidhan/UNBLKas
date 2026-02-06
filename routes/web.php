@@ -64,6 +64,7 @@ Route::put('transaksi/transfer{id}',[TransactionController::class,'updateTransfe
 Route::post('transaksi/rincian',[TransactionController::class,'storeRincian'])->name('storeRincian');
 Route::delete('transaksi/rincian{id}',[TransactionController::class,'destroyRincian'])->name('destroyRincian');
 Route::put('transaksi/rincian{id}',[TransactionController::class,'updateRincian'])->name('updateRincian');
+Route::get('/transactions/{transaction}/bukti/preview',[TransactionController::class, 'previewBukti'])->name('transactions.bukti.preview');
 Route::resource('transaksi',TransactionController::class);
 
 
@@ -73,6 +74,9 @@ Route::get('pertanggungjawaban/cetak', [ReportController::class,'lpjCetak'])->na
 Route::get('realisasianggaran', [ReportController::class,'realisasiPage'])->name('realisasiPage');
 Route::get('realisasianggaran/cetak', [ReportController::class,'realisasiCetak'])->name('realisasiCetak');
 Route::get('realisasianggaran/logtransaksi', [ReportController::class,'logTransaksi'])->name('logTransaksi');
+Route::get('/laporan/realisasi/csv', [ReportController::class, 'realisasiCsv'])
+    ->name('realisasi.csv');
+
 
 Route::get('posisikas', [ReportController::class,'posisikasPage'])->name('posisikasPage');
 Route::get('posisikas/cetak', [ReportController::class,'posisikasCetak'])->name('posisikasCetak');

@@ -10,6 +10,7 @@ use Redirect;
 use Carbon\Carbon;
 use App\Models\Departement;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -19,6 +20,25 @@ class TransactionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+    
+    public function previewBukti(Transaction $transaction)
+    {
+        if (!$transaction->bukti_file_path ||
+            !Storage::disk('public')->exists($transaction->bukti_file_path)) {
+            abort(404);
+        }
+
+        return response()->file(
+            storage_path('app/public/' . $transaction->bukti_file_path),
+            [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$transaction->bukti_file_name.'"',
+                'Cache-Control'       => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma'              => 'no-cache',
+                'Expires'             => '0',
+            ]
+        );
     }
     public function index(Request $request)
     {

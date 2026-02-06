@@ -258,6 +258,8 @@
                                                         data-target="#staticBackdrop"
 
                                                         data-id="{{ $trans->id }}"
+                                                        data-bukti_file_name="{{ $trans->bukti_file_name }}"
+                                                        data-bukti_file_path="{{ $trans->bukti_file_path }}"
                                                         data-no_spb="{{ $trans->no_spb }}"
                                                         data-tanggal="{{ \Carbon\Carbon::parse($trans->tanggal)->format('d/m/Y') }}"
                                                         data-jumlah="Rp {{ number_format($trans->transaction_details_sum_nominal,0,',','.') }}"
@@ -318,14 +320,20 @@
                                                             <div>Jumlah : <strong id="modalJumlah"></strong></div>
                                                             <i class="fa fa-paperclip mr-1"></i> Lampiran
 
-                                                            <button type="button"
+                                                            <!-- <button type="button"
                                                                     class="btn btn-outline-success btn-sm btn-block mt-2 btn-preview-pdf"
                                                                     data-toggle="modal"
                                                                     data-target="#pdfPreviewModal"
-                                                                    data-url="{{ route('transactions.bukti.preview', $transaction->id) }}"
                                                                     style="color:#fff;">
                                                                 <i class="fa fa-file-pdf-o"></i>
-                                                                Lampiran ({{ $transaction->bukti_file_name }})
+                                                                Lampiran
+                                                            </button> -->
+                                                            <button type="button"
+                                                                    id="btnPreviewPdf"
+                                                                    class="btn btn-outline-secondary btn-sm btn-block mt-2"
+                                                                    disabled>
+                                                                <i class="fa fa-ban"></i>
+                                                                Tidak Ada File Bukti Terupload
                                                             </button>
                                                             <input type="hidden" id="modalTransactionId">
                                                         </div>
@@ -434,7 +442,7 @@
                                 </div>
 
                                 <div class="modal fade" id="pdfPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                         <div class="modal-content">
 
                                             <!-- Header -->
@@ -451,14 +459,14 @@
                                             <div class="modal-body p-0 position-relative" style="height:80vh;">
 
                                                 <!-- Loading -->
-                                                <div id="pdfLoading"
+                                                <!-- <div id="pdfLoading"
                                                     class="d-flex justify-content-center align-items-center"
                                                     style="height:100%;">
                                                     <div class="text-center">
                                                         <div class="spinner-border text-success mb-2"></div>
                                                         <div>Memuat dokumen...</div>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 <!-- Iframe -->
                                                 <iframe id="pdfIframe"
@@ -578,6 +586,8 @@ $(document).ready(function () {
 
         // get data from button
         const id      = button.data('id');
+        const fileName  = button.data('bukti_file_name');
+        const filePath  = button.data('bukti_file_path');
         const noSpb   = button.data('no_spb');
         const tanggal = button.data('tanggal');
         const jumlah  = button.data('jumlah');
@@ -592,6 +602,25 @@ $(document).ready(function () {
 
         // optional: change badge color based on status
         // Verified / Rejected / Pending Review
+            const previewBtn = $('#btnPreviewPdf');
+
+        if (filePath) {
+            previewBtn
+                .removeClass('btn-outline-secondary')
+                .addClass('btn-outline-success')
+                .prop('disabled', false)
+                .html(`<i class="fa fa-file-pdf-o"></i> ${fileName}`);
+        } else {
+            previewBtn
+                .removeClass('btn-outline-success')
+                .addClass('btn-outline-secondary')
+                .prop('disabled', true)
+                .html(`<i class="fa fa-ban"></i> Tidak Ada File Bukti Terupload`);
+        }
+        $('#btnPreviewPdf').on('click', function () {
+            if ($(this).prop('disabled')) return;
+            $('#pdfPreviewModal').modal('show');
+        });
     });
 </script>
 <script
@@ -599,24 +628,41 @@ $(document).ready(function () {
   type="module"
 ></script>
 <script>
-    $(document).on('click', '.btn-preview-pdf', function () {
-        let pdfUrl = $(this).data('url');
+    const previewPdfBaseUrl = "{{ url('/transactions') }}";
+    $('#pdfPreviewModal').on('show.bs.modal', function () {
 
-        $('#pdfLoading').show();
-        $('#pdfIframe').hide().attr('src', pdfUrl);
+        // 1️⃣ Get transaction ID (from hidden input or wherever you store it)
+        const transactionId = $('#modalTransactionId').val();
+
+        if (!transactionId) {
+            alert('Transaction ID not found');
+            return;
+        }
+
+        // 2️⃣ Cache buster (THIS IS WHAT YOU ASKED ABOUT)
+        const cacheBuster = new Date().getTime();
+
+        // 3️⃣ Build fresh PDF URL
+        const pdfUrl = `${previewPdfBaseUrl}/${transactionId}/bukti/preview?v=${cacheBuster}`;
+
+        // 4️⃣ Set iframe + new tab link
+        $('#pdfIframe').attr('src', pdfUrl);
         $('#openNewTab').attr('href', pdfUrl);
+
+        // 5️⃣ Loading state
+        $('#pdfLoading').show();
+        $('#pdfIframe').hide();
     });
 
-    // Saat iframe selesai load
+    // When PDF finishes loading
     $('#pdfIframe').on('load', function () {
         $('#pdfLoading').hide();
         $(this).show();
     });
 
-    // Reset saat modal ditutup (IMPORTANT)
+    // Cleanup (IMPORTANT for cache issues)
     $('#pdfPreviewModal').on('hidden.bs.modal', function () {
-        $('#pdfIframe').attr('src', '');
-        $('#pdfLoading').show();
+        $('#pdfIframe').attr('src', 'about:blank');
     });
 </script>
 @endpush

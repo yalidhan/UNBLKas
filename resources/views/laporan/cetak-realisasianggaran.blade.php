@@ -42,9 +42,19 @@
 </head>
 <body>
     <div class="form-group">
-        <div class="tooltip"><button onClick="window.print()"><i class="fa fa-print" style="font-size:34px;"></i></button>
+        <!-- <div class="tooltip"><button onClick="window.print()"><i class="fa fa-print" style="font-size:34px;"></i></button>
             <span class="tooltiptext">Cetak Laporan</span>
-        </div>   
+        </div>    -->
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <button onclick="window.print()" title="Cetak Laporan">
+                <i class="fa fa-print" style="font-size:30px;"></i>
+            </button>
+
+            <a href="{{ route('realisasi.csv', request()->all()) }}"
+            class="btn btn-success">
+                <i class="fa fa-file-csv"></i> Download CSV
+            </a>
+        </div>
         <h2 align="center"><b>LAPORAN REALISASI ANGGARAN</b></h2>                  
             @if (!empty($departement->nama))
             <h2 align="center">{{$departement->pusat}}</h2>

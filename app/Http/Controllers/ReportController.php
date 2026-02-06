@@ -11,6 +11,7 @@ use Redirect;
 use Carbon\Carbon;
 use App\Models\Departement;
 use App\Models\User;
+use App\Services\RealisasiAnggaranService;
 
 class ReportController extends Controller
 {
@@ -332,5 +333,36 @@ class ReportController extends Controller
         ->with('tahun',$tahun)
         ->with('lastdateperiode',$lastdateperiode)
         ->with('departements',$departement);
+    }
+
+    public function realisasiCsv(
+        Request $request,
+        RealisasiAnggaranService $service
+        ) {
+        $data = $service->generate($request->all());
+
+        return response()->stream(function () use ($data) {
+            $out = fopen('php://output', 'w');
+
+            fputcsv($out, [
+                'Kelompok', 'Akun', 'Pagu', 'Realisasi', '%', 'Sisa'
+            ]);
+
+            foreach ($data['rows'] as $row) {
+                fputcsv($out, [
+                    $row['kelompok'],
+                    $row['akun'],
+                    $row['pagu'],
+                    $row['realisasi'],
+                    $row['persen'],
+                    $row['sisa'],
+                ]);
+            }
+
+            fclose($out);
+        }, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=realisasi_anggaran.csv',
+        ]);
     }
 }   
