@@ -108,7 +108,7 @@
                 </tr>
                     @foreach ($detailTransaction as $value)
                     <tr>
-                        <td style="white-space: nowrap;">{{$value->no}} || {{$value->tipe}}</td>
+                        
                         @if ($value->no_trf !==null && $value->dk==2 )
                             @php
                             \DB::statement("SET SQL_MODE=''");
@@ -124,10 +124,12 @@
                                 ORDER BY t.id DESC limit 1;"
                             );  
                             @endphp       
+                        <td style="white-space: nowrap;">{{$droppingValue[0]->no}} || {{$droppingValue[0]->tipe}}</td>
                         <td>{{$droppingValue[0]->nama}}
                             <br>(Rp {{number_format($droppingValue[0]->nominal,0,',','.')}})
                         </td>                   
                         @else
+                        <td style="white-space: nowrap;">{{$value->no}} || {{$value->tipe}}</td>
                         <td>{{$value->nama}}
                             <br>(Rp {{number_format($value->nominal,0,',','.')}})
                         </td>
