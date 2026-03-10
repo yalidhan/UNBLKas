@@ -23,6 +23,7 @@
         }
     @stack('rincian_planning-style')
     @stack('audit-style')  
+    @stack('histrory-open-period')
     @stack ('transaksi-style')
     </style>
 </head>
@@ -177,6 +178,34 @@
                         @else
                         @endif
                     </li>
+                    <li class="nav-label">Pengaturan</li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-badge menu-icon"></i><span class="nav-text">Pengaturan</span>
+                        </a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('periodClosingPage')}}">Tutup Periode</a></li>
+                            </ul>
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('periodOpenPage')}}">Request Buka Periode</a></li>
+                            </ul>
+                           
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('period.requests.mine')}}">Riwayat Permintaan Buka Periode</a></li>
+                            </ul>
+                            @php
+                            $notifCount = \App\Models\PeriodOpenRequest::where('status', 'pending')
+                                ->count();
+                            @endphp
+                            @if (auth()->user()->jabatan=="SPI")
+                            <ul aria-expanded="false">
+                                <li><a href="{{route('period.requests.index')}}">Persetujuan Pembukaan Periode @if($notifCount > 0)
+                                <span class="badge badge-success">{{ $notifCount }}</span>
+                                @else <span class="badge badge-light">0</span> @endif</a></li>
+                            </ul>
+                            @else
+                            @endif
+                    </li>
                 </ul>
             </div>
         </div>
@@ -240,7 +269,57 @@
     @stack('detail_budget-script')
     @stack('audit-script')
     @stack('child-row-datatables')
+    @stack('pengaturan-script')
 
+@php
+$latest = \App\Models\PeriodOpenRequest::where('requested_by', auth()->id())
+    ->whereIn('status', ['approved','rejected'])
+    ->where('is_read', false)
+    ->latest('approved_at')
+    ->first();
+@endphp
+
+@if($latest)
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    Swal.fire({
+        icon: "{{ $latest->status == 'approved' ? 'success' : 'error' }}",
+        title: "{{ $latest->status == 'approved'
+            ? 'Permintaan Buka Periode Disetujui '
+            : 'Permintaan Buka Periode Ditolak' }}",
+
+        html: `
+            Periode:
+            <strong>
+            {{ \DateTime::createFromFormat('!m', $latest->month)->format('F') }}
+            {{ $latest->year }}
+            </strong><br><br>
+
+            @if($latest->status == 'approved')
+            Dibuka sampai:<br>
+            <strong>
+                {{ $latest->open_until 
+                    ? \Carbon\Carbon::parse($latest->open_until)->format('d M Y H:i')
+                    : 'Tidak tersedia' }}
+            </strong>
+            @else
+                Alasan:<br>
+                <strong>{{ $latest->rejection_reason }}</strong>
+            @endif
+        `
+    }).then(() => {
+        fetch("{{ route('period.requests.markRead', $latest->id) }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            }
+        });
+    });
+
+});
+</script>
+@endif
 </body>
 
 </html>

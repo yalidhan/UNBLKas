@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('content')
+
 <div class="content-body">
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
@@ -12,6 +13,7 @@
                 </div>
             </div>
             <!-- row -->
+             
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -66,7 +68,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{route('transaksi.update',$showTransaction[0]->id)}}" method="POST">
+                                                <form action="{{route('transaksi.update',$showTransaction[0]->id)}}" method="POST" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
                                                 <input type="hidden" name="kode" value="edit">
@@ -85,6 +87,72 @@
                                                         <span class="input-group-text">Keterangan</span>
                                                     </div>
                                                     <textarea required name="keterangan_edit" rows="2" cols="30" maxlength="255" class="form-control" aria-label="With textarea">{{$showTransaction[0]->keterangan}}</textarea>
+                                                </div>
+                                                <!-- ===== File Lama ===== -->
+                                                @if($showTransaction[0]->bukti_file_path)
+                                                <div class="mb-2">
+                                                    <small>Bukti saat ini:</small><br>
+
+                                                    <a href="{{ asset('storage/'.$showTransaction[0]->bukti_file_path) }}"
+                                                    target="_blank">
+                                                    🔍 Lihat Bukti
+                                                    </a>
+
+                                                    <!-- Tombol hapus bukti -->
+                                                    <div class="mt-2">
+                                                        <input type="checkbox" name="hapus_bukti" value="1" id="hapus_bukti">
+                                                        <label for="hapus_bukti" class="text-danger">
+                                                             ❌Hapus bukti tanpa upload baru
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                @endif
+
+                                                <!-- ===== Drag & Drop Upload ===== -->
+                                                <div class="form-group mt-3">
+                                                    <label>Ganti Bukti Transaksi (PDF, max 5MB)</label>
+
+                                                    <div id="drop-area-edit"
+                                                        class="border rounded p-3 text-center"
+                                                        style="cursor:pointer;">
+
+                                                        <p class="mb-2">
+                                                            Drag & drop PDF di sini atau klik untuk memilih 📄
+                                                        </p>
+
+                                                        <input type="file"
+                                                            name="bukti_transaksi"
+                                                            id="bukti_transaksi_edit"
+                                                            accept="application/pdf"
+                                                            style="display:none;">
+
+                                                        <span id="file-name-edit" class="text-muted">
+                                                            Belum ada file dipilih
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- ===== Status ===== -->
+                                                <div class="form-group mt-3">
+                                                    <label>Status Transaksi</label>
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input"
+                                                            type="radio"
+                                                            name="status_transaksi"
+                                                            value="selesai"
+                                                            {{$showTransaction[0]->status_transaksi=='selesai'?'checked':''}}>
+                                                        <label class="form-check-label">Selesai</label>
+                                                    </div>
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input"
+                                                            type="radio"
+                                                            name="status_transaksi"
+                                                            value="on_progress"
+                                                            {{$showTransaction[0]->status_transaksi=='on_progress'?'checked':''}}>
+                                                        <label class="form-check-label">On Progress</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                                     <div class="modal-footer">
@@ -142,6 +210,12 @@
                                 @endif   
                                 </div>
                     </div>
+                @if($errors->first())
+                    <div class="alert alert-danger" role="alert">
+                    {{$errors->first()}}
+                    </div>
+                    @else
+                @endif
                 </div>
                 <div class="table-responsive"> 
                     <table class="table table-bordered table-striped verticle-middle">
@@ -181,6 +255,7 @@
                                                             @csrf
                                                             @method('PUT')
                                                                 <div class="form-group">
+                                                                    <input type="hidden" name="departement_id" value="{{$departement_id}}">
                                                                     <label for="akun_rincian_edit{{$value->id}}" class="col-form-label">Akun</label>
                                                                     <select id="akun_rincian_edit{{$value->id}}" data-width="100%" name="akun_rincian_edit" class="form-control" required>
                                                                         @if ($value->dk==2)
@@ -265,8 +340,9 @@
                                                     <div class="form-group">
                                                         <label for="nominal_tambah_rincian" class="col-form-label">Nominal :</label>
                                                         <input required name="nominal_tambah_rincian" type="text" maxlength="14" class="form-control" id="nominal_tambah_rincian" placeholder="Rp">
-                                                    </div>
-                                                    <input type="hidden" name="transaction_id" value="{{$showTransaction[0]->id}}">
+                                                    </div><input type="hidden" name="transaction_id" value="{{$showTransaction[0]->id}}">
+                                                    <input type="hidden" name="departement_id" value="{{$departement_id}}">
+                                                    
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -281,6 +357,7 @@
     </div>
 </div>
 </div>
+
 @endsection
 @push('nominal-mask')
     $('#nominal_tambah_rincian').mask('#.##0', {reverse: true});
@@ -327,4 +404,72 @@
         });
     });
     </script>    
+@if(session('warning'))
+<script>
+    Swal.fire({
+        icon: 'warning',
+        title: 'Peringatan!!',
+        text: '{{ session('warning') }}',
+        html: `
+            Mata Akun <b>{{ session('namaAkun') }}</b> <br>
+            Pada Departement <b>{{ session('namaDepartement') }}</b> <br>
+            <b>Pagu Anggaran Tahun {{ session('tahun') }}:</b> {{ session('rpPaguAnggaran') }}<br>
+            <b>Realisasi Tahun {{ session('tahun') }}:</b> {{ session('rpRealisasi') }}  <br><br>
+            Realisasi telah melebihi pagu anggaran!
+        `,
+        showConfirmButton: true
+    });
+</script>
+@endif
+<script>
+    const dropEdit = document.getElementById("drop-area-edit");
+    const inputEdit = document.getElementById("bukti_transaksi_edit");
+    const nameEdit = document.getElementById("file-name-edit");
+
+    if (dropEdit) {
+
+        dropEdit.addEventListener("click", () => inputEdit.click());
+
+        inputEdit.addEventListener("change", handleFileEdit);
+
+        dropEdit.addEventListener("dragover", e => {
+            e.preventDefault();
+            dropEdit.classList.add("bg-light");
+        });
+
+        dropEdit.addEventListener("dragleave", () => {
+            dropEdit.classList.remove("bg-light");
+        });
+
+        dropEdit.addEventListener("drop", e => {
+            e.preventDefault();
+            dropEdit.classList.remove("bg-light");
+
+            inputEdit.files = e.dataTransfer.files;
+            handleFileEdit();
+        });
+
+        function handleFileEdit() {
+
+            const file = inputEdit.files[0];
+            if (!file) return;
+
+            if (file.type !== "application/pdf") {
+                alert("Hanya PDF!");
+                inputEdit.value = "";
+                nameEdit.textContent = "Belum ada file";
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Max 5MB!");
+                inputEdit.value = "";
+                nameEdit.textContent = "Belum ada file";
+                return;
+            }
+
+            nameEdit.textContent = file.name;
+        }
+    }
+</script>
 @endpush

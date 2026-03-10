@@ -11,6 +11,8 @@ class TransactionAudit extends Model
     protected $fillable = [
         'transaction_id',
         'status',
+        'auditor_id',
+        'audited_at',
     ];
 
     public const STATUS_VERIFIED = 'verified';
@@ -26,5 +28,10 @@ class TransactionAudit extends Model
     public function notes()
     {
         return $this->hasMany(AuditNote::class, 'audit_id');
+    }
+    
+    public function auditor()
+    {
+        return $this->belongsTo(User::class, 'auditor_id');
     }
 }

@@ -43,16 +43,18 @@ class TransactionAuditController extends Controller
                             ->whereYear('tanggal', $year)
                             ->where('departement_id', $selectedDepartement)
                             ->withSum('transaction_details', 'nominal')
+                            ->with('audit')
                             ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
             $departementName = Departement::find($selectedDepartement);
         }else{
             $transaction = Transaction::whereMonth('tanggal', $month)
                             ->whereYear('tanggal', $year)
                             ->withSum('transaction_details', 'nominal')
+                            ->with('audit')
                             ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
                             $departementName = null;
         }
-// dd($transaction);
+// dd($transaction[0]->audit);
         $departement = Departement::where('status','1')->whereNotIn('id',[1,18,19,20,21])->get();
         return view('audit/audit', compact('transaction',
                                             'month',
@@ -76,6 +78,24 @@ class TransactionAuditController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
+        $request->validate([
+        'transaction_id' => 'required|exists:transactions,id',
+        'status' => 'required|in:verified,rejected',
+        ]);
+
+        TransactionAudit::updateOrCreate(
+            ['transaction_id' => $request->transaction_id],
+            [
+                'status'     => $request->status,
+                'auditor_id' => auth()->id(),
+                'audited_at' => now(),
+            ]
+        );
+
+    return redirect()
+        ->back()
+        ->with('success', 'Audit berhasil diproses.');
     }
 
     /**

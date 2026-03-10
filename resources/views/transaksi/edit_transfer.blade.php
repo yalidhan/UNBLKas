@@ -18,7 +18,13 @@
             <div class="card">
                 <div class="card-header">{{ __('Edit Transfer') }}</div>
                 <div class="card-body">
-                    <form id="formTF" method="POST" action="{{route('updateTransfer',$showTransaction[0]->no_trf)}}">
+                    @if($errors->first())
+                        <div class="alert alert-danger" role="alert">
+                        {{$errors->first()}}
+                        </div>
+                        @else
+                    @endif
+                    <form id="formTF" method="POST" action="{{route('updateTransfer',$showTransaction[0]->no_trf)}}" enctype="multipart/form-data">
                         @csrf
                         @method ('put')
                         <input type="hidden" name="kode" value="edit">
@@ -73,6 +79,79 @@
                         <label for="nominal_transfer" class="col-form-label">Nominal Transfer:</label>
                         <input @if (auth()->user()->id==$showTransaction[0]->user_id) @else disabled @endif required name="nominal_transfer" value="{{$showDetailTransaction1[0]->nominal}}" type="text" class="form-control" id="nominal_transfer" maxlength="14" placeholder="Rp">
                     </div>
+                    <!-- ===== FILE BUKTI TRANSFER ===== -->
+                    @if($showTransaction[0]->bukti_file_path)
+
+                    <div class="mb-2">
+                        <small>Bukti saat ini:</small><br>
+
+                        <a href="{{ asset('storage/'.$showTransaction[0]->bukti_file_path) }}"
+                        target="_blank">
+                        🔍 Lihat Bukti Transfer
+                        </a>
+
+                        <!-- Hapus tanpa upload -->
+                        @if (auth()->user()->id == $showTransaction[0]->user_id)
+                        <div class="mt-2">
+                            <input type="checkbox"
+                                name="hapus_bukti"
+                                value="1"
+                                id="hapus_bukti_transfer">
+
+                            <label for="hapus_bukti_transfer" class="text-danger">
+                                ❌ Hapus bukti tanpa upload baru
+                            </label>
+                        </div>
+                        @endif
+                    </div>
+
+                    @endif
+                    <!-- ===== Upload Bukti Baru ===== -->
+                    <div class="form-group mt-3">
+                        <label>Ganti Bukti Transfer (PDF, max 5MB)</label>
+
+                        <div class="drop-area border rounded p-3 text-center"
+                            style="cursor:pointer;">
+
+                            <p class="mb-2">
+                                Drag & drop PDF di sini atau klik untuk memilih
+                            </p>
+
+                            <input type="file"
+                                name="bukti_transaksi"
+                                class="bukti-input"
+                                accept="application/pdf"
+                                style="display:none;"
+                                @if (auth()->user()->id != $showTransaction[0]->user_id) disabled @endif>
+
+                            <span class="file-name text-muted">
+                                Belum ada file dipilih
+                            </span>
+                        </div>
+                    </div>
+                    <!-- ===== Status ===== -->
+                    <div class="form-group mt-3">
+                        <label>Status Transaksi</label>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="status_transaksi"
+                                value="selesai"
+                                {{$showTransaction[0]->status_transaksi=='selesai'?'checked':''}}>
+                            <label class="form-check-label">Selesai</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="status_transaksi"
+                                value="on_progress"
+                                {{$showTransaction[0]->status_transaksi=='on_progress'?'checked':''}}>
+                            <label class="form-check-label">On Progress</label>
+                        </div>
+                    </div>
+
                     </div>
                     <input type="text" hidden value="{{$showTransaction[0]->id}}" name="id_1">
                     <input type="text" hidden value="{{$showTransaction[1]->id}}" name="id_2">
@@ -189,4 +268,57 @@
             });
         });
     </script>
+    <script>
+document.querySelectorAll(".drop-area").forEach(dropArea => {
+
+    const input = dropArea.querySelector(".bukti-input");
+    const name  = dropArea.querySelector(".file-name");
+
+    if (!input) return;
+
+    dropArea.addEventListener("click", () => input.click());
+
+    input.addEventListener("change", handleFile);
+
+    dropArea.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropArea.classList.add("bg-light");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("bg-light");
+    });
+
+    dropArea.addEventListener("drop", e => {
+        e.preventDefault();
+        dropArea.classList.remove("bg-light");
+
+        input.files = e.dataTransfer.files;
+        handleFile();
+    });
+
+    function handleFile() {
+
+        const file = input.files[0];
+        if (!file) return;
+
+        if (file.type !== "application/pdf") {
+            alert("Hanya file PDF!");
+            input.value = "";
+            name.textContent = "Belum ada file";
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            alert("Maksimal 5MB!");
+            input.value = "";
+            name.textContent = "Belum ada file";
+            return;
+        }
+
+        name.textContent = file.name;
+    }
+
+});
+</script>
 @endpush

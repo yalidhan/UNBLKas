@@ -10,12 +10,14 @@ class AuditNote extends Model
     use HasFactory;
     protected $fillable = [
         'audit_id',
-        'auditor_id',
+        'notetaker_id',
         'note',
+        'note_at',
         'read_at',
     ];
 
     protected $casts = [
+        'note_at' => 'datetime',
         'read_at' => 'datetime',
     ];
 
@@ -24,9 +26,9 @@ class AuditNote extends Model
         return $this->belongsTo(TransactionAudit::class, 'audit_id');
     }
 
-    public function auditor()
+    public function notetaker()
     {
-        return $this->belongsTo(User::class, 'auditor_id');
+        return $this->belongsTo(User::class, 'notetaker_id');
     }
 
     // Helper

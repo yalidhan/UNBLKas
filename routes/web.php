@@ -13,6 +13,8 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\TransactionAuditController;
 use App\Http\Controllers\AuditNoteController;
+Use App\Http\Controllers\PeriodClosingController;
+Use App\Http\Controllers\PeriodOpenRequestController;
 
  
 
@@ -81,6 +83,47 @@ Route::get('/laporan/realisasi/csv', [ReportController::class, 'realisasiCsv'])
 Route::get('posisikas', [ReportController::class,'posisikasPage'])->name('posisikasPage');
 Route::get('posisikas/cetak', [ReportController::class,'posisikasCetak'])->name('posisikasCetak');
 
+Route::get('period', [PeriodClosingController::class,'periodClosingPage'])->name('periodClosingPage');
+Route::post('/period/close',
+    [PeriodClosingController::class, 'close']
+)->name('period.close');
+Route::get('openperiod', [PeriodOpenRequestController::class,'periodOpenPage'])->name('periodOpenPage');
+Route::post('/period/request', [PeriodOpenRequestController::class, 'requestOpen'])
+    ->name('period.request');
+
+Route::middleware(['auth'])->group(function () {
+
+    // halaman SPI approval
+    Route::get('/period/requests',
+        [PeriodOpenRequestController::class, 'index'])
+        ->name('period.requests.index');
+
+    // approve
+    Route::post('/period/requests/{id}/approve',
+        [PeriodOpenRequestController::class, 'approve'])
+        ->name('period.requests.approve');
+
+    // reject
+    Route::post('/period/requests/{id}/reject',
+        [PeriodOpenRequestController::class, 'reject'])
+        ->name('period.requests.reject');
+});
+Route::get('/period/my-requests',
+    [PeriodOpenRequestController::class, 'myRequests'])
+    ->name('period.requests.mine');
+Route::post('/period/request/{id}/mark-read',
+    [PeriodOpenRequestController::class, 'markRead'])
+    ->name('period.requests.markRead');
+
 Route::get('report-perencanaan/cetak', [ReportController::class,'perencanaanCetak'])->name('perencanaanCetak');
 
 Route::resource('transaction_audits', TransactionAuditController::class);
+
+Route::get('/audit-notes/{audit}', [AuditNoteController::class, 'getByAudit'])
+    ->name('audit-notes.by-audit');
+Route::post('/audit-notes', [AuditNoteController::class, 'store'])
+    ->name('audit-notes.store');
+Route::put('/audit-notes/{note}', [AuditNoteController::class, 'update'])
+    ->name('audit-notes.update');
+Route::delete('/audit-notes/{note}', [AuditNoteController::class, 'destroy'])
+    ->name('audit-notes.destroy');
