@@ -93,7 +93,7 @@
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
-                                            <b>{{auth::user()->name}}</b>
+                                            <b>{{auth()->user()->name}}</b>
                                         </li>
                                         <li>
                                             <a href="{{route('updatepassword')}}"><i class="icon-key"></i> <span>Ganti Password</span></a>
