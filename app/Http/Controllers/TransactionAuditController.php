@@ -37,24 +37,40 @@ class TransactionAuditController extends Controller
             $month=$current->month;
             $year=$current->year;
         }
-        if ($request->filled('departement')){
-            $selectedDepartement = $request->input('departement');
-            $transaction = Transaction::whereMonth('tanggal', $month)
-                            ->whereYear('tanggal', $year)
-                            ->where('departement_id', $selectedDepartement)
-                            ->withSum('transaction_details', 'nominal')
-                            ->with('audit')
-                            ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
-            $departementName = Departement::find($selectedDepartement);
-        }else{
-            $transaction = Transaction::whereMonth('tanggal', $month)
-                            ->whereYear('tanggal', $year)
-                            ->withSum('transaction_details', 'nominal')
-                            ->with('audit')
-                            ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
-                            $departementName = null;
+        // if ($request->filled('departement')){
+        //     $selectedDepartement = $request->input('departement');
+        //     $transaction = Transaction::whereMonth('tanggal', $month)
+        //                     ->whereYear('tanggal', $year)
+        //                     ->where('departement_id', $selectedDepartement)
+        //                     ->withSum('transaction_details', 'nominal')
+        //                     ->with('audit')
+        //                     ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
+        //     $departementName = Departement::find($selectedDepartement);
+        // }else{
+        //     $transaction = Transaction::whereMonth('tanggal', $month)
+        //                     ->whereYear('tanggal', $year)
+        //                     ->withSum('transaction_details', 'nominal')
+        //                     ->with('audit')
+        //                     ->orderBy('tanggal','asc')->orderBy('id','asc')->get();
+        //                     $departementName = null;
+        // }
+        $query = Transaction::whereMonth('tanggal', $month)
+        ->whereYear('tanggal', $year)
+        ->whereNotIn('departement_id',[1,18,19,20,21])
+        ->withSum('transaction_details', 'nominal')
+        ->with('audit');
+
+        if ($request->filled('departement')) {
+            $query->where('departement_id', $request->departement);
+            $departementName = Departement::find($request->departement);
+        } else {
+            $departementName = null;
         }
-// dd($transaction[0]->audit);
+
+        $transaction = $query->orderBy('tanggal','asc')
+                            ->orderBy('id','asc')
+                            ->get();
+        // dd($transaction[0]->audit);
         $departement = Departement::where('status','1')->whereNotIn('id',[1,18,19,20,21])->get();
         return view('audit/audit', compact('transaction',
                                             'month',
