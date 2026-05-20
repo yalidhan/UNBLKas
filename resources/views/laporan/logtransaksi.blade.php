@@ -80,6 +80,7 @@
                                     <table class="table table-striped table-bordered zero-configuration">
                                         <thead>
                                             <tr>
+                                                <th>Sumber Kas</th>
                                                 <th>No.SPB</th>
                                                 <th>Keterangan</th>
                                                 <th>Tanggal</th>
@@ -91,6 +92,7 @@
                                         <tbody>
                                             @foreach ($logtransaksi as $transaksi)
                                             <tr>
+                                                <td>{{$transaksi->departemen}}</td>
                                                 <td>{{$transaksi->no_spb}}</td>
                                                 <td>{{$transaksi->keterangan}}</td>
                                                 <td>{{\Carbon\Carbon::parse($transaksi->tanggal)->format('d F Y')}}</td>

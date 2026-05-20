@@ -128,57 +128,167 @@ class ReportController extends Controller
                     ->with('departement',$departement);
     }
 
+    // public function logTransaksi(Request $request)
+    // {
+    //     $tahun=$request->thn;
+    //     $sd=$request->sd;
+    //     $account_id=$request->akn;
+    //     $departement_id=$request->dp;
+    //     $departement=Departement::find($request->dp);
+    //     // dd($departement->nama);
+    //     $logtransaksi=DB::select(
+    //         "SELECT t.keterangan,t.no_spb,t.id,t.tanggal,d.dk, d.account_id,d.nominal,
+    //                             a.id,a.no,a.nama,dp.nama as departemen 
+    //         FROM transactions t 
+    //         LEFT JOIN transaction_details d 
+    //                             ON t.id = d.transaction_id 
+    //         LEFT JOIN accounts a 
+    //                             ON d.account_id = a.id 
+    //         LEFT JOIN departements dp
+    //                             ON t.departement_id=dp.id
+    //         WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id            
+    //     ");
+        
+    //     $totalLogTransaksiPengeluaran=DB::select(
+    //         "SELECT SUM(d.nominal) as total_pengeluaran
+    //         FROM transactions t 
+    //         LEFT JOIN transaction_details d 
+    //                             ON t.id = d.transaction_id 
+    //         LEFT JOIN accounts a 
+    //                             ON d.account_id = a.id 
+    //         LEFT JOIN departements dp
+    //                             ON t.departement_id=dp.id
+    //         WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2");
+        
+    //     $totalLogTransaksPengembalian=DB::select(
+    //         "SELECT SUM(d.nominal) as total_pengembalian
+    //         FROM transactions t 
+    //         LEFT JOIN transaction_details d 
+    //                             ON t.id = d.transaction_id 
+    //         LEFT JOIN accounts a 
+    //                             ON d.account_id = a.id 
+    //         LEFT JOIN departements dp
+    //                             ON t.departement_id=dp.id
+    //         WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=1");
+    //     // WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2   
+    //     // dd($logtransaksi);
+    //     // dd($totalLogTransaksiPengeluaran[0]);
+    //     return view('laporan/logtransaksi')
+    //                 ->with('logtransaksi',$logtransaksi)
+    //                 ->with('totalPengembalian',$totalLogTransaksPengembalian)
+    //                 ->with('totalPengeluaran',$totalLogTransaksiPengeluaran)
+    //                 ->with('sd',$sd)
+    //                 ->with('departement',$departement);
+    // } OLD LOG TRANSAKSI
+
     public function logTransaksi(Request $request)
     {
-        $tahun=$request->thn;
-        $sd=$request->sd;
-        $account_id=$request->akn;
-        $departement_id=$request->dp;
-        $departement=Departement::find($request->dp);
-        // dd($departement->nama);
-        $logtransaksi=DB::select(
-            "SELECT t.keterangan,t.no_spb,t.id,t.tanggal,d.dk, d.account_id,d.nominal,
-                                a.id,a.no,a.nama,dp.nama as departemen 
-            FROM transactions t 
-            LEFT JOIN transaction_details d 
-                                ON t.id = d.transaction_id 
-            LEFT JOIN accounts a 
-                                ON d.account_id = a.id 
+        $tahun = $request->thn;
+        $sd = $request->sd;
+        $account_id = $request->akn;
+        $departement_id = $request->dp;
+
+        // MATCH REALISASI CETAK LOGIC
+        if ($departement_id == "") {
+
+            $d_id = auth()->user()->departement_id;
+            $dept_sql = "t.departement_id = $d_id";
+            $departement = Departement::find($d_id);
+
+        } elseif ($departement_id == 0) {
+
+            $dept_sql = "t.departement_id NOT IN (1,18,19,20,21)";
+
+            $departement = (object)[
+                'id' => 0,
+                'nama' => 'Universitas Borneo Lestari'
+            ];
+
+        } elseif ($departement_id == 1) {
+
+            $dept_sql = "t.departement_id IN (1,19,20,21)";
+
+            $departement = (object)[
+                'id' => 1,
+                'nama' => 'Yayasan Borneo Lestari'
+            ];
+
+        } else {
+
+            $dept_sql = "t.departement_id = $departement_id";
+            $departement = Departement::find($departement_id);
+
+        }
+
+        $logtransaksi = DB::select("
+            SELECT
+                t.keterangan,
+                t.no_spb,
+                t.id,
+                t.tanggal,
+                d.dk,
+                d.account_id,
+                d.nominal,
+                a.id,
+                a.no,
+                a.nama,
+                dp.nama AS departemen
+
+            FROM transactions t
+
+            LEFT JOIN transaction_details d
+                ON t.id = d.transaction_id
+
+            LEFT JOIN accounts a
+                ON d.account_id = a.id
+
             LEFT JOIN departements dp
-                                ON t.departement_id=dp.id
-            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id            
+                ON t.departement_id = dp.id
+
+            WHERE
+                $dept_sql
+                AND t.tanggal BETWEEN '$tahun-01-01' AND '$sd'
+                AND d.account_id = $account_id
         ");
-        
-        $totalLogTransaksiPengeluaran=DB::select(
-            "SELECT SUM(d.nominal) as total_pengeluaran
-            FROM transactions t 
-            LEFT JOIN transaction_details d 
-                                ON t.id = d.transaction_id 
-            LEFT JOIN accounts a 
-                                ON d.account_id = a.id 
-            LEFT JOIN departements dp
-                                ON t.departement_id=dp.id
-            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2");
-        
-        $totalLogTransaksPengembalian=DB::select(
-            "SELECT SUM(d.nominal) as total_pengembalian
-            FROM transactions t 
-            LEFT JOIN transaction_details d 
-                                ON t.id = d.transaction_id 
-            LEFT JOIN accounts a 
-                                ON d.account_id = a.id 
-            LEFT JOIN departements dp
-                                ON t.departement_id=dp.id
-            WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=1");
-        // WHERE t.departement_id=$departement_id AND t.tanggal BETWEEN '$tahun-01-01' and '$sd' AND d.account_id=$account_id AND dk=2   
-        // dd($logtransaksi);
-        // dd($totalLogTransaksiPengeluaran[0]);
+
+        $totalLogTransaksiPengeluaran = DB::select("
+            SELECT
+                SUM(d.nominal) AS total_pengeluaran
+
+            FROM transactions t
+
+            LEFT JOIN transaction_details d
+                ON t.id = d.transaction_id
+
+            WHERE
+                $dept_sql
+                AND t.tanggal BETWEEN '$tahun-01-01' AND '$sd'
+                AND d.account_id = $account_id
+                AND d.dk = 2
+        ");
+
+        $totalLogTransaksPengembalian = DB::select("
+            SELECT
+                SUM(d.nominal) AS total_pengembalian
+
+            FROM transactions t
+
+            LEFT JOIN transaction_details d
+                ON t.id = d.transaction_id
+
+            WHERE
+                $dept_sql
+                AND t.tanggal BETWEEN '$tahun-01-01' AND '$sd'
+                AND d.account_id = $account_id
+                AND d.dk = 1
+        ");
+
         return view('laporan/logtransaksi')
-                    ->with('logtransaksi',$logtransaksi)
-                    ->with('totalPengembalian',$totalLogTransaksPengembalian)
-                    ->with('totalPengeluaran',$totalLogTransaksiPengeluaran)
-                    ->with('sd',$sd)
-                    ->with('departement',$departement);
+                ->with('logtransaksi',$logtransaksi)
+                ->with('totalPengembalian',$totalLogTransaksPengembalian)
+                ->with('totalPengeluaran',$totalLogTransaksiPengeluaran)
+                ->with('sd',$sd)
+                ->with('departement',$departement);
     }
 
 
