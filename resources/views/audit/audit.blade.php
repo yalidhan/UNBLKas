@@ -1,6 +1,7 @@
 @extends('master')
 @section('content')
 @push('audit-style')
+
     /* Row search */
     #audit thead .filter-row th {
         padding: 4px 6px;
@@ -290,6 +291,30 @@
 .audit-status-badge{
     transition: all .5s ease;
 }
+    div.dataTables_filter input,
+    div.dataTables_length select {
+        display: inline-block;
+        width: auto;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,
+                    box-shadow .15s ease-in-out;
+    }
+
+    div.dataTables_filter input:focus,
+    div.dataTables_length select:focus {
+        border-color: #80bdff !important;
+        outline: 0;
+        box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+    }
 @endpush
         <!--**********************************
             Content body start
@@ -681,27 +706,6 @@
 </script> -->
 <script>
     $(document).ready(function () {
-
-        var table = $('#audit').DataTable({
-            order: [[2, 'asc']],
-            columnDefs: [
-                { targets: 5, orderable: false, searchable: false } // kolom Aksi
-            ]
-        });
-
-        // Apply search per column (thead)
-        $('#audit thead tr.filter-row th').each(function (index) {
-            $('input', this).on('keyup change clear', function () {
-                if (table.column(index).search() !== this.value) {
-                    table.column(index).search(this.value).draw();
-                }
-            });
-        });
-
-    });
-</script>
-<script>
-    $(document).ready(function () {
         $('#filter_departemen').select2({
             theme: 'bootstrap4',
             placeholder: 'Pilih Departemen 🔽',
@@ -711,27 +715,58 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
 
-        var table = $('#audit').DataTable();
+    var table = $('#audit').DataTable({
+        dom:
+            '<"row mb-2"' +
+                '<"col-md-6"f>' +
+                '<"col-md-6 d-flex justify-content-end"p>' +
+            '>' +
+            'rt' +
+            '<"row mt-2"' +
+                '<"col-md-6"i>' +
+                '<"col-md-6"l>' +
+            '>',
 
-        $('#btnFilter').on('click', function () {
-            let periode = $('#filter_periode').val();
-            let departemen = $('#filter_departemen').val();
+        order: [[2, 'asc']],
 
-            // contoh: kolom 0 = periode, kolom 1 = departemen
-            table.column(0).search(periode);
-            table.column(1).search(departemen).draw();
-        });
-
-        $('#btnReset').on('click', function () {
-            $('#filter_periode').val('');
-            $('#filter_departemen').val(null).trigger('change');
-
-            table.search('').columns().search('').draw();
-        });
-
+        columnDefs: [
+            {
+                targets: 5,
+                orderable: false,
+                searchable: false
+            }
+        ]
     });
+
+    // Filter button
+    $('#btnFilter').on('click', function () {
+        let periode = $('#filter_periode').val();
+        let departemen = $('#filter_departemen').val();
+
+        table.column(0).search(periode);
+        table.column(1).search(departemen).draw();
+    });
+
+    // Reset button
+    $('#btnReset').on('click', function () {
+        $('#filter_periode').val('');
+        $('#filter_departemen').val(null).trigger('change');
+
+        table.search('').columns().search('').draw();
+    });
+
+    // Search per column (thead)
+    $('#audit thead tr.filter-row th').each(function (index) {
+        $('input', this).on('keyup change clear', function () {
+            if (table.column(index).search() !== this.value) {
+                table.column(index).search(this.value).draw();
+            }
+        });
+    });
+
+});
 </script>
 <script
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
