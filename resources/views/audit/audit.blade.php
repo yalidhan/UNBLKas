@@ -315,6 +315,31 @@
         outline: 0;
         box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
     }
+    .dataTables_filter {
+    text-align: left !important;
+    margin-left: 0 !important;
+    }
+
+    .dataTables_filter label {
+        margin-left: 0 !important;
+    }
+
+    .dataTables_filter input {
+        margin-left: 5px;
+    }
+    #audit_wrapper.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+#audit_wrapper .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.table-audit-wrapper #audit_wrapper.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 @endpush
         <!--**********************************
             Content body start
@@ -334,9 +359,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                            <center>
-                                <h1 class="card-title">Audit Transaksi</h1>   
-                            </center>
+                                <h1 class="card-title text-center">Audit Transaksi</h1>   
                             <!-- Card Filter -->
                             <div class="col-md-12 mb-3">
                                 <div class="card border-start border-success shadow-sm" style="background-color:rgb(117, 113, 249);">
@@ -381,14 +404,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <center>
-                                <h4>
+                                <h4 class="text-center">
                                     Daftar Transaksi Periode 
                                     {{ \Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y') }}
                                     - Pada Departemen 
                                     {{ $departementName->nama ?? 'Semua Departemen' }}
                                 </h4>
-                            </center>
                                 <div class="table-responsive table-audit-wrapper">
                                     <table id="audit" class="table align-items-center mb-0 table-audit">
                                         <thead>
@@ -718,16 +739,18 @@
 $(document).ready(function () {
 
     var table = $('#audit').DataTable({
-        dom:
-            '<"row mb-2"' +
-                '<"col-md-6"f>' +
-                '<"col-md-6 d-flex justify-content-end"p>' +
-            '>' +
-            'rt' +
-            '<"row mt-2"' +
-                '<"col-md-6"i>' +
-                '<"col-md-6"l>' +
-            '>',
+dom:
+    '<"row mb-2 mx-0"' +
+        '<"col-md-6 px-0"f>' +
+        '<"col-md-6 px-0 text-right"l>' +
+    '>' +
+    '<"row mb-2 mx-0"' +
+        '<"col-md-12 px-0 d-flex justify-content-end"p>' +
+    '>' +
+    'rt' +
+    '<"row mt-2 mx-0"' +
+        '<"col-md-12 px-0"i>' +
+    '>',
 
         order: [[2, 'asc']],
 
