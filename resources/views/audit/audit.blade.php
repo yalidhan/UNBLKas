@@ -891,22 +891,109 @@ dom:
 
             if (!result.isConfirmed) return;
 
-            // update hidden input
+            // Update hidden input
             $('#audit_status').val(status);
 
-            // update badge BEFORE reload
-            updateAuditBadge(transactionId, status);
-
-            // update modal header
+            // Update modal header temporarily
             updateAuditHeader(status);
 
-            // disable buttons
+            // Disable buttons while processing
             $('#btnVerify, #btnReject').prop('disabled', true);
 
-            // submit form
+            // Submit form
             $('#auditForm').submit();
         });
     }
+    
+$('#auditForm').on('submit', function (e) {
+    e.preventDefault();
+
+    const form = this;
+    const transactionId = $('#modalTransactionId').val();
+    const newStatus = $('#audit_status').val();
+    const previousStatus = $('#audit button[data-id="' + transactionId + '"]')
+        .attr('data-audit_status') || '';
+
+    $('#btnVerify, #btnReject').prop('disabled', true);
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: new FormData(form)
+    })
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || 'Gagal menyimpan status audit.'
+            );
+        }
+
+        return data;
+    })
+    .then(data => {
+        // Update the table only after the server confirms success.
+        updateAuditBadge(transactionId, newStatus);
+
+        // Update the modal.
+        updateAuditHeader(newStatus);
+        $('#audit_status').val(newStatus);
+
+        if (newStatus === 'verified') {
+            $('#auditVerifiedCard').removeClass('d-none');
+        } else {
+            $('#auditVerifiedCard').addClass('d-none');
+        }
+
+        // Update button metadata for the next time the modal opens.
+        const $button = $('#audit button[data-id="' + transactionId + '"]');
+
+        $button.attr('data-audit_status', newStatus);
+        $button.data('audit_status', newStatus);
+
+        if (data.auditor_name) {
+            $button.attr('data-auditor_name', data.auditor_name);
+            $button.data('auditor_name', data.auditor_name);
+            $('#modalAuditorName').text(data.auditor_name);
+        }
+
+        if (data.audited_at) {
+            $button.attr('data-audited_at', data.audited_at);
+            $button.data('audited_at', data.audited_at);
+            $('#modalAuditedAt').text(data.audited_at);
+        }
+
+        updateAuditButtons(newStatus);
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: data.message || 'Status audit berhasil diperbarui.',
+            timer: 1800,
+            showConfirmButton: false
+        });
+    })
+    .catch(error => {
+        // Restore the previous status in the modal.
+        $('#audit_status').val(previousStatus);
+        updateAuditHeader(previousStatus);
+
+        if (previousStatus === 'verified') {
+            $('#auditVerifiedCard').removeClass('d-none');
+        } else {
+            $('#auditVerifiedCard').addClass('d-none');
+        }
+
+        updateAuditButtons(previousStatus);
+
+        Swal.fire('Gagal', error.message, 'error');
+    });
+});
+
 
 
     /* ===============================

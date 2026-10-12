@@ -91,28 +91,64 @@ class TransactionAuditController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-        // dd($request->all());
-        $request->validate([
+    // public function store(Request $request)
+    // {
+    //     //
+    //     // dd($request->all());
+    //     $request->validate([
+    //     'transaction_id' => 'required|exists:transactions,id',
+    //     'status' => 'required|in:verified,rejected',
+    //     ]);
+
+    //     TransactionAudit::updateOrCreate(
+    //         ['transaction_id' => $request->transaction_id],
+    //         [
+    //             'status'     => $request->status,
+    //             'auditor_id' => auth()->id(),
+    //             'audited_at' => now(),
+    //         ]
+    //     );
+
+    //     return redirect()
+    //         ->back()
+    //         ->with('success', 'Audit berhasil diproses.');
+    // }
+    
+public function store(Request $request)
+{
+    $validated = $request->validate([
         'transaction_id' => 'required|exists:transactions,id',
         'status' => 'required|in:verified,rejected',
+    ]);
+
+    $audit = TransactionAudit::updateOrCreate(
+        ['transaction_id' => $validated['transaction_id']],
+        [
+            'status'     => $validated['status'],
+            'auditor_id' => auth()->id(),
+            'audited_at' => now(),
+        ]
+    );
+
+    // Return JSON for AJAX requests so the page does not reload.
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Audit berhasil diproses.',
+            'audit_status' => $audit->status,
+            'auditor_name' => auth()->user()->name,
+            'audited_at' => $audit->audited_at
+                ? Carbon::parse($audit->audited_at)->format('d/m/Y H:i')
+                : null,
         ]);
+    }
 
-        TransactionAudit::updateOrCreate(
-            ['transaction_id' => $request->transaction_id],
-            [
-                'status'     => $request->status,
-                'auditor_id' => auth()->id(),
-                'audited_at' => now(),
-            ]
-        );
-
+    // Preserve the existing behavior for normal form submissions.
     return redirect()
         ->back()
         ->with('success', 'Audit berhasil diproses.');
-    }
+}
+
 
     /**
      * Display the specified resource.
