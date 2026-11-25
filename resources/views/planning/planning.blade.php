@@ -79,7 +79,7 @@
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
                                                             <th>Persetujuan WR 2</th>
-                                                            <!-- <th>Persetujuan Rektor</th> -->
+                                                            <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
                                                             <!-- <th>Status Pembayaran</th> -->
                                                             <th>Aksi</th>
@@ -100,12 +100,16 @@
                                                                 <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                             </td>
-                                                            <!-- <td>
+                                                            <td>
+                                                                @if (auth()->user()->departement_id==1)
                                                                 <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
-                                                            </td> -->
+                                                                @else
+                                                                <span class="badge badge-danger">Tidak memiliki hak akses</span>
+                                                                @endif
+                                                            </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                 @php
@@ -151,7 +155,7 @@
                                                             <th><input type="text" placeholder="Search Input Oleh"></th>
                                                             <th><input type="text" placeholder="Search Tahun Anggaran"></th>
                                                             <th><input type="text" placeholder="Search Persetujuan WR II"></th>
-                                                            <!-- <th><input type="text" placeholder="Search Persetujuan Rektor"></th> -->
+                                                            <th><input type="text" placeholder="Search Persetujuan Rektor"></th>
                                                             <th><input type="text" placeholder="Search Total"></th>
                                                             <!-- <th><input type="text" placeholder="Status Pembayaran"></th> -->
                                                             <th>Aksi</th>
@@ -171,7 +175,7 @@
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
                                                             <th>Persetujuan WR 2</th>
-                                                            <!-- <th>Persetujuan Rektor</th> -->
+                                                            <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
                                                             <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
@@ -193,12 +197,16 @@
                                                                 <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                             </td>
-                                                            <!-- <td>
+                                                            <td>
+                                                                @if (auth()->user()->departement_id==1)
                                                                 <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
-                                                            </td> -->
+                                                                @else
+                                                                <span class="badge badge-danger">Tidak memiliki hak akses</span>
+                                                                @endif
+                                                            </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                 @php
@@ -264,7 +272,7 @@
                                                             <th>Input Oleh</th>
                                                             <th>Tahun Anggaran</th>
                                                             <th>Persetujuan WR II</th>
-                                                            <!-- <th>Persetujuan Rektor</th> -->
+                                                            <th>Persetujuan Rektor</th>
                                                             <th>Total</th>
                                                             <th>Status Pembayaran</th>
                                                             <th>Aksi</th>
@@ -285,12 +293,16 @@
                                                                 <span class="badge badge-danger">Ditolak {{$value->WR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                             </td>
-                                                            <!-- <td>
-                                                            <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                            <td>
+                                                                @if (auth()->user()->departement_id==1)
+                                                                <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                                 <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                                 <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
                                                                 <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
-                                                            </td> -->
+                                                                @else
+                                                                    <span class="badge badge-danger">Tidak memiliki hak akses</span>
+                                                                @endif
+                                                            </td>
                                                             <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                                 <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
                                                                 @php
