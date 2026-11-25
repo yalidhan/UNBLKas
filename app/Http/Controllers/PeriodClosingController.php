@@ -25,7 +25,7 @@ class PeriodClosingController extends Controller
     public function close(Request $request)
     {
         // Permission check
-        if (auth()->user()->jabatan != 'Bendahara Operasional'
+        if (auth()->user()->jabatan != 'SPI'
             || !in_array(auth()->user()->departement_id, [6, 1])) {
 
             return back()->withErrors([

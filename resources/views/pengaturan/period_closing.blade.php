@@ -188,10 +188,10 @@
                                         <div class="alert alert-warning">
                                             <i class="fa fa-exclamation-triangle"></i>
                                             <strong>Perhatian!</strong><br>
-                                            Tutup buku akan mengunci semua transaksi pada bulan tersebut. User yang memiliki akses untuk menutup buku dan mengajukan request buka buku adalah Bendahara Operasional Rektorat & Yayasan,
+                                            Tutup buku akan mengunci semua transaksi pada bulan tersebut. User yang memiliki akses untuk menutup buku dan mengajukan request buka buku adalah SPI & Yayasan,
                                              untuk membuka kembali diperlukan persetujuan SPI.
                                         </div>
-                                        @if (auth()->user()->jabatan == 'Bendahara Operasional'
+                                        @if (auth()->user()->jabatan == 'SPI'
                                             && in_array(auth()->user()->departement_id, [6, 1]))
                                         <div class="form-check mb-3">
                                             <input class="form-check-input"
