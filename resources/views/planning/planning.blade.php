@@ -445,10 +445,11 @@
                                                         <span class="badge badge-warning">Revisi {{$value->WR_3}}</span>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
+                                                        <!-- <span class="badge badge-primary">Sedang Ditinjau {{$value->REKTOR_0}}</span>
                                                         <span class="badge badge-success">Disetujui {{$value->REKTOR_1}}</span>
                                                         <span class="badge badge-danger">Ditolak {{$value->REKTOR_2}}</span>
-                                                        <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span>
+                                                        <span class="badge badge-warning">Revisi {{$value->REKTOR_3}}</span> -->
+                                                        <span class="badge badge-danger">Tidak memiliki hak akses</span>
                                                     </td>
                                                     <td style="white-space: nowrap;">Pengajuan Rp {{number_format($value->nominal,0,',','.')}}
                                                         <br>Disetujui Rp {{number_format($value->nominal_disetujui,0,',','.')}}
